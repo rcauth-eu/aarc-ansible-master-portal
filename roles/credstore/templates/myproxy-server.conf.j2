@@ -1,0 +1,23 @@
+{% if credstore_accepted_credentials is defined %}
+accepted_credentials		"{{ credstore_accepted_credentials }}"
+{% endif %}
+{% if credstore_authorized_retrievers is defined %}
+authorized_retrievers		"{{ credstore_authorized_retrievers }}"
+{% endif %}
+{% if credstore_authorized_renewers is defined %}
+authorized_renewers		"{{ credstore_authorized_renewers }}"
+{% endif %}
+{% if credstore_trusted_retrievers is defined %}
+trusted_retrievers		"{{ credstore_trusted_retrievers }}"
+{% endif %}
+
+cert_dir 			{{ credstore_cert_dir }}
+#proxy_extfile 			{{ credstore_proxy_extfile }}
+max_proxy_lifetime		{{ credstore_max_proxy_lifetime }}
+
+allow_voms_attribute_requests 	{{ credstore_allow_voms_attribute_requests }}
+{% if credstore_allow_voms_attribute_requests == "true"  %}
+#voms_userconf 			{{ credstore_voms_userconf }}
+{% endif %}
+
+

@@ -1,0 +1,93 @@
+---
+
+# make sure directory structure is in place
+
+- name: client directory exists
+  file: 
+    path: "{{ mp_client_dir }}"
+    state: directory
+    owner: tomcat
+    group: tomcat
+
+- name: client conf dir exists
+  file: 
+    path: "{{ mp_client_conf_dir }}"
+    state: directory
+    owner: tomcat
+    group: tomcat
+
+
+- name: client log exists
+  file: 
+    path: "{{ mp_client_log_dir }}"
+    state: directory
+    owner: tomcat
+    group: tomcat
+
+- name: client storage exists
+  file:
+    path: "{{ mp_client_storage_dir }}"
+    state: directory
+    owner: tomcat
+    group: tomcat
+
+# place configuration
+
+- name: client config file
+  template:
+    src: client-cfg.xml.j2
+    dest: "{{ mp_client_conf_file }}"
+    owner: tomcat
+    group: tomcat
+    mode: 0600
+    backup: yes
+
+# place trust and key stores
+
+- name: retrive all trusted CAs
+  #command: "ls {{ certificates }}/*.pem"
+  command: "find {{ certificates }} -type f -name '*.pem'"
+  register: trusted_cas
+
+- name: add trusted CAs to client trust store
+  raw: "/usr/bin/keytool -list -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias `basename {{ item }}` || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias `basename {{ item }}`  -file {{ item }}"
+  with_items: trusted_cas.stdout_lines
+
+#- name: add trusted CAs to client trust store
+#  raw: "/usr/bin/keytool -list -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias {{ item }} || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias {{ item }}  -file {{ item }}"
+#  with_items: trusted_cas.stdout_lines
+
+- name: add the right permission to the trust store
+  file: 
+    path: "{{ mp_client_truststore }}"
+    owner: tomcat
+    group: tomcat
+    mode: 0644
+
+- name: add hostcert to keystore
+  command: "openssl pkcs12 -export -in {{ hostcert }} -inkey {{ hostkey }} -out {{ mp_client_keystore }} -name hostcred -CApath {{ certificates }} -chain -passout pass:{{ mp_client_keystore_pw }}"
+
+- name: add the right permission to the key store
+  file: 
+    path: "{{ mp_client_keystore }}"
+    owner: tomcat
+    group: tomcat
+    mode: 0400
+
+# deploy war file
+
+- name: delete old deployment
+  file:
+    path: "{{item}}"
+    state: absent
+  with_items:
+    - "{{ catalina_home }}/webapps/{{ mp_client }}"
+    - "{{ catalina_home }}/webapps/{{ mp_client }}.war"
+
+- name: copy war 
+  copy:
+    src: mp-oa2-client.war
+    dest: "{{ catalina_home }}/webapps/{{ mp_client}}.war"
+    owner: tomcat
+    group: tomcat
+    mode: 0644

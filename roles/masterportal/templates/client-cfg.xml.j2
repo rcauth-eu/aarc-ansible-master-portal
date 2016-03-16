@@ -1,0 +1,83 @@
+<config>
+
+    <client name="default" alias="{{ mp_client_conf }}"/>
+
+    <!-- ############################################################################## -->
+
+    <client name="mysql-mp-client-config" address="https://{{ ansible_fqdn  }}/{{ mp_client }}">
+
+           <logging  logFileName="{{ mp_client_log_dir }}/{{ mp_client }}.log"
+                     logName="MP"
+                     logSize="1000000"
+                     logFileCount="10"
+                     debug="true"/>
+
+           <callbackUri>https://{{ ansible_fqdn  }}/{{ mp_client }}/ready</callbackUri>
+
+           <serviceUri>{{ deleg_server_auth }}</serviceUri>
+
+           <id>{{ mp_client_id }}</id>
+           <secret>{{ mp_client_secret }}</secret>
+
+           <lifetime>{{ mp_client_conf_lifetime }}</lifetime>
+
+           <mysql    username="{{ mp_client_db_user }}"
+                     password="{{ mp_client_db_pw }}"
+                     database="{{ mp_client_db }}"
+                     schema="{{ mp_client_db }}">
+                          <assetStore/>
+           </mysql>
+
+           <keystore path="{{ mp_client_truststore }}"
+                     type="jks"
+                     password="{{ mp_client_truststore_pw }}"
+                     factory="SunX509" />
+
+           <myproxy host="{{ credstore_host }}" port="{{ credstore_port }}" password="{{ credstore_pw }}">
+                     <keystore path="{{ mp_client_keystore }}"
+                               type="pkcs12"
+                               password="{{ mp_client_keystore_pw }}"
+                               factory="SunX509" />
+           </myproxy>
+
+    </client>
+
+    <!-- ############################################################################## -->
+
+    <client name="filestore-mp-client-config" address="https://{{ ansible_fqdn  }}/{{ mp_client }}">
+
+           <logging  logFileName="{{ mp_client_log_dir }}/{{ mp_client }}.log"
+                     logName="MP"
+                     logSize="1000000"
+                     logFileCount="10"
+                     debug="true"/>
+
+           <callbackUri>https://{{ ansible_fqdn  }}/{{ mp_client }}/ready</callbackUri>
+
+           <serviceUri>{{ deleg_server_auth }}</serviceUri>
+
+           <id>{{ mp_client_id }}</id>
+           <secret>{{ mp_client_secret }}</secret>
+
+           <lifetime>{{ mp_client_conf_lifetime }}</lifetime>
+
+           <fileStore path="{{ mp_client_storage_dir }}">
+                      <assetStore/>
+           </fileStore>
+
+           <keystore path="{{ mp_client_truststore }}"
+                     type="jks"
+                     password="{{ mp_client_truststore_pw }}"
+                     factory="SunX509" />
+
+           <myproxy host="{{ credstore_host }}" port="{{ credstore_port }}" password="{{ credstore_pw }}">
+                     <keystore path="{{ mp_client_keystore }}"
+                               type="pkcs12"
+                               password="{{ mp_client_keystore_pw }}"
+                               factory="SunX509" />
+           </myproxy>
+
+    </client>
+
+</config>
+

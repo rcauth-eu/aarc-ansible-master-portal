@@ -1,0 +1,21 @@
+---
+
+# Install apache
+
+- name: install httpd
+  yum: name={{item}} state=present
+  with_items:
+    - httpd
+    - httpd-tools
+    - mod_ssl
+
+# configure
+
+- name: httpd config file present
+  template: 
+    src: ssl.conf.j2
+    dest: /etc/httpd/conf.d/ssl.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes

@@ -1,0 +1,19 @@
+---
+
+# Install latest sun java 1.8
+
+- name: download java 8
+  get_url: 
+    url: http://javadl.sun.com/webapps/download/AutoDL?BundleId=114680
+    dest: /tmp/jre.rpm
+- name: make sure java 8 is installed
+  yum: 
+    name: /tmp/jre.rpm
+    state: present
+- name: JAVA_HOME present in bashrc
+  lineinfile:
+    dest: /etc/bashrc
+    state: present
+    line: "export JAVA_HOME={{ java_home }}"
+    regexp: "^export JAVA_HOME=.*"
+    insertafter: EOF

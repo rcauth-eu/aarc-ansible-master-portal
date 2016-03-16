@@ -1,0 +1,16 @@
+---
+
+# include dependencies
+
+- include: dep-java.yml
+- include: dep-tomcat.yml
+- include: dep-httpd.yml
+#- include: dep-mysql.yml
+
+# include tasks to deploy master portal
+
+- include: oa4mp-client.yml
+- include: oa4mp-server.yml
+- include: vo-portal.yml
+
+- include: iptables.yml

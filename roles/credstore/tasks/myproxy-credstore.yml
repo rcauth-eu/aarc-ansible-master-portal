@@ -1,0 +1,54 @@
+---
+
+# These tasks will install and configure MyProxy Server
+# to act as a Credential Store
+
+- name: install myproxy
+  yum: name={{item}} state=present
+  with_items:
+    - myproxy
+    - myproxy-server
+    - myproxy-voms
+    - myproxy-admin 
+    - myproxy-doc
+- name: add myproxy-server.config
+  template: 
+    src: myproxy-server.conf.j2 
+    dest: /etc/myproxy-server.config 
+    owner: myproxy 
+    group: myproxy 
+    mode: 0644
+    backup: yes
+- name: add myproxy proxy extfile
+  copy: 
+    src: myproxy-proxy-extfile 
+    dest: "{{ credstore_proxy_extfile }}"
+    owner: myproxy 
+    group: myproxy
+    mode: 0644
+- name: give access to host certificate
+  file:
+    path: /etc/grid-security/hostcert.pem
+    owner: myproxy
+    group: myproxy
+    mode: 0644
+- name: give access to host key
+  file:
+    path: /etc/grid-security/hostkey.pem
+    owner: myproxy
+    group: myproxy
+    mode: 0400
+- name: create hostcert link
+  file: 
+    src: /etc/grid-security/hostcert.pem 
+    dest: /etc/grid-security/myproxy/hostcert.pem 
+    owner: myproxy
+    group: myproxy
+    state: link
+- name: create hostkey link
+  file: 
+    src: /etc/grid-security/hostkey.pem 
+    dest: /etc/grid-security/myproxy/hostkey.pem 
+    owner: myproxy
+    group: myproxy
+    state: link

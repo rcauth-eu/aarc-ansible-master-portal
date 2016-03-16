@@ -1,0 +1,27 @@
+---
+- hosts: masterportal
+  remote_user: root
+  tasks:
+  - name: install libselinux (ansible selinux dependency)
+    yum:
+      name: libselinux-python
+      state: present
+  - selinux: state=disabled
+  - name: add repository
+    yumrepo:
+      name: edugridpma
+      description: trustanchor repo
+      baseurl: http://dist.eugridpma.info/distribution/igtf/current/
+      gpgcheck: yes
+      gpgkey: https://dist.eugridpma.info/distribution/igtf/current/GPG-KEY-EUGridPMA-RPM-3
+      protect: yes
+      enabled: yes
+  - name: install terena trust root
+    yum:
+      name: ca_TERENA-eScience-SSL-CA-3.noarch
+      update_cache: yes
+      state: present
+  - name: install epel
+    yum:
+      name: epel-release
+      state: present

@@ -1,0 +1,13 @@
+---
+
+# iptables rule for myproxy
+
+- name: add iptable rule
+  iptables: 
+    chain: INPUT
+    ctstate: NEW
+    protocol: tcp
+    destination_port: 7512
+    source: "{{ masterportal_address }}"
+    jump: ACCEPT
+    state: present 

@@ -1,0 +1,38 @@
+<config>
+
+    <client name="default" alias="{{ vo_portal_conf }}"/>
+
+    <!-- ############################################################################## -->
+
+    <client name="{{ vo_portal_conf }}" address="https://{{ ansible_fqdn  }}/{{ vo_portal }}">
+
+           <logging  logFileName="{{ vo_portal_log_dir }}/{{ vo_portal }}.log"
+                     logName="VOP"
+                     logSize="1000000"
+                     logFileCount="10"
+                     debug="true"/>
+
+           <callbackUri>https://{{ ansible_fqdn  }}/{{ vo_portal }}/ready</callbackUri>
+
+           <serviceUri>https://{{ ansible_fqdn  }}/{{ mp_server }}</serviceUri>
+
+           <id>{{ vo_portal_id }}</id>
+           <secret>{{ vo_portal_secret }}</secret>
+
+           <lifetime>{{ vo_portal_conf_lifetime }}</lifetime>
+
+           <requestProxies>true</requestProxies>
+
+           <fileStore path="{{ vo_portal_storage_dir }}">
+                      <assetStore/>
+           </fileStore>
+
+           <keystore path="{{ vo_portal_truststore }}"
+                     type="jks"
+                     password="{{ vo_portal_truststore_pw }}"
+                     factory="SunX509" />
+
+    </client>
+
+</config>
+

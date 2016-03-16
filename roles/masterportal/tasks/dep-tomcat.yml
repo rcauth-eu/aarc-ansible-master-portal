@@ -1,0 +1,69 @@
+---
+
+# Install tomcat
+
+- name: install tomcat 6
+  yum: 
+    name: tomcat6
+    state: present
+- name: add CATALINA_HOME to bashrc
+  lineinfile:
+    dest: /etc/bashrc
+    state: present
+    line: "export CATALINA_HOME={{ catalina_home }}"
+    regexp: "^export CATALINA_HOME=.*"
+    insertafter: EOF
+
+#- name: clean up webapps directory
+#  command: /bin/rm -rf "{{ catalina_home }}/webapps/*"
+
+# Install jglobus-jsse and globus-ssl-proxies
+- name: install jglobus
+  yum: name={{ item }} state=present
+  with_items:
+    - jglobus-jsse 
+    - jglobus-ssl-proxies
+
+# Install MySQL connector
+- name: install mysql connector
+  yum: name=mysql-connector-java state=present
+
+# create link from {{cataline_home}}/lib/mysql-connector 
+
+# configurations
+
+# close unused ports?  
+
+# add oa4mp configuration parameters
+
+- name: add oa4mp config parameters to web.xml
+  template: 
+    src: web.xml.j2
+    dest: "{{ catalina_home }}/conf/web.xml"
+    owner: root
+    group: root
+    mode: 0664
+
+# add javax.mail jar
+
+- name: download javax.mail jar
+  get_url:
+    url: http://java.net/projects/javamail/downloads/download/javax.mail.jar
+    dest: "{{ catalina_home }}/lib/javax.mail.jar"
+- name: set permission on javax.mail
+  file:
+    path: "{{ catalina_home }}/lib/javax.mail.jar"
+    owner: root
+    group: root
+    mode: 0644
+
+# enable cross-context
+
+- name: adding context.xml (crossContext enabled)
+  copy:
+    src: context.xml
+    dest: "{{ catalina_home }}/conf/context.xml"
+    owner: root
+    group: root
+    mode: 0664
+

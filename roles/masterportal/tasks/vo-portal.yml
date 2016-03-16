@@ -1,0 +1,72 @@
+---
+
+# make sure directory structure is in place
+
+- name: voportal directory exists
+  file: 
+    path: "{{ vo_portal_dir }}"
+    state: directory
+    owner: tomcat
+    group: tomcat
+
+- name: voportal conf dir exists
+  file: 
+    path: "{{ vo_portal_conf_dir }}"
+    state: directory
+    owner: tomcat
+    group: tomcat
+
+
+- name: voportal log exists
+  file: 
+    path: "{{ vo_portal_log_dir }}"
+    state: directory
+    owner: tomcat
+    group: tomcat
+
+- name: voportal storage exists
+  file: 
+    path: "{{ vo_portal_storage_dir }}"
+    state: directory
+    owner: tomcat
+    group: tomcat
+
+- name: voportal config file
+  template:
+    src: vo-portal-cfg.xml.j2
+    dest: "{{ vo_portal_conf_file }}"
+    owner: tomcat
+    group: tomcat
+    mode: 0600
+    backup: yes
+
+- name: retrive all trusted CAs
+  command: "find {{ certificates }} -type f -name '*.pem'"
+  register: trusted_cas
+
+- name: add trusted CAs to client trust store
+  raw: /usr/bin/keytool -list -keystore "{{ vo_portal_truststore }}" -storepass "{{ vo_portal_truststore_pw }}" -alias `basename "{{ item }}"` || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore "{{ vo_portal_truststore }}" -storepass "{{ vo_portal_truststore_pw }}" -alias `basename "{{ item }}"`  -file "{{ item }}"
+  with_items: trusted_cas.stdout_lines
+
+- name: add the right permission to the trust store
+  file:
+    path: "{{ vo_portal_truststore }}"
+    owner: tomcat
+    group: tomcat
+    mode: 0644
+
+- name: delete old deployment
+  file:
+    path: "{{item}}"
+    state: absent
+  with_items:
+    - "{{ catalina_home }}/webapps/{{ vo_portal }}"
+    - "{{ catalina_home }}/webapps/{{ vo_portal }}.war"
+
+- name: copy war 
+  copy:
+    src: vo-portal.war
+    dest: "{{ catalina_home }}/webapps/{{ vo_portal }}.war"
+    owner: tomcat
+    group: tomcat
+    mode: 0644

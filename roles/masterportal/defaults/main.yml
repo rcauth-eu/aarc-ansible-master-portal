@@ -1,0 +1,47 @@
+---
+
+# certificates
+
+certificates: /etc/grid-security/certificates
+hostcert: /etc/grid-security/hostcert.pem
+hostkey: /etc/grid-security/hostkey.pem
+
+# java constants
+
+java_home: /usr/java/default
+
+# tomcat constants
+
+catalina_home: /usr/share/tomcat6
+
+# mysql
+
+mysql_root_password: changeme
+
+# oa4mp
+
+mp_client_db_pw: changeme
+mp_client_truststore_pw: changeme
+mp_client_keystore_pw: changeme
+mp_clinet_id: FILLME
+mp_client_secret: FILLME
+
+mp_server_db_pw: changeme
+mp_server_truststore_pw: changeme
+mp_server_keystore_pw: changeme
+
+# credential store
+
+credstore_host: www.example.com
+credstore_port: 7512
+credstore_pw: changeme
+
+# delegation server
+
+deleg_server_auth: https://www.example.com/oauth2
+
+# VO Portal 
+
+vo_portal_truststore_pw: changeit
+vo_portal_id: FILLME
+vo_portal_secret: FILLME

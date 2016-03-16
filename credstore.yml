@@ -1,0 +1,8 @@
+---
+- hosts: credstore
+  remote_user: root
+  roles:
+    - credstore
+  tasks:
+    - name: start myproxy
+      service: name=myproxy-server state=restarted enabled=yes

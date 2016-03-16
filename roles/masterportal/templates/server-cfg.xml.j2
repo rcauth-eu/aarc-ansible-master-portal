@@ -1,0 +1,65 @@
+<config>
+
+    <service name="default" alias="{{ mp_server_conf }}"/>
+
+    <!-- ############################################################################## -->
+
+    <service name="mysql-mp-server-config" address="https://{{ ansible_fqdn  }}/{{ mp_server }}" debug="true">
+
+       <logging  logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
+                 logName="MP"
+                 logSize="1000000"
+                 logFileCount="10"
+                 debug="true"
+       />
+
+       <mysql    username="{{ mp_server_db_user }}" 
+                 password="{{ mp_server_db_pw }}" 
+                 database="{{ mp_server_db }}" 
+                 schema="{{ mp_server_db }}" >
+                         <transactions/>
+                         <clients/>
+                         <clientApprovals/>
+       </mysql>
+
+       <myproxy host="{{ credstore_host }}" port="{{ credstore_port }}" password="{{ credstore_pw }}">
+                 <keystore path="{{ mp_server_keystore }}"
+                           type="pkcs12"
+                           password="{{ mp_server_keystore_pw }}"
+                           factory="SunX509" />
+       </myproxy>
+
+       <!-- <authorizationServlet useHeader="true" requireHeader="true" headerFieldName="eppn" /> -->
+
+    </service>
+
+    <!-- ############################################################################## -->
+
+    <service name="filestore-mp-server-config" address="https://{{ ansible_fqdn  }}/{{ mp_server }}" debug="true">
+
+       <logging  logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
+                 logName="MP"
+                 logSize="1000000"
+                 logFileCount="10"
+                 debug="true"
+       />
+
+       <fileStore path="{{ mp_server_storage_dir }}">
+               <transactions/>
+               <clients/>
+               <clientApprovals/>
+       </fileStore>
+
+       <myproxy host="{{ credstore_host }}" port="{{ credstore_port }}" password="{{ credstore_pw }}">
+                 <keystore path="{{ mp_server_keystore }}"
+                           type="pkcs12"
+                           password="{{ mp_server_keystore_pw }}"
+                           factory="SunX509" />
+       </myproxy>
+
+       <!-- <authorizationServlet useHeader="true" requireHeader="true" headerFieldName="eppn" /> -->
+
+    </service>
+
+</config>
+

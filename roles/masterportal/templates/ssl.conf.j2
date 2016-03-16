@@ -1,0 +1,43 @@
+LoadModule ssl_module modules/mod_ssl.so
+Listen 443
+
+SSLPassPhraseDialog  builtin
+SSLSessionCache         shmcb:/var/cache/mod_ssl/scache(512000)
+SSLSessionCacheTimeout  300
+
+SSLMutex default
+
+SSLRandomSeed startup file:/dev/urandom  256
+SSLRandomSeed connect builtin
+
+SSLCryptoDevice builtin
+
+<VirtualHost _default_:443>
+
+    ServerName {{ ansible_fqdn }}
+
+    ProxyPass /{{ mp_server }} ajp://127.0.0.1:8009/{{ mp_server }}
+    ProxyPass /{{ mp_client }} ajp://127.0.0.1:8009/{{ mp_client }}
+
+    ProxyPass /{{ mp_server }}/authorized !
+
+    ProxyRequests Off
+    UseCanonicalPhysicalPort On
+    UseCanonicalName On
+
+    ErrorLog logs/ssl_error_log
+    TransferLog logs/ssl_access_log
+    LogLevel warn
+
+    SSLEngine on
+    SSLProtocol all -SSLv2
+    SSLCipherSuite DEFAULT:!EXP:!SSLv2:!DES:!IDEA:!SEED:+3DES
+    SSLCertificateFile {{ hostcert }}
+    SSLCertificateKeyFile {{ hostkey }}
+    #SSLCertificateChainFile /etc/grid-security/certificates/rootCA.pem
+
+    CustomLog logs/ssl_request_log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+
+</VirtualHost>
+
+

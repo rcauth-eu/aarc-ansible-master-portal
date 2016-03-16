@@ -1,0 +1,75 @@
+---
+
+# Install MySQL Server
+
+- name: Install MySQL
+  yum: name={{ item }} state=present
+  with_items:
+    - mysql
+    - mysql-server
+    - MySQL-python
+  register: mysql_installation
+
+# Start MySQL Server
+
+- name: Start the MySQL service
+  service: name=mysqld state=started enabled=yes
+
+# Configure root password (but only on fresh mysql installations)
+
+- name: update mysql root password for all root accounts
+  mysql_user: name=root host={{ item }} password={{ mysql_root_password }} priv=*.*:ALL,GRANT
+  with_items:
+    - 127.0.0.1
+    - localhost
+  when: mysql_installation.changed
+
+# check OA4MP Client DB
+
+- name: check OA4MP Client DB
+  mysql_db: 
+    name: "{{mp_client_db}}" 
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  register: client_db
+
+- name: copy oa4mp client sql script
+  template: 
+    src: mp-oa2-client-mysql.sql.j2
+    dest: /tmp/mp-oa2-client-mysql.sql
+  when: client_db.changed
+
+- name: execute oa4mp client sql script
+  mysql_db: 
+    state: import
+    name: all 
+    target: /tmp/mp-oa2-client-mysql.sql
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  when: client_db.changed
+
+# check OA4MP Server DB
+
+- name: Create OA4MP Client DB
+  mysql_db: 
+    name: "{{mp_server_db}}" 
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  register: server_db
+
+- name: copy oa4mp server sql script
+  template: 
+    src: mp-oa2-server-mysql.sql.j2
+    dest: /tmp/mp-oa2-server-mysql.sql
+  when: server_db.changed
+
+- name: execute oa4mp server sql script
+  mysql_db: 
+    state: import
+    name: all 
+    target: /tmp/mp-oa2-server-mysql.sql
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  when: server_db.changed
