@@ -6,39 +6,41 @@
   file: 
     path: "{{ vo_portal_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 - name: voportal conf dir exists
   file: 
     path: "{{ vo_portal_conf_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 
 - name: voportal log exists
   file: 
     path: "{{ vo_portal_log_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 - name: voportal storage exists
   file: 
     path: "{{ vo_portal_storage_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 - name: voportal config file
   template:
     src: vo-portal-cfg.xml.j2
     dest: "{{ vo_portal_conf_file }}"
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
     mode: 0600
     backup: yes
+
+# (no need for a trust store as long as trusted certs are in /etc/grid-security/certificates)
 
 - name: retrive all trusted CAs
   command: "find {{ certificates }} -type f -name '*.pem'"
@@ -55,6 +57,13 @@
     group: tomcat
     mode: 0644
 
+# deploy war file
+
+- name: stop tomcat for the war switch
+  service:
+    name: "{{ tomcat_service }}"
+    state: stopped
+
 - name: delete old deployment
   file:
     path: "{{item}}"
@@ -67,6 +76,8 @@
   copy:
     src: vo-portal.war
     dest: "{{ catalina_home }}/webapps/{{ vo_portal }}.war"
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
     mode: 0644
+  notify: restart tomcat
+

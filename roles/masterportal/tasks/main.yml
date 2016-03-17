@@ -1,16 +1,25 @@
 ---
 
-# include dependencies
+# Include dependencies
 
 - include: dep-java.yml
 - include: dep-tomcat.yml
 - include: dep-httpd.yml
+
+# Currently the Master Portal does not support database backend
+# This will be fixed in to future, but for now, filesystem backend
+# is used.
+
 #- include: dep-mysql.yml
 
-# include tasks to deploy master portal
+# Include tasks to deploy master portal
 
 - include: oa4mp-client.yml
 - include: oa4mp-server.yml
+
+# The VO Portal is not part of the Master Portal, it's only a simple 
+# Master Portal client installed alongside it for testing purposes.
+
 - include: vo-portal.yml
 
 - include: iptables.yml

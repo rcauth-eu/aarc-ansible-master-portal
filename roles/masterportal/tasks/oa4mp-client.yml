@@ -6,30 +6,30 @@
   file: 
     path: "{{ mp_client_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 - name: client conf dir exists
   file: 
     path: "{{ mp_client_conf_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 
 - name: client log exists
   file: 
     path: "{{ mp_client_log_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 - name: client storage exists
   file:
     path: "{{ mp_client_storage_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 # place configuration
 
@@ -37,25 +37,21 @@
   template:
     src: client-cfg.xml.j2
     dest: "{{ mp_client_conf_file }}"
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
     mode: 0600
     backup: yes
 
+# (no need for a trust store as long as trusted certs are in /etc/grid-security/certificates)
 # place trust and key stores
 
 - name: retrive all trusted CAs
-  #command: "ls {{ certificates }}/*.pem"
   command: "find {{ certificates }} -type f -name '*.pem'"
   register: trusted_cas
 
 - name: add trusted CAs to client trust store
   raw: "/usr/bin/keytool -list -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias `basename {{ item }}` || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias `basename {{ item }}`  -file {{ item }}"
   with_items: trusted_cas.stdout_lines
-
-#- name: add trusted CAs to client trust store
-#  raw: "/usr/bin/keytool -list -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias {{ item }} || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias {{ item }}  -file {{ item }}"
-#  with_items: trusted_cas.stdout_lines
 
 - name: add the right permission to the trust store
   file: 
@@ -64,17 +60,24 @@
     group: tomcat
     mode: 0644
 
+# convert hostcert into pkcs12, so that oa4mp can load it in its keystore
+
 - name: add hostcert to keystore
   command: "openssl pkcs12 -export -in {{ hostcert }} -inkey {{ hostkey }} -out {{ mp_client_keystore }} -name hostcred -CApath {{ certificates }} -chain -passout pass:{{ mp_client_keystore_pw }}"
 
 - name: add the right permission to the key store
   file: 
     path: "{{ mp_client_keystore }}"
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
     mode: 0400
 
 # deploy war file
+
+- name: stop tomcat for the war switch
+  service:
+    name: "{{ tomcat_service }}"
+    state: stopped
 
 - name: delete old deployment
   file:
@@ -88,6 +91,8 @@
   copy:
     src: mp-oa2-client.war
     dest: "{{ catalina_home }}/webapps/{{ mp_client}}.war"
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
     mode: 0644
+  notify: restart tomcat
+

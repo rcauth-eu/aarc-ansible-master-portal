@@ -1,6 +1,8 @@
 ---
 - hosts: masterportal
   remote_user: root
+  vars_files:
+    - masterportal_env.yml
   roles:
     - masterportal
   tasks:

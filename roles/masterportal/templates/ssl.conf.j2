@@ -18,6 +18,9 @@ SSLCryptoDevice builtin
 
     ProxyPass /{{ mp_server }} ajp://127.0.0.1:8009/{{ mp_server }}
     ProxyPass /{{ mp_client }} ajp://127.0.0.1:8009/{{ mp_client }}
+    
+    # This should only be enabled for testing purposes	
+    ProxyPass /vo-portal ajp://127.0.0.1:8009/vo-portal
 
     ProxyPass /{{ mp_server }}/authorized !
 
@@ -30,11 +33,14 @@ SSLCryptoDevice builtin
     LogLevel warn
 
     SSLEngine on
-    SSLProtocol all -SSLv2
+    SSLProtocol all -SSLv2 -SSLv3
     SSLCipherSuite DEFAULT:!EXP:!SSLv2:!DES:!IDEA:!SEED:+3DES
     SSLCertificateFile {{ hostcert }}
     SSLCertificateKeyFile {{ hostkey }}
-    #SSLCertificateChainFile /etc/grid-security/certificates/rootCA.pem
+{% if hostcert_intermediate %}
+    SSLCertificateChainFile {{ hostcert_intermediate }}
+{% endif %}
+
 
     CustomLog logs/ssl_request_log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 

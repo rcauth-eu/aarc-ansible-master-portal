@@ -1,6 +1,8 @@
 ---
 - hosts: credstore
   remote_user: root
+  vars_files:
+    - credstore_env.yml
   roles:
     - credstore
   tasks:

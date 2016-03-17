@@ -1,3 +1,10 @@
 ---
 - include: myproxy-credstore.yml
-- include: iptables.yml
+
+# The CA certificate bundle from the appropriate Delegation Server has to be copied to the 
+# Credential Store, so that incoming certificates can be verified for storage
+
+- include: deploy-trustedca.yml
+
+# this is only needed it the Credential Store runs a separate host than the Master Portal
+#- include: iptables.yml

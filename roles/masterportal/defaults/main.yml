@@ -5,20 +5,31 @@
 certificates: /etc/grid-security/certificates
 hostcert: /etc/grid-security/hostcert.pem
 hostkey: /etc/grid-security/hostkey.pem
+hostcert_intermediate: /etc/grid-security/certificates/TERENA-eScience-SSL-CA-3.pem
 
-# java constants
-
-java_home: /usr/java/default
-
-# tomcat constants
-
-catalina_home: /usr/share/tomcat6
-
-# mysql
-
-mysql_root_password: changeme
+# mysql (not in use for now)
+#mysql_root_password: changeme
 
 # oa4mp
+
+mp_server: mp-oa2-server
+mp_client: mp-oa2-client
+
+# OA4MP Client 
+
+mp_client_db: oa2client
+mp_client_db_user: oa4mp-client
+
+mp_client_dir: /var/www/client
+mp_client_conf_dir: "{{ mp_client_dir }}/conf"
+mp_client_conf_file: "{{ mp_client_conf_dir }}/cfg.xml"
+mp_client_truststore: "{{ mp_client_conf_dir }}/trust-store.jks"
+mp_client_keystore: "/etc/grid-security/hostcred.p12"
+#mp_client_conf: mysql-mp-client-config
+mp_client_conf: filestore-mp-client-config
+mp_client_log_dir: "{{ mp_client_dir }}/log"
+mp_client_storage_dir: "{{ mp_client_dir }}/storage"
+mp_client_conf_lifetime: 31536000
 
 mp_client_db_pw: changeme
 mp_client_truststore_pw: changeme
@@ -26,22 +37,48 @@ mp_client_keystore_pw: changeme
 mp_clinet_id: FILLME
 mp_client_secret: FILLME
 
+# OA4MP Server
+
+mp_server_db: oa2server
+mp_server_db_user: oa4mp-server
+
+mp_server_dir: /var/www/server
+mp_server_conf_dir: "{{ mp_server_dir }}/conf"
+mp_server_conf_file: "{{ mp_server_conf_dir }}/cfg.xml"
+mp_server_truststore: "{{ mp_server_conf_dir }}/trust-store.jks"
+mp_server_keystore: "/etc/grid-security/hostcred.p12"
+#mp_server_conf: mysql-mp-server-config
+mp_server_conf: filestore-mp-server-config
+mp_server_log_dir: "{{ mp_server_dir }}/log"
+mp_server_storage_dir: "{{ mp_server_dir }}/storage"
+mp_server_tools_dir: "{{ mp_server_dir }}/tools"
+
 mp_server_db_pw: changeme
 mp_server_truststore_pw: changeme
 mp_server_keystore_pw: changeme
 
+# VO Portal
+
+vo_portal: vo-portal
+vo_portal_dir: /var/www/voportal
+vo_portal_conf_dir: "{{ vo_portal_dir }}/conf"
+vo_portal_conf_file: "{{ vo_portal_conf_dir }}/cfg.xml"
+vo_portal_truststore: "{{ vo_portal_conf_dir }}/trust-store.jks"
+vo_portal_conf: vo-portal-config
+vo_portal_log_dir: "{{ vo_portal_dir }}/log"
+vo_portal_storage_dir: "{{ vo_portal_dir }}/storage"
+vo_portal_conf_lifetime: 86000000
+
+vo_portal_truststore_pw: changeit
+vo_portal_id: FILLME
+vo_portal_secret: FILLME
+
 # credential store
 
-credstore_host: www.example.com
+credstore_host: host.myproxy.com
 credstore_port: 7512
 credstore_pw: changeme
 
 # delegation server
 
 deleg_server_auth: https://www.example.com/oauth2
-
-# VO Portal 
-
-vo_portal_truststore_pw: changeit
-vo_portal_id: FILLME
-vo_portal_secret: FILLME

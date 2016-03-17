@@ -1,0 +1,10 @@
+---
+
+- name: unpack democa.tar.gz into /etc/grid-security/certificates
+  unarchive:
+    src: democa.tar.gz
+    copy: yes
+    dest: "{{ credstore_cert_dir }}"
+    mode: 0644
+    owner: root
+    group: root

@@ -2,10 +2,13 @@
 
 # Install tomcat
 
-- name: install tomcat 6
-  yum: 
-    name: tomcat6
+- name: install tomcat
+  yum:
+    name: "{{ item }}"
     state: present
+  with_items: "{{ tomcat_packages }}"
+  register: tomcat_install
+
 - name: add CATALINA_HOME to bashrc
   lineinfile:
     dest: /etc/bashrc
@@ -14,42 +17,88 @@
     regexp: "^export CATALINA_HOME=.*"
     insertafter: EOF
 
-#- name: clean up webapps directory
-#  command: /bin/rm -rf "{{ catalina_home }}/webapps/*"
+- name: clean up webapps directory
+  command: /bin/rm -rf "{{ catalina_home }}/webapps/*"
+  when: tomcat_install.changed
 
-# Install jglobus-jsse and globus-ssl-proxies
-- name: install jglobus
-  yum: name={{ item }} state=present
-  with_items:
-    - jglobus-jsse 
-    - jglobus-ssl-proxies
 
-# Install MySQL connector
-- name: install mysql connector
-  yum: name=mysql-connector-java state=present
-
-# create link from {{cataline_home}}/lib/mysql-connector 
+# Install jglobus-jsse and globus-ssl-proxies (this is only needed for limited proxies!)
+#- name: install jglobus
+#  yum: name={{ item }} state=present
+#  with_items:
+#    - jglobus-jsse 
+#    - jglobus-ssl-proxies
 
 # configurations
 
 # close unused ports?  
 
+# set tomcatAuthentication="false" so REMOTE_USER will be taken over from apache
+
+- name: check if tomcat authnetication is disabled (ignore errors)
+  command: grep 'Connector.*port="8009".*tomcatAuthentication="false"' "{{ catalina_home }}/conf/server.xml"
+  ignore_errors: True
+  changed_when: False
+  register: tomcat_auth
+
+- name: disable tomcat authnetication
+  lineinfile:
+     dest: "{{ catalina_home }}/conf/server.xml"
+     regexp: '^(.*)<Connector port="8009"(.*)$'
+     line: '\1<Connector port="8009" tomcatAuthentication="false"\2'
+     backrefs: yes
+     owner: "{{ tomcat_user }}"
+     group: "{{ tomcat_user }}"
+     mode: 0664
+  when: tomcat_auth.rc != 0
+  notify: restart tomcat
+
 # add oa4mp configuration parameters
 
 - name: add oa4mp config parameters to web.xml
-  template: 
-    src: web.xml.j2
-    dest: "{{ catalina_home }}/conf/web.xml"
-    owner: root
-    group: root
-    mode: 0664
+  blockinfile:
+     dest: "{{ catalina_home }}/conf/web.xml"
+     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+     insertbefore: "</web-app>"
+     owner: "{{ tomcat_user }}"
+     group: "{{ tomcat_user }}"
+     mode: 0664
+     block: |
+       <context-param>
+          <param-name>oa4mp:mp-oa2.client.config.file</param-name>
+          <param-value>{{ mp_client_conf_file }}</param-value>
+       </context-param>
+       <context-param>
+          <param-name>oa4mp:mp-oa2.client.config.name</param-name>
+          <param-value>default</param-value>
+       </context-param>
+
+       <context-param>
+          <param-name>oa4mp:mp-oa2.server.config.file</param-name>
+          <param-value>{{ mp_server_conf_file }}</param-value>
+       </context-param>
+       <context-param>
+          <param-name>oa4mp:mp-oa2.server.config.name</param-name>
+          <param-value>default</param-value>
+       </context-param>
+
+       <context-param>
+          <param-name>oa4mp:vp-oa2.client.config.file</param-name>
+          <param-value>{{ vo_portal_conf_file }}</param-value>
+       </context-param>
+       <context-param>
+          <param-name>oa4mp:vp-oa2.client.config.name</param-name>
+          <param-value>default</param-value>
+       </context-param>
+  notify: restart tomcat
 
 # add javax.mail jar
 
 - name: download javax.mail jar
   get_url:
-    url: http://java.net/projects/javamail/downloads/download/javax.mail.jar
+    url: "{{ javax_mail_url }}"
     dest: "{{ catalina_home }}/lib/javax.mail.jar"
+
 - name: set permission on javax.mail
   file:
     path: "{{ catalina_home }}/lib/javax.mail.jar"
@@ -57,6 +106,7 @@
     group: root
     mode: 0644
 
+# add mail resource to context.xml
 # enable cross-context
 
 - name: adding context.xml (crossContext enabled)

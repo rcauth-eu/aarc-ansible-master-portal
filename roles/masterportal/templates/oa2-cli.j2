@@ -1,0 +1,37 @@
+# Run the OA4MP CLI (command line interface). This will allow you to edit, create or remove
+# clients, approvals. It will also allow you to copy one store to another completely.
+# Invoke with --help for more information.
+#
+# The next 5 entries completely determine how this operates. Change these to whatever you want if
+# different from the standard install.
+
+OA4MP_ROOT={{ mp_server_dir }}
+DEFAULT_CONFIG={{ mp_server_conf_file }}
+DEFAULT_TARGET=default
+cliJar={{ mp_server_tools_dir }}/oa2-cli.jar
+logFile={{ mp_server_log_dir }}/oa2-cli.log
+
+# End of user serviceable parts.
+
+if [[  "$1" = "--help" || $# -gt 2 ]];then
+  echo "oa2-cli [configName configFile"]
+  echo "Start the OAuth 2 forMyProxy command line admin tool with the"
+  echo "given configuration name in the given configuration file (full path)."
+  echo "No arguments means to use the config named '$DEFAULT_TARGET' in the file  '$DEFAULT_CONFIG'"
+  echo "One argument is assumed to be the configuration name in the default config file."
+  exit 1
+fi
+
+target=${1:-$DEFAULT_TARGET}
+adminCfg=${2:-$DEFAULT_CONFIG}
+
+# Note the flag for one-jar: If this is not set then there will be a ton of random startup
+# messages, all of which are benign. One of the included dependencies has an embedded log4j
+# file that causes this, so we just have to override it.
+java -Done-jar.silent=true -jar $cliJar   -cfg $adminCfg -name $target -log $logFile -v
+
+if [ $? != 0 ]; then
+  exit 1
+fi
+
+exit 0

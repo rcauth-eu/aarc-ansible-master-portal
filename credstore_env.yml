@@ -1,0 +1,20 @@
+---
+
+# Fill in the Master Portal DN. This is going to be trusted by the MyProxy
+# Credential Store. This is generally the hostcert DN of the Master Portal
+
+credstore_accepted_credentials: "/C=NL/O=Example/OU=Org/CN=masterportal"
+credstore_authorized_retrievers: "/C=NL/O=Example/OU=Org/CN=masterportal"
+credstore_authorized_renewers: "/C=NL/O=Example/OU=Org/CN=masterportal"
+credstore_trusted_retrievers: "/C=NL/O=Example/OU=Org/CN=masterportal"
+
+# Maximum lifetime of issued proxies by the Credential Store
+
+credstore_max_proxy_lifetime: 12
+
+# IP address of the Master Portal trusted by this Credential Store (only 
+# used for IP table rules. Ignore this if Credential Store is running
+# on the same host as the Master Portal
+
+masterportal_address: 123.123.123.123
+

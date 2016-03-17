@@ -1,0 +1,39 @@
+---
+
+# java constants
+
+java_download_url: "https://javadl.sun.com/webapps/download/AutoDL?BundleId=114680"
+javax_mail_url: "https://java.net/projects/javamail/downloads/download/javax.mail.jar"
+java_home: /usr/java/default
+
+# tomcat constants
+
+tomcat_packages:
+ - tomcat6
+
+tomcat_extra_packages:
+  - jglobus-jsse
+  - jglobus-ssl-proxies
+
+tomcat_extra_libs: /usr/share/java/jglobus
+
+catalina_home: /usr/share/tomcat6
+tomcat_user: tomcat
+tomcat_service: tomcat6
+
+# apache
+
+httpd_packages:
+  - httpd
+  - httpd-tools
+  - mod_ssl
+
+httpd_service: httpd
+
+# mysql
+
+mysql_packages:
+  - mysql
+  - mysql-server
+  - MySQL-python
+  - mysql-connector-java

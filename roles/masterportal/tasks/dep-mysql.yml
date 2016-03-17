@@ -4,10 +4,7 @@
 
 - name: Install MySQL
   yum: name={{ item }} state=present
-  with_items:
-    - mysql
-    - mysql-server
-    - MySQL-python
+  with_items: "{{ mysql_packages }}"
   register: mysql_installation
 
 # Start MySQL Server
@@ -72,4 +69,10 @@
     target: /tmp/mp-oa2-server-mysql.sql
     login_user: root
     login_password: "{{ mysql_root_password }}"
+  when: server_db.changed
+
+- name: remove oa4mp server sql script
+  file:
+    path: /tmp/oa4mp-server-mysql.sql
+    state: absent
   when: server_db.changed

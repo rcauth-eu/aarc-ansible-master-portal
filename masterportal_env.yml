@@ -1,0 +1,51 @@
+---
+
+# OA4MP Client
+
+# The keystore is used for BOTH mp_client and mp_server to access the Credential Store
+# therefor the two passwords KEYSTORE_PW should be the same. This way the two components
+# can share a single keystore. The keystore usually contains the hostcert of the Master Portal
+
+# The mp_client_id and mp_client_secret should be filled from the client ID and SECRET 
+# provided by the delegation server while registering the master portal. Got to
+# {{ delegation_server_auth }}/register and follow the registration steps to get an ID and SECRET
+
+mp_client_keystore_pw: KEYSTORE_PW
+mp_client_truststore_pw: TRUSTSTORE_PW
+mp_client_id: MP_CLIENT_ID
+mp_client_secret: MP_CLIENT_SECRET
+
+# OA4MP Server
+
+# Make sure mp_server_keystore_pw matches the keystore password set above at mp_client_keystore_pw!
+
+mp_server_keystore_pw: KEYSTORE_PW
+
+# Credential Store
+
+# Set the MyProxy Credential Store that will store all the incoming used proxies. Make sure to 
+# fill in the right hostname (even if it's localhost!), othewise the SSL connection will break!
+# The MYPROXY_PWD will be used to encrypt every incoming user proxy.
+
+credstore_host: host.myproxy.com
+credstore_port: 7512
+credstore_pw: MYPROXY_PWD
+
+# Delegation Server
+
+# Fill in the delegation server oauth2 endpoint that which will be used by this Master Portal
+
+deleg_server_auth: https://www.example.com/oauth2
+
+# VO Portal
+
+# The VO Portal is only deployed for testing purposes! Usually, a VO Portal would like on a different
+# host. Leave these variables empty for the first run of ansible, since there is no Master Portal
+# to register with yet. After the first ansible run, the Master Portal should be up and running. 
+# Now you can naviagete to {{ masterportal }}/{{ mp_server }}/register and register your VO Portal.
+# Once you have the ID and SECRET, you can fill them in here, and rerun ansible
+
+vo_portal_id: VP_CLIENT_ID
+vo_portal_secret: VP_CLIENT_SECRET
+vo_portal_truststore_pw: VO_TRUSTSTORE_PW
+

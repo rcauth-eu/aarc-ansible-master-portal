@@ -6,30 +6,37 @@
   file: 
     path: "{{ mp_server_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 - name: server conf dir exists
   file: 
     path: "{{ mp_server_conf_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 
 - name: server log exists
   file: 
     path: "{{ mp_server_log_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 - name: server storage exists
   file:
     path: "{{ mp_server_storage_dir }}"
     state: directory
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+
+- name: server tools exists
+  file:
+    path: "{{ mp_server_tools_dir }}"
+    state: directory
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
 
 # place configuration
 
@@ -37,27 +44,50 @@
   template:
     src: server-cfg.xml.j2
     dest: "{{ mp_server_conf_file }}"
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
     mode: 0600
     backup: yes
 
-# place trust and key stores
+# copy tools for client approval
 
-- name: retrieve all trusted CAs
-  command: "find {{ certificates }} -type f -name '*.pem'"
-  register: trusted_cas
-
-- name: add trusted CAs to client trust store
-  raw: /usr/bin/keytool -list -keystore "{{ mp_server_truststore }}" -storepass "{{ mp_server_truststore_pw }}" -alias `basename "{{ item }}"` || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore "{{ mp_server_truststore }}" -storepass "{{ mp_server_truststore_pw }}" -alias `basename "{{ item }}"`  -file "{{ item }}"
-  with_items: trusted_cas.stdout_lines
-
-- name: add the right permission to the trust store
-  file:
-    path: "{{ mp_server_truststore }}"
-    owner: tomcat
-    group: tomcat
+- name: copy client approval jar
+  copy:
+    src: oa2-cli.jar
+    dest: "{{ mp_server_tools_dir }}"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
     mode: 0644
+
+- name: copy client approval jar
+  template:
+    src: oa2-cli.j2
+    dest: "{{ mp_server_tools_dir }}/oa2-cli"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+    mode: 0744
+
+
+# (no need for a trust store as long as trusted certs are in /etc/grid-security/certificates)
+
+# place trust and key store
+
+#- name: retrieve all trusted CAs
+#  command: "find {{ certificates }} -type f -name '*.pem'"
+#  register: trusted_cas
+
+#- name: add trusted CAs to client trust store
+#  raw: /usr/bin/keytool -list -keystore "{{ mp_server_truststore }}" -storepass "{{ mp_server_truststore_pw }}" -alias `basename "{{ item }}"` || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore "{{ mp_server_truststore }}" -storepass "{{ mp_server_truststore_pw }}" -alias `basename "{{ item }}"`  -file "{{ item }}"
+#  with_items: trusted_cas.stdout_lines
+
+#- name: add the right permission to the trust store
+#  file:
+#    path: "{{ mp_server_truststore }}"
+#    owner: tomcat
+#    group: tomcat
+#    mode: 0644
+
+# convert hostcert into pkcs12, so that oa4mp can load it in its keystore
 
 - name: add hostcert to keystore
   command: openssl pkcs12 -export -in "{{ hostcert }}" -inkey "{{ hostkey }}" -out "{{ mp_server_keystore }}" -name hostcred -CApath "{{ certificates }}" -chain -passout "pass:{{ mp_server_keystore_pw }}"
@@ -65,11 +95,16 @@
 - name: add the right permission to the key store
   file:
     path: "{{ mp_server_keystore }}"
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
     mode: 0400
 
 # deploy war file
+
+- name: stop tomcat for the war switch
+  service:
+    name: "{{ tomcat_service }}"
+    state: stopped
 
 - name: delete old deployment
   file:
@@ -83,6 +118,7 @@
   copy:
     src: mp-oa2-server.war
     dest: "{{ catalina_home }}/webapps/{{ mp_server }}.war"
-    owner: tomcat
-    group: tomcat
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
     mode: 0644
+  notify: restart tomcat
