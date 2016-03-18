@@ -1,0 +1,87 @@
+####################################################################################################
+Ansible Deploy Script for Master Portal
+####################################################################################################
+
+
+What are these scripts for?
+----------------------------------------------------------------------------------------------------
+
+These scripts are for deploying a Master Portal + Credential Store. To find out more about what this
+setup is useful for take a look at: https://wiki.nikhef.nl/grid/CILogon_Pre-Pilot_Work . You can 
+use these scripts to deploy a Master Portal and Credential Store on two separate hosts, or into one
+single host. 
+
+
+Prerequisites
+---------------------------------------------------------------------------------------------------
+
+	1. Your hosts should already be configured with host certificats placed in the usual 
+	   /etc/grid-security location. It is further assumed that your host certificates are
+	   issued by 'TERENA eScience SSL CA 3'. If not, you will have to make some modifications
+	   to these scripts before executing them
+
+
+How to use these scripts?
+----------------------------------------------------------------------------------------------------
+
+Before you begin executing plays make sure to decide whether you're deployment will use two separate 
+hosts for Master Portal and Credential Store, or a single host. Fill in you machine hostname[s] into 
+the 'hosts.inventory' file accordingly. 
+
+There are three different plays you have to execute in order to set up a Master Portal. The plays 
+you have to execute are in order as follows:
+
+1. basic-env.yml
+
+	a. Check that you have the right host certificate
+
+	   This play contains a basic configuration that has to be done to both Master Portal and 
+	   Credential Store. For single host deployments this only has to be execute once, while in 
+	   case of separate hosts execute this play for both Master Portal and Credential Store 
+	   hosts. 
+
+	   This play takes care of installing some dependecies, like the epel repository, and 
+	   certificate trust roots. It is assumed that your host is configured with host certificate 
+	   issued by the 'TERENA eScience SSL CA 3' root certificate. If this is not the case, make 
+	   sure to correctly edit this play to install the right root certificate bundle.
+
+
+2. credstore.yml
+
+	a. Fill in required environment variables
+
+	   This play will configure the Credential Server host. Basically, it provides a MyProxy 
+	   Server installation with some configuration. Before starting this play there are a couple 
+	   important variables you should override. You can find these and their explanation in 
+	   'credstore_env.yml'.
+
+	b. Provide Online CA tar file
+
+	   MyProxy only stores credentials that it can verify, therefor it's very important to
+	   have the Online CA (which will issue user certificates) present in the trusted 
+	   certificates directory (usually /etc/grid-security/certificates). Make a tarball from 
+	   the Online CA in pem format, together with subject_hash links and signing_policy. Do
+	   not forget the signing policy, since MyProxy will not work without it. The result tarball
+	   should contain these files at the top level, without any direcotry structure, and it
+	   should be places under 'roles/credstore/files/'
+
+
+3. masterportal.yml
+
+	a. Fill in the required variales
+
+	   Before executing this play, make sure to fill in the required variables listed and 
+	   explained in the 'masterportal_env.yml' file.
+
+	b. Verify deploying war files
+
+	   This play is about to deploy the Master Portal war files (mp-oa2-client.war and 
+	   mp-oa2-server.war) and optionally the VO Portal war file (vo-portal.war). Make sure that
+	   these are present in your 'role/masterportal/files' directory. 
+
+	c. Tweak iptables rules
+
+	   There is a simple set of iptable rules being deployed by this play. Feel free to customize
+	   this to the needs of your infrastructure. Make sure to leave port 443 accessible. The
+	   iptables file can be found in 'role/masterportal/files'
+ 

@@ -16,5 +16,5 @@ credstore_max_proxy_lifetime: 12
 # used for IP table rules. Ignore this if Credential Store is running
 # on the same host as the Master Portal
 
-masterportal_address: 123.123.123.123
+# masterportal_address: 123.123.123.123
 

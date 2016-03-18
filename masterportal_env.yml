@@ -6,6 +6,9 @@
 # therefor the two passwords KEYSTORE_PW should be the same. This way the two components
 # can share a single keystore. The keystore usually contains the hostcert of the Master Portal
 
+# The truststore contains trusted root certificates, and it's used to establish connection
+# to the delegation server (/token and /getcert endpoints are backchannel calls)
+
 # The mp_client_id and mp_client_secret should be filled from the client ID and SECRET 
 # provided by the delegation server while registering the master portal. Got to
 # {{ delegation_server_auth }}/register and follow the registration steps to get an ID and SECRET
