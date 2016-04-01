@@ -2,9 +2,8 @@
 - hosts: credstore
   remote_user: root
   vars_files:
+    - basic_env.yml
     - credstore_env.yml
   roles:
+    - basic
     - credstore
-  tasks:
-    - name: start myproxy
-      service: name=myproxy-server state=restarted enabled=yes

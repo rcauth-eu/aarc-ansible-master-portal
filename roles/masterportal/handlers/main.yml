@@ -10,3 +10,13 @@
     name: "{{ httpd_service }}"
     state: restarted
 
+- name: restart iptables
+  service:
+    name: iptables
+    state: restarted
+
+- name: restart ip6tables
+  service:
+    name: ip6tables
+    state: restarted
+

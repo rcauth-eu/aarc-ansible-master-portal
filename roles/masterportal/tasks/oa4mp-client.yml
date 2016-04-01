@@ -51,7 +51,7 @@
 
 - name: add trusted CAs to client trust store
   raw: "/usr/bin/keytool -list -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias `basename {{ item }}` || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias `basename {{ item }}`  -file {{ item }}"
-  with_items: trusted_cas.stdout_lines
+  with_items: "{{ trusted_cas.stdout_lines }}"
 
 - name: add the right permission to the trust store
   file: 

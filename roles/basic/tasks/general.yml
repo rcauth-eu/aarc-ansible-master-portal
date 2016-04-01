@@ -1,0 +1,55 @@
+---
+
+- name: yum update machine
+  yum: 
+    name: '*'
+    state: latest
+
+- name: set hostname
+  hostname:
+    name: "{{ ansible_fqdn }}"
+
+- name: install general packages
+  yum: 
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ general_packages }}"
+
+#- name: install nikhef packages
+#  yum:
+#    name: "{{ item }}"
+#    state: present
+#    enablerepo: "{{ nikhef_local_repo }}"
+#  with_items: "{{ nikhef_packages }}"
+
+# You might need to disable SELinux. The setup has not been tested with it yet.
+# Disable SELinux (Shibboleth SP requirement)
+#- name: disable selinux 
+#  selinux: state=disabled
+
+# NTP Setup
+
+- name: add ntp config
+  template:
+    src: ntp.conf.j2
+    dest: "/etc/ntp.conf"
+    owner: "root"
+    group: "root"
+    mode: 0644
+    backup: yes
+  register: ntp_config
+
+- name: restart ntpd
+  service: name=ntpd state=restarted enabled=yes
+  when: ntp_config.changed
+
+# Configuring fetchcrl
+
+- name: add fetchcrl config
+  template:
+    src: fetch-crl.conf.j2
+    dest: "/etc/fetch-crl.conf"
+    owner: "root"
+    group: "root"
+    mode: 0644
+    backup: yes

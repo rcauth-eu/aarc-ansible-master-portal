@@ -6,5 +6,9 @@
 
 - include: deploy-trustedca.yml
 
-# this is only needed it the Credential Store runs a separate host than the Master Portal
-#- include: iptables.yml
+# this is only needed if the Credential Store runs on a separate host from the
+# Master Portal, otherwise we are allowed via the related/established rule
+- include: iptables.yml
+
+- name: start myproxy
+  service: name=myproxy-server state=restarted enabled=yes

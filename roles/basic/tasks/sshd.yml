@@ -1,0 +1,29 @@
+---
+
+# custom sshd configuration
+
+- name: raise sshd log level
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^LogLevel.*"
+    line: "LogLevel VERBOSE"
+    mode: 0600
+    owner: root
+    group: root
+    backup: yes
+  register: log_raised
+
+- name: disable ssh password logins
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication.*"
+    line: "PasswordAuthentication no"
+    mode: 0600
+    owner: root
+    group: root
+    backup: yes
+  register: ps_disabled
+
+- name: restart sshd
+  service: name=sshd state=restarted enabled=yes
+  when: log_raised.changed or ps_disabled.changed

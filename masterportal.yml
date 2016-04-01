@@ -2,11 +2,8 @@
 - hosts: masterportal
   remote_user: root
   vars_files:
+    - basic_env.yml
     - masterportal_env.yml
   roles:
+    - basic
     - masterportal
-  tasks:
-    - name: start tomcat
-      service: name=tomcat6 state=restarted enabled=yes
-    - name: start httpd
-      service: name=httpd state=restarted enabled=yes

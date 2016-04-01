@@ -1,0 +1,20 @@
+---
+
+# Chown only later, at this stage we don't have a myproxy user
+- name: copy hostcert
+  copy:
+    src: "{{ ansible_fqdn }}.crt"
+    dest: /etc/grid-security/hostcert.pem
+#    owner: myproxy
+#    group: myproxy
+    mode: 0644
+
+# Chown only later, at this stage we don't have a myproxy user
+- name: copy hostkey
+  copy:
+    src: "{{ ansible_fqdn }}.key"
+    dest: /etc/grid-security/hostkey.pem
+#    owner: myproxy
+#    group: myproxy
+    mode: 0400
+

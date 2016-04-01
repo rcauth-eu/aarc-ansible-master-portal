@@ -1,0 +1,12 @@
+###              ENVIRONMENT SPECIFIC INFORMATION                 ###
+###                                                               ###
+### Usually you would override these using a variables include    ###
+### file, using the vars_files include in your play. These        ###
+### varabales include, for example, passwords, secrets and other  ###
+### environment specific information                              ###
+
+# NTP Server
+
+ntp_servers: 
+   - ntp1.server.com
+   - ntp2.server.com

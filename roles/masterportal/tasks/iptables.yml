@@ -1,18 +1,23 @@
 ---
 
-# Iptables Setup
+# iptables rules for masterportal
 
 - name: add iptables config
-  copy:
-    src: iptables
+  template:
+    src: iptables.j2
     dest: "/etc/sysconfig/iptables"
     owner: "root"
     group: "root"
     mode: 0600
     backup: yes
-  register: iptables_config
+  notify: restart iptables
 
-- name: restart iptables
-  service: name=iptables state=restarted enabled=yes
-  when: iptables_config.changed
-
+- name: add ip6tables config
+  template:
+    src: ip6tables.j2
+    dest: "/etc/sysconfig/ip6tables"
+    owner: "root"
+    group: "root"
+    mode: 0600
+    backup: yes
+  notify: restart ip6tables

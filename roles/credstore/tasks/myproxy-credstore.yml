@@ -19,6 +19,7 @@
     group: myproxy 
     mode: 0644
     backup: yes
+  notify: restart myproxy
 - name: add myproxy proxy extfile
   copy: 
     src: myproxy-proxy-extfile 

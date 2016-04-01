@@ -18,3 +18,19 @@
     backup: yes
   notify: restart httpd
 
+# replace welcome page
+
+- name: replace apache welcome page
+  stat:
+    path: /var/www/html/index.html
+  ignore_errors: yes
+  register: index_page
+
+- name: create index page
+  file:
+    path: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+    state: touch
+  when: index_page.stat.exists == false

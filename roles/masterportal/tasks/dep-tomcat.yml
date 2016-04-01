@@ -17,10 +17,9 @@
     regexp: "^export CATALINA_HOME=.*"
     insertafter: EOF
 
-- name: clean up webapps directory
-  command: /bin/rm -rf "{{ catalina_home }}/webapps/*"
-  when: tomcat_install.changed
-
+#- name: clean up webapps directory
+#  command: /bin/rm -rf "{{ catalina_home }}/webapps/*"
+#  when: tomcat_install.changed
 
 # Install jglobus-jsse and globus-ssl-proxies (this is only needed for limited proxies!)
 #- name: install jglobus
@@ -36,7 +35,7 @@
 # set tomcatAuthentication="false" so REMOTE_USER will be taken over from apache
 
 - name: check if tomcat authnetication is disabled (ignore errors)
-  command: grep 'Connector.*port="8009".*tomcatAuthentication="false"' "{{ catalina_home }}/conf/server.xml"
+  command: grep 'Connector.*port="8009".*address="127.0.0.1" tomcatAuthentication="false"' "{{ catalina_home }}/conf/server.xml"
   ignore_errors: True
   changed_when: False
   register: tomcat_auth
@@ -45,12 +44,32 @@
   lineinfile:
      dest: "{{ catalina_home }}/conf/server.xml"
      regexp: '^(.*)<Connector port="8009"(.*)$'
-     line: '\1<Connector port="8009" tomcatAuthentication="false"\2'
+     line: '\1<Connector port="8009" address="127.0.0.1" tomcatAuthentication="false"\2'
      backrefs: yes
      owner: "{{ tomcat_user }}"
      group: "{{ tomcat_user }}"
      mode: 0664
   when: tomcat_auth.rc != 0
+  notify: restart tomcat
+
+# only listen on localhost
+
+- name: check if listening address
+  command: grep 'Connector.*port="8080".*address="127.0.0.1"' "{{ catalina_home }}/conf/server.xml"
+  ignore_errors: True
+  changed_when: False
+  register: tomcat_local_listen
+
+- name: disable tomcat authnetication
+  lineinfile:
+     dest: "{{ catalina_home }}/conf/server.xml"
+     regexp: '^(.*)<Connector port="8080"(.*)$'
+     line: '\1<Connector port="8080" address="127.0.0.1" \2'
+     backrefs: yes
+     owner: "{{ tomcat_user }}"
+     group: "{{ tomcat_user }}"
+     mode: 0664
+  when: tomcat_local_listen.rc != 0
   notify: restart tomcat
 
 # add oa4mp configuration parameters

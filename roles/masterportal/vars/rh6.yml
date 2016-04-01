@@ -10,6 +10,7 @@ java_home: /usr/java/default
 
 tomcat_packages:
  - tomcat6
+ - tomcat6-admin-webapps
 
 tomcat_extra_packages:
   - jglobus-jsse

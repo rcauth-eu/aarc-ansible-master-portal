@@ -1,0 +1,12 @@
+---
+
+- name: get interface names
+  shell: "ls /sys/class/net/ | grep -v 'lo'"
+  register: interfaces
+
+- name: "disable network manager in {{ item }}"
+  lineinfile:
+    dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item }}"
+    regexp: "^NM_CONTROLLED=.*"
+    line: "NM_CONTROLLED=no"
+  with_items: "{{ interfaces.stdout_lines }}" 

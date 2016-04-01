@@ -48,7 +48,7 @@
 
 - name: add trusted CAs to client trust store
   raw: /usr/bin/keytool -list -keystore "{{ vo_portal_truststore }}" -storepass "{{ vo_portal_truststore_pw }}" -alias `basename "{{ item }}"` || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore "{{ vo_portal_truststore }}" -storepass "{{ vo_portal_truststore_pw }}" -alias `basename "{{ item }}"`  -file "{{ item }}"
-  with_items: trusted_cas.stdout_lines
+  with_items: "{{ trusted_cas.stdout_lines }}"
 
 - name: add the right permission to the trust store
   file:

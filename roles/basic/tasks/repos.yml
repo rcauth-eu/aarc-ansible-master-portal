@@ -1,0 +1,35 @@
+---
+
+- name: adding EPEL GPG key
+  rpm_key: 
+    key: "{{ epelkey }}"
+    state: present
+
+- name: adding EPEL 
+  yum: 
+    name: "{{ epelrpm }}"
+    state: present
+
+- name: adding IGTF GPG key
+  rpm_key:
+    key: "{{ igtfkey }}"
+    state: present
+
+#- name: adding IGTF repository (current-new)
+#  yumrepo:
+#    name: eugridpma
+#    description: EUGridPMA
+#    baseurl: "{{ igtf_current_baseurl }}"
+#    file: eugridpma
+#    gpgcheck: yes
+#    enabled: yes
+#    gpgkey: "{{ igtfkey }}"
+
+- name: adding IGTF repository (current-new)
+  template:
+    src: eugridpma.repo.j2
+    dest: /etc/yum.repos.d/eugridpma.repo
+    owner: "root"
+    group: "root"
+    mode: 0644
+

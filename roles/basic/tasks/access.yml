@@ -1,0 +1,24 @@
+---
+
+# Configure access to machine with authconfig
+
+- name: add access.conf file
+  template:
+    src: access.conf.j2
+    dest: "/etc/security/access.conf"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  register: pamaccess_config
+
+- name: execute authconfig 
+  command: "/usr/sbin/authconfig --kickstart --disablemd5 --passalgo=sha512  --enableshadow --enablecache --enablepamaccess --enablelocauthorize --disablesssd --disablesssdauth --disableldaptls --disableldap --disableldapauth --enablerfc2307 "
+  when: pamaccess_config.changed
+
+- name: fix authconfig bug (sets PATH_LDAP_CACERTS to the wrong in /usr/share/authconfig/authinfo.py)
+  file:
+    src: /etc/openldap/certs
+    dest: /etc/openldap/cacerts
+    owner: root
+    state: link
+

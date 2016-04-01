@@ -1,0 +1,23 @@
+---
+
+# include tasks to execute
+
+- include: sshd.yml
+- include: repos.yml
+- include: general.yml
+- include: network.yml
+- include: hostcreds.yml
+- include: access.yml
+- include: iptables.yml
+
+# list of disabled services
+
+- name: disable services
+  service: name={{ item }} state=stopped enabled=no
+  with_items: "{{ disabled_services }}" 
+
+# list of enabled services
+
+- name: enable services
+  service: name={{ item }} state=started enabled=yes
+  with_items: "{{ enabled_services }}"
