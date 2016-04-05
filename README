@@ -15,10 +15,11 @@ single host.
 Prerequisites
 ---------------------------------------------------------------------------------------------------
 
-	1. Your hosts should already be configured with host certificats placed in the usual 
-	   /etc/grid-security location. It is further assumed that your host certificates are
-	   issued by 'TERENA eScience SSL CA 3'. If not, you will have to make some modifications
-	   to these scripts before executing them
+	1. You need to have host certificates ready for this deployment. Place your PEM formatted  
+	   certificate and key file under the '*.PLACEHOLDER' files in the 'roles/basic/files/' 
+	   directory. The basic role will take care of deploying these into the target machine.
+	   It is assumed that your host certificates are issued by 'TERENA eScience SSL CA 3'. 
+	   If not, you will have to make some modifications to these scripts before executing them!
 
 
 How to use these scripts?
@@ -26,27 +27,17 @@ How to use these scripts?
 
 Before you begin executing plays make sure to decide whether you're deployment will use two separate 
 hosts for Master Portal and Credential Store, or a single host. Fill in you machine hostname[s] into 
-the 'hosts.inventory' file accordingly. 
+the 'hosts.inventory' file accordingly. The hostname[s] set in the invertory files will be set on the
+target machine[s].
 
-There are three different plays you have to execute in order to set up a Master Portal. The plays 
-you have to execute are in order as follows:
+There are two different plays you can execute. One for the Credential Store called 'credstore.yml' 
+and one for the Master Portal called 'masterportal.yml'.  Both plays include the basic role, which
+takes care of setting up the environment for both components. 
 
-1. basic-env.yml
+Make sure to check recommanded modifications below before starting either play! In case of single host 
+deployments, execute 'credstore.yml' first and 'materportal.yml' after. 
 
-	a. Check that you have the right host certificate
-
-	   This play contains a basic configuration that has to be done to both Master Portal and 
-	   Credential Store. For single host deployments this only has to be execute once, while in 
-	   case of separate hosts execute this play for both Master Portal and Credential Store 
-	   hosts. 
-
-	   This play takes care of installing some dependecies, like the epel repository, and 
-	   certificate trust roots. It is assumed that your host is configured with host certificate 
-	   issued by the 'TERENA eScience SSL CA 3' root certificate. If this is not the case, make 
-	   sure to correctly edit this play to install the right root certificate bundle.
-
-
-2. credstore.yml
+1. credstore.yml
 
 	a. Fill in required environment variables
 
@@ -66,12 +57,13 @@ you have to execute are in order as follows:
 	   should be places under 'roles/credstore/files/'
 
 
-3. masterportal.yml
+2. masterportal.yml
 
-	a. Fill in the required variales
+	a. Fill in the required environment variables
 
 	   Before executing this play, make sure to fill in the required variables listed and 
-	   explained in the 'masterportal_env.yml' file.
+	   explained in the 'masterportal_env.yml' file. Look into the masterportal_env.yml.tamplate
+	   for a list of variables you have to override. 
 
 	b. Verify deploying war files
 
