@@ -14,7 +14,7 @@ SSLCryptoDevice builtin
 
 <VirtualHost _default_:443>
 
-    ServerName {{ ansible_fqdn }}
+    ServerName {{ inventory_hostname }}
 
     ProxyPass /{{ mp_server }} ajp://127.0.0.1:8009/{{ mp_server }}
     ProxyPass /{{ mp_client }} ajp://127.0.0.1:8009/{{ mp_client }}

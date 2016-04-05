@@ -4,7 +4,7 @@
 
     <!-- ############################################################################## -->
 
-    <client name="mysql-mp-client-config" address="https://{{ ansible_fqdn  }}/{{ mp_client }}">
+    <client name="mysql-mp-client-config" address="https://{{ inventory_hostname }}/{{ mp_client }}">
 
            <logging  logFileName="{{ mp_client_log_dir }}/{{ mp_client }}.log"
                      logName="MP"
@@ -12,7 +12,7 @@
                      logFileCount="10"
                      debug="true"/>
 
-           <callbackUri>https://{{ ansible_fqdn  }}/{{ mp_client }}/ready</callbackUri>
+           <callbackUri>https://{{ inventory_hostname }}/{{ mp_client }}/ready</callbackUri>
 
            <serviceUri>{{ deleg_server_auth }}</serviceUri>
 
@@ -44,7 +44,7 @@
 
     <!-- ############################################################################## -->
 
-    <client name="filestore-mp-client-config" address="https://{{ ansible_fqdn  }}/{{ mp_client }}">
+    <client name="filestore-mp-client-config" address="https://{{ inventory_hostname }}/{{ mp_client }}">
 
            <logging  logFileName="{{ mp_client_log_dir }}/{{ mp_client }}.log"
                      logName="MP"
@@ -52,7 +52,7 @@
                      logFileCount="10"
                      debug="true"/>
 
-           <callbackUri>https://{{ ansible_fqdn  }}/{{ mp_client }}/ready</callbackUri>
+           <callbackUri>https://{{ inventory_hostname }}/{{ mp_client }}/ready</callbackUri>
 
            <serviceUri>{{ deleg_server_auth }}</serviceUri>
 

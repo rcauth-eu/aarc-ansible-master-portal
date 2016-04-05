@@ -3,7 +3,7 @@
 # Chown only later, at this stage we don't have a myproxy user
 - name: copy hostcert
   copy:
-    src: "{{ ansible_fqdn }}.crt"
+    src: "{{ inventory_hostname }}.crt"
     dest: /etc/grid-security/hostcert.pem
 #    owner: myproxy
 #    group: myproxy
@@ -12,7 +12,7 @@
 # Chown only later, at this stage we don't have a myproxy user
 - name: copy hostkey
   copy:
-    src: "{{ ansible_fqdn }}.key"
+    src: "{{ inventory_hostname }}.key"
     dest: /etc/grid-security/hostkey.pem
 #    owner: myproxy
 #    group: myproxy

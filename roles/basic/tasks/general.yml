@@ -7,7 +7,7 @@
 
 - name: set hostname
   hostname:
-    name: "{{ ansible_fqdn }}"
+    name: "{{ inventory_hostname }}"
 
 - name: install general packages
   yum: 

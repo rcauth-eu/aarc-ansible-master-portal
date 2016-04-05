@@ -4,7 +4,7 @@
 
     <!-- ############################################################################## -->
 
-    <client name="{{ vo_portal_conf }}" address="https://{{ ansible_fqdn  }}/{{ vo_portal }}">
+    <client name="{{ vo_portal_conf }}" address="https://{{ inventory_hostname }}/{{ vo_portal }}">
 
            <logging  logFileName="{{ vo_portal_log_dir }}/{{ vo_portal }}.log"
                      logName="VOP"
@@ -12,9 +12,9 @@
                      logFileCount="10"
                      debug="true"/>
 
-           <callbackUri>https://{{ ansible_fqdn  }}/{{ vo_portal }}/ready</callbackUri>
+           <callbackUri>https://{{ inventory_hostname }}/{{ vo_portal }}/ready</callbackUri>
 
-           <serviceUri>https://{{ ansible_fqdn  }}/{{ mp_server }}</serviceUri>
+           <serviceUri>https://{{ inventory_hostname }}/{{ mp_server }}</serviceUri>
 
            <id>{{ vo_portal_id }}</id>
            <secret>{{ vo_portal_secret }}</secret>

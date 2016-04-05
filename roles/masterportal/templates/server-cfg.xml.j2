@@ -4,7 +4,7 @@
 
     <!-- ############################################################################## -->
 
-    <service name="mysql-mp-server-config" address="https://{{ ansible_fqdn  }}/{{ mp_server }}" debug="true">
+    <service name="mysql-mp-server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true">
 
        <logging  logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
                  logName="MP"
@@ -35,7 +35,7 @@
 
     <!-- ############################################################################## -->
 
-    <service name="filestore-mp-server-config" address="https://{{ ansible_fqdn  }}/{{ mp_server }}" debug="true">
+    <service name="filestore-mp-server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true">
 
        <logging  logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
                  logName="MP"
