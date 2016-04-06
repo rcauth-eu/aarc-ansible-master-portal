@@ -21,7 +21,7 @@
     backup: yes
   notify: restart myproxy
 - name: add myproxy proxy extfile
-  copy: 
+  template: 
     src: myproxy-proxy-extfile 
     dest: "{{ credstore_proxy_extfile }}"
     owner: myproxy 
