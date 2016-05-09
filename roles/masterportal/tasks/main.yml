@@ -27,6 +27,6 @@
 # list of enabled services
 
 - name: start tomcat
-  service: name=tomcat6 state=restarted enabled=yes
+  service: name={{ tomcat_service }} state=restarted enabled=yes
 - name: start httpd
-  service: name=httpd state=restarted enabled=yes
+  service: name={{ httpd_service }} state=restarted enabled=yes

@@ -1,0 +1,80 @@
+---
+
+# java constants
+
+java_download_url: "https://javadl.sun.com/webapps/download/AutoDL?BundleId=114680"
+javax_mail_url: "https://java.net/projects/javamail/downloads/download/javax.mail.jar"
+java_home: /usr/java/default
+
+# tomcat constants
+
+tomcat_packages:
+ - tomcat
+ - tomcat-admin-webapps
+
+tomcat_extra_packages:
+  - jglobus-jsse
+  - jglobus-ssl-proxies
+
+tomcat_extra_libs: /usr/share/java/jglobus
+
+catalina_home: /usr/share/tomcat
+tomcat_user: tomcat
+tomcat_service: tomcat
+
+# apache
+
+httpd_packages:
+  - httpd
+  - httpd-tools
+  - mod_ssl
+
+httpd_service: httpd
+
+# mysql
+
+# NOTE
+# THERE IS NO MYSQL PACKAGE IN CENTOS7 SINCE IT COMES WITH THE MARIADB IMPLEMENTATION
+# YOU CAN INSTALL MTSQL FROM THE REPOSITORY BELOW, BUT THIS WILL NOT WORK PROPERLY 
+
+#mysql_repo_baseurl: http://repo.mysql.com/yum/mysql-5.7-community/el/7/$basearch/
+#mysql_repo_connectors_baseurl: http://repo.mysql.com/yum/mysql-connectors-community/el/7/$basearch/
+#mysql_repo_gpgkey: https://repo.mysql.com/RPM-GPG-KEY-mysql
+
+#mysql_packages:
+#  - mysql-community-server
+#  - mysql-connector-java
+#  - mysql-connector-python
+
+#mysql_root_password: changeme
+
+# mariadb
+
+# NOTE
+# THE MARIADB PACKAGES ARE IN THE CENTOS7 REPOS, BUT THERE IS NO MARIADB JDBC CONNECTOR PROVIDED
+# THE CONNECTOR DOWLOADED FROM THE OFFICIAL MARIADB WEBPAGE DOES NOT WORK PROPERLY ON CENTOS7
+# THEREFOR WE USE THE CONNECTOR PROVIDED BY MYSQL INSTEAD.
+
+# THE ABOVE EFFECTIVELY MEANS THAT OA4MP WILL RUN WITH 'MYSQL' CONNECTOR AND IMPLEMENTATION
+# BUT THE UNDERLYING DATABASE WILL ACTUALLY BY MARIADB.
+
+mariadb_packages:
+  - mariadb
+  - mariadb-server
+  - mysql-connector-java
+  - MySQL-python
+
+mariadb_connector_path: /usr/share/java
+mariadb_connector: mysql-connector-java.jar
+
+# postgresql
+
+postgresql_packages:
+  - postgresql
+  - postgresql-server
+  - postgresql-jdbc
+  - python-psycopg2
+
+postgresql_connector_path: /usr/share/java
+postgresql_connector: postgresql-jdbc.jar
+                                           

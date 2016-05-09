@@ -1,0 +1,31 @@
+---
+general_packages:
+  - libselinux-python
+  - net-tools
+  - bind-utils
+  - postfix
+  - mailx
+  - sysstat
+  - ntp
+  - nscd
+  - fetch-crl
+  - ca_TERENA-eScience-SSL-CA-3
+  - iptables-services
+
+disabled_services:
+#  - NetworkManager
+  - wpa_supplicant
+
+enabled_services:
+  - ntpd
+  - nscd
+  - fetch-crl-cron
+  - iptables
+  - ip6tables
+
+igtfkey: "https://dl.igtf.net/distribution/igtf/current-new/GPG-KEY-EUGridPMA-RPM-3"
+igtf_current_baseurl: "http://dist.eugridpma.info/distribution/igtf/current-new/"
+
+epelrpm: "https://dl.fedoraproject.org/pub/epel/7/{{ ansible_architecture }}/e/epel-release-7-5.noarch.rpm"
+epelkey: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7"
+
