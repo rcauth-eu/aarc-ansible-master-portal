@@ -5,7 +5,8 @@ SSLPassPhraseDialog  builtin
 SSLSessionCache         shmcb:/var/cache/mod_ssl/scache(512000)
 SSLSessionCacheTimeout  300
 
-SSLMutex default
+#This has to be removed when configuring httpd on rh7
+#SSLMutex default
 
 SSLRandomSeed startup file:/dev/urandom  256
 SSLRandomSeed connect builtin
