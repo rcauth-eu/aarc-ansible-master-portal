@@ -12,7 +12,8 @@ CREATE USER '{{ mp_server_db_user }}'@'localhost' IDENTIFIED BY '{{ mp_server_db
 Run the rest of this script. The user must exist before permissions are granted.
 */
 
-CREATE USER '{{ mp_server_db_user }}'@'localhost' IDENTIFIED BY '{{ mp_server_db_pw }}';
+/* User is created by the ansibel script */
+/* CREATE USER '{{ mp_server_db_user }}'@'localhost' IDENTIFIED BY '{{ mp_server_db_pw }}'; */
 
 CREATE DATABASE IF NOT EXISTS {{ mp_server_db }}
 DEFAULT CHARACTER SET utf8;
@@ -47,32 +48,44 @@ CREATE TABLE {{ mp_server_db }}.client_approvals (
 );
 
 CREATE TABLE {{ mp_server_db }}.transactions (
-  temp_token          VARCHAR(255) PRIMARY KEY,
-  temp_token_valid    BOOLEAN,
-  callback_uri        TEXT,
-  certreq             TEXT,
-  certlifetime        BIGINT,
-  client_id           TEXT,
-  verifier_token      TEXT,
-  access_token        TEXT,
-  refresh_token       TEXT,
-  refresh_token_valid BOOLEAN,
-  expires_in          BIGINT,
-  certificate         TEXT,
-  username            TEXT,
-  myproxyUsername     TEXT,
+  temp_token          		VARCHAR(255) PRIMARY KEY,
+  temp_token_valid    		BOOLEAN,
+  callback_uri        		TEXT,
+  certreq             		TEXT,
+  certlifetime        		BIGINT,
+  client_id           		TEXT,
+  verifier_token      		TEXT,
+  access_token        		TEXT,
+  refresh_token       		TEXT,
+  refresh_token_valid 		BOOLEAN,
+  expires_in          		BIGINT,
+  certificate         		TEXT,
+  username            		TEXT,
+  myproxyUsername     		TEXT,
+  mp_client_session_identifier  TEXT,
   UNIQUE INDEX verifier (verifier_token(255)),
   UNIQUE INDEX accessToken (access_token(255)),
   UNIQUE INDEX refreshToken (refresh_token(255)),
-  UNIQUE INDEX username (username(255))
+  UNIQUE INDEX username (username(255),access_token(255))
 );
 
 COMMIT;
-# Now to grant restricted access. The  tables have to exist before this step
+/* Now to grant restricted access. The  tables have to exist before this step */
 
-GRANT All  ON {{ mp_server_db }}.client_approvals TO '{{ mp_server_db_user }}'@'localhost';
-GRANT ALL ON {{ mp_server_db }}.clients TO '{{ mp_server_db_user }}'@'localhost';
-GRANT ALL ON {{ mp_server_db }}.callbacks TO '{{ mp_server_db_user }}'@'localhost';
-GRANT ALL ON {{ mp_server_db }}.transactions TO '{{ mp_server_db_user }}'@'localhost';
+GRANT ALL ON {{ mp_server_db }}.client_approvals
+        TO '{{ mp_server_db_user }}'@'localhost'
+        IDENTIFIED BY '{{ mp_server_db_pw }}';
+
+GRANT ALL ON {{ mp_server_db }}.clients
+        TO '{{ mp_server_db_user }}'@'localhost'
+        IDENTIFIED BY '{{ mp_server_db_pw }}';
+
+GRANT ALL ON {{ mp_server_db }}.callbacks
+        TO '{{ mp_server_db_user }}'@'localhost'
+        IDENTIFIED BY '{{ mp_server_db_pw }}';
+
+GRANT ALL ON {{ mp_server_db }}.transactions
+        TO '{{ mp_server_db_user }}'@'localhost'
+        IDENTIFIED BY '{{ mp_server_db_pw }}';
 
 commit;

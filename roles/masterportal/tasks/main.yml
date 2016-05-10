@@ -11,6 +11,7 @@
 # is used.
 
 #- include: dep-mysql.yml
+- include: dep-mariadb.yml
 
 # Include tasks to deploy master portal
 

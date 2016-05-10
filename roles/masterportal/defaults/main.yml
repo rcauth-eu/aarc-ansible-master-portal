@@ -7,8 +7,9 @@ hostcert: /etc/grid-security/hostcert.pem
 hostkey: /etc/grid-security/hostkey.pem
 hostcert_intermediate: /etc/grid-security/certificates/TERENA-eScience-SSL-CA-3.pem
 
-# mysql (not in use for now)
+# DB
 #mysql_root_password: changeme
+mariadb_root_password: changeme
 
 # oa4mp
 
@@ -25,8 +26,8 @@ mp_client_conf_dir: "{{ mp_client_dir }}/conf"
 mp_client_conf_file: "{{ mp_client_conf_dir }}/cfg.xml"
 mp_client_truststore: "{{ mp_client_conf_dir }}/trust-store.jks"
 mp_client_keystore: "/etc/grid-security/hostcred.p12"
-#mp_client_conf: mysql-mp-client-config
-mp_client_conf: filestore-mp-client-config
+mp_client_conf: mysql-mp-client-config
+#mp_client_conf: filestore-mp-client-config
 mp_client_log_dir: "{{ mp_client_dir }}/log"
 mp_client_storage_dir: "{{ mp_client_dir }}/storage"
 mp_client_conf_lifetime: 31536000
@@ -47,8 +48,8 @@ mp_server_conf_dir: "{{ mp_server_dir }}/conf"
 mp_server_conf_file: "{{ mp_server_conf_dir }}/cfg.xml"
 mp_server_truststore: "{{ mp_server_conf_dir }}/trust-store.jks"
 mp_server_keystore: "/etc/grid-security/hostcred.p12"
-#mp_server_conf: mysql-mp-server-config
-mp_server_conf: filestore-mp-server-config
+mp_server_conf: mysql-mp-server-config
+#mp_server_conf: filestore-mp-server-config
 mp_server_log_dir: "{{ mp_server_dir }}/log"
 mp_server_storage_dir: "{{ mp_server_dir }}/storage"
 mp_server_tools_dir: "{{ mp_server_dir }}/tools"
