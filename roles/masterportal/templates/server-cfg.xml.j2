@@ -13,6 +13,10 @@
                  debug="true"
        />
 
+       <scopes handler="org.masterportal.oauth2.server.MPForwardingScopeHandler">
+	  <scope>org.cilogon.userinfo</scope>
+       </scopes>
+
        <mysql    username="{{ mp_server_db_user }}" 
                  password="{{ mp_server_db_pw }}" 
                  database="{{ mp_server_db }}" 
@@ -43,6 +47,10 @@
                  logFileCount="10"
                  debug="true"
        />
+
+       <scopes handler="org.masterportal.oauth2.server.MPForwardingScopeHandler">
+	  <scope>org.cilogon.userinfo</scope>
+       </scopes>
 
        <fileStore path="{{ mp_server_storage_dir }}">
                <transactions/>

@@ -62,6 +62,7 @@ CREATE TABLE {{ mp_server_db }}.transactions (
   certificate         		TEXT,
   username            		TEXT,
   myproxyUsername     		TEXT,
+  claims              		TEXT CHARACTER SET 'utf8',
   mp_client_session_identifier  TEXT,
   UNIQUE INDEX verifier (verifier_token(255)),
   UNIQUE INDEX accessToken (access_token(255)),
