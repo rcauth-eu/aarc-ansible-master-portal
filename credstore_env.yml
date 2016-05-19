@@ -10,7 +10,7 @@ credstore_trusted_retrievers: "/C=NL/O=Example/OU=Org/CN=masterportal"
 
 # Maximum lifetime of issued proxies by the Credential Store
 
-credstore_max_proxy_lifetime: 12
+credstore_max_proxy_lifetime: 264
 
 # IP address of the Master Portal trusted by this Credential Store (only 
 # used for IP table rules. Ignore this if Credential Store is running
