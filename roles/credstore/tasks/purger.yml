@@ -1,0 +1,19 @@
+---
+
+# Install the myproxy_purge script and set its conjob
+
+- name: copy the myproxy_purge script
+  copy:
+    src: myproxy_purge.sh
+    dest: /usr/sbin/myproxy_purge.sh
+    owner: myproxy
+    group: myproxy
+    mode: 0700
+
+- name: copy the myproxy_purge cron.d file
+  copy:
+    src: myproxy_purge
+    dest: /etc/cron.d/myproxy_purge
+    owner: root
+    group: root
+    mode: 0644

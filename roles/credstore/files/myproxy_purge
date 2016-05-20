@@ -1,0 +1,1 @@
+55 */6 * * * root /usr/sbin/myproxy_purge.sh >> /var/log/myproxy-purge.log 2>&1

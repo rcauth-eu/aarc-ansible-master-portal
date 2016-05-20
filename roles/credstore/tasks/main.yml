@@ -10,5 +10,8 @@
 # Master Portal, otherwise we are allowed via the related/established rule
 - include: iptables.yml
 
+# add the purging script to clean up expired/revoked certificates
+- include: purger.yml
+
 - name: start myproxy
   service: name=myproxy-server state=restarted enabled=yes
