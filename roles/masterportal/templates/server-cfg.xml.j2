@@ -31,6 +31,18 @@
                            type="pkcs12"
                            password="{{ mp_server_keystore_pw }}"
                            factory="SunX509" />
+		 <!-- 
+			The default lifetime set in seconds is used in case there is no proxylifetime value 
+			provided with the original /getproxy request 
+		 -->
+		 <defaultLifetime>43200</defaultLifetime>
+		 <!-- 
+			The maximum lifetime value should be the max_proxy_lifetime - tolerance, where the 
+			max_proxy_lifetime is set in the myproxy-server.conf (converted into seconds), and
+			the tolerance is a small timeframe (usually a day) which prevents the Delegation
+			Server from being flooded with requests.
+		 -->
+		 <maximumLifetime>864000</maximumLifetime>
        </myproxy>
 
        <!-- <authorizationServlet useHeader="true" requireHeader="true" headerFieldName="eppn" /> -->
