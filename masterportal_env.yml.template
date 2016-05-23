@@ -1,5 +1,9 @@
 ---
 
+# DB Passwords
+
+mariadb_root_password: MYSQL_ROOT_PW
+
 # OA4MP Client
 
 # The keystore is used for BOTH mp_client and mp_server to access the Credential Store
@@ -18,11 +22,15 @@ mp_client_truststore_pw: TRUSTSTORE_PW
 mp_client_id: MP_CLIENT_ID
 mp_client_secret: MP_CLIENT_SECRET
 
+mp_client_db_pw: MP_CLIENT_DB_PW
+
 # OA4MP Server
 
 # Make sure mp_server_keystore_pw matches the keystore password set above at mp_client_keystore_pw!
 
 mp_server_keystore_pw: KEYSTORE_PW
+
+mp_server_db_pw: MP_SERVER_DB_PW
 
 # Credential Store
 
