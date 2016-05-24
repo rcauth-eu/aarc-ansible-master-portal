@@ -54,13 +54,13 @@
 
 # only listen on localhost
 
-- name: check if listening address
+- name: check if listening address is set to localhost
   command: grep 'Connector.*port="8080".*address="127.0.0.1"' "{{ catalina_home }}/conf/server.xml"
   ignore_errors: True
   changed_when: False
   register: tomcat_local_listen
 
-- name: disable tomcat authnetication
+- name: set listening address to localhost
   lineinfile:
      dest: "{{ catalina_home }}/conf/server.xml"
      regexp: '^(.*)<Connector port="8080"(.*)$'
