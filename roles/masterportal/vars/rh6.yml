@@ -38,3 +38,6 @@ mysql_packages:
   - mysql-server
   - MySQL-python
   - mysql-connector-java
+
+mysql_connector_path: /usr/share/java
+mysql_connector: mysql-connector-java.jar

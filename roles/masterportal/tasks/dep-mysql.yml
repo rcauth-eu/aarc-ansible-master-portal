@@ -7,6 +7,14 @@
   with_items: "{{ mysql_packages }}"
   register: mysql_installation
 
+- name: make a link to the connector
+  file:
+    src: "{{ mysql_connector_path }}/{{ mysql_connector }}"
+    dest: "{{ catalina_home }}/lib/{{ mysql_connector }}"
+    owner: root
+    group: root
+    state: link
+
 # Start MySQL Server
 
 - name: Start the MySQL service
@@ -21,58 +29,93 @@
     - localhost
   when: mysql_installation.changed
 
-# check OA4MP Client DB
-
-- name: check OA4MP Client DB
-  mysql_db: 
-    name: "{{mp_client_db}}" 
-    state: present
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
-  register: client_db
-
-- name: copy oa4mp client sql script
-  template: 
-    src: mp-oa2-client-mysql.sql.j2
-    dest: /tmp/mp-oa2-client-mysql.sql
-  when: client_db.changed
-
-- name: execute oa4mp client sql script
-  mysql_db: 
-    state: import
-    name: all 
-    target: /tmp/mp-oa2-client-mysql.sql
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
-  when: client_db.changed
-
 # check OA4MP Server DB
 
-- name: Create OA4MP Client DB
+- name: Create MP Server DB
   mysql_db: 
-    name: "{{mp_server_db}}" 
+    name: "{{ mp_server_db }}" 
     state: present
     login_user: root
     login_password: "{{ mysql_root_password }}"
   register: server_db
+  when: mysql_root_password is defined
 
-- name: copy oa4mp server sql script
+- name: update mysql MP Server user account
+  mysql_user:
+    name: "{{ mp_server_db_user }}"
+    host: "{{ item }}"
+    password: "{{ mp_server_db_pw }}"
+    priv: "{{ mp_server_db }}.*:ALL"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  with_items:
+    - 127.0.0.1
+    - localhost
+  when: mysql_root_password is defined
+
+- name: copy MP Server sql script
   template: 
     src: mp-oa2-server-mysql.sql.j2
     dest: /tmp/mp-oa2-server-mysql.sql
-  when: server_db.changed
+  when: server_db is defined and server_db.changed
 
-- name: execute oa4mp server sql script
+- name: execute MP Server sql script
   mysql_db: 
     state: import
     name: all 
     target: /tmp/mp-oa2-server-mysql.sql
     login_user: root
     login_password: "{{ mysql_root_password }}"
-  when: server_db.changed
+  when: server_db is defined and server_db.changed
 
-- name: remove oa4mp server sql script
+- name: remove MP Server sql script
   file:
     path: /tmp/oa4mp-server-mysql.sql
     state: absent
-  when: server_db.changed
+  when: server_db is defined and server_db.changed
+
+# check OA4MP Client DB
+
+- name: check MP Client DB
+  mysql_db: 
+    name: "{{ mp_client_db }}" 
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  register: client_db
+  when: mysql_root_password is defined
+
+- name: update mysql MP Client user account
+  mysql_user:
+    name: "{{ mp_client_db_user }}"
+    host: "{{ item }}"
+    password: "{{ mp_client_db_pw }}"
+    priv: "{{ mp_client_db }}.*:ALL"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  with_items:
+    - 127.0.0.1
+    - localhost
+  when: mysql_root_password is defined
+
+- name: copy MP Client sql script
+  template: 
+    src: mp-oa2-client-mysql.sql.j2
+    dest: /tmp/mp-oa2-client-mysql.sql
+  when: client_db is defined and client_db.changed
+
+- name: execute MP Client sql script
+  mysql_db: 
+    state: import
+    name: all 
+    target: /tmp/mp-oa2-client-mysql.sql
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+  when: client_db is defined and client_db.changed
+
+- name: remove MP Client sql script
+  file:
+    path: /tmp/mp-oa2-client-mysql.sql
+    state: absent
+  when: client_db is defined and client_db.changed
+
