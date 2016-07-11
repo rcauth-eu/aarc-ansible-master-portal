@@ -8,6 +8,11 @@ credstore_authorized_retrievers: "/C=NL/O=Example/OU=Org/CN=masterportal"
 credstore_authorized_renewers: "/C=NL/O=Example/OU=Org/CN=masterportal"
 credstore_trusted_retrievers: "/C=NL/O=Example/OU=Org/CN=masterportal"
 
+# Fill in authorized DN prefix if you want to enable self-renewal of
+# the stored certificates 
+
+self_authorized_renewers: "/DC=NL/DC=DemoCA/O=*"
+
 # Maximum lifetime of issued proxies by the Credential Store
 
 credstore_max_proxy_lifetime: 264

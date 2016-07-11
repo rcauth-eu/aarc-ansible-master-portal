@@ -6,9 +6,15 @@ authorized_retrievers		"{{ credstore_authorized_retrievers }}"
 {% endif %}
 {% if credstore_authorized_renewers is defined %}
 authorized_renewers		"{{ credstore_authorized_renewers }}"
+default_authorized_renewers     "{{ credstore_authorized_renewers }}"
 {% endif %}
 {% if credstore_trusted_retrievers is defined %}
 trusted_retrievers		"{{ credstore_trusted_retrievers }}"
+{% endif %}
+
+{% if self_authorized_renewers is defined %}
+authorized_renewers		"{{ self_authorized_renewers }}"
+allow_self_authorization        True
 {% endif %}
 
 cert_dir 			{{ credstore_cert_dir }}
