@@ -36,13 +36,24 @@
 			provided with the original /getproxy request 
 		 -->
 		 <defaultLifetime>43200</defaultLifetime>
-		 <!-- 
-			The maximum lifetime value should be the max_proxy_lifetime - tolerance, where the 
-			max_proxy_lifetime is set in the myproxy-server.conf (converted into seconds), and
-			the tolerance is a small timeframe (usually a day) which prevents the Delegation
-			Server from being flooded with requests.
-		 -->
-		 <maximumLifetime>864000</maximumLifetime>
+
+                 <validators>
+                        <validator handler="org.masterportal.oauth2.server.validators.DNValidator">
+                                <input name="input_claim">cert_subject_dn</input>
+                        </validator>
+                        <validator handler="org.masterportal.oauth2.server.validators.LifetimeValidator">
+                                <!-- 
+                                     max_proxy_lifetime is set in the myproxy-server.conf (converted into seconds) 
+                                -->
+                                <input name="max_proxy_lifetime">950400</input>
+                                <!-- 
+                                     the tolerance is a small timeframe in seconds (usually a day) which prevents 
+                                     the Delegation Server from being flooded with requests. 
+                                -->
+                                <input name="tolerance">86400</input>
+                        </validator>
+                 </validators>
+
        </myproxy>
 
        <!-- <authorizationServlet useHeader="true" requireHeader="true" headerFieldName="eppn" /> -->
