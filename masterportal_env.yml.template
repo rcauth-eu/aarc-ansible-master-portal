@@ -24,6 +24,11 @@ mp_client_secret: MP_CLIENT_SECRET
 
 mp_client_db_pw: MP_CLIENT_DB_PW
 
+# Configure the mp_client_conf_lifetime to set the lifetime sent with every /getcert request to
+# the delegation server. This will determine the lifetime of the EEC returned by the Online CA,
+# as well as the lifetime of the created Long Lived Proxy Certificate. 
+mp_client_conf_lifetime: 950400
+
 # OA4MP Server
 
 # Make sure mp_server_keystore_pw matches the keystore password set above at mp_client_keystore_pw!
