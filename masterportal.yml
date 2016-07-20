@@ -1,9 +1,12 @@
 ---
 - hosts: masterportal
-  remote_user: root
+  remote_user: jenkins
+  become: yes
+  become_method: sudo
   vars_files:
     - basic_env.yml
     - masterportal_env.yml
+    - secrets_env.yml
   roles:
     - basic
     - masterportal

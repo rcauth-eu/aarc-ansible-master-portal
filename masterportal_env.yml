@@ -1,0 +1,22 @@
+---
+
+# OA4MP Client
+
+# Configure the mp_client_conf_lifetime to set the lifetime sent with every /getcert request to
+# the delegation server. This will determine the lifetime of the EEC returned by the Online CA,
+# as well as the lifetime of the created Long Lived Proxy Certificate. 
+mp_client_conf_lifetime: 950400
+
+# Credential Store
+
+# Set the MyProxy Credential Store that will store all the incoming used proxies. Make sure to 
+# fill in the right hostname (even if it's localhost!), othewise the SSL connection will break!
+
+credstore_host: myproxy-credstore
+credstore_port: 7512
+
+# Delegation Server
+
+# Fill in the delegation server oauth2 endpoint that will be used by this Master Portal
+
+deleg_server_auth: https://delegation-server/oauth2
