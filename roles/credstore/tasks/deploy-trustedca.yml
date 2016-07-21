@@ -1,10 +1,18 @@
 ---
 
+- name: install trust anchor RPMs from URLs
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ credstore_trust_anchor_packages | default([]) }}"
+  when: credstore_trust_anchor_packages is defined
+
 - name: unpack onlineca.tar.gz into /etc/grid-security/certificates
   unarchive:
-    src: onlineca.tar.gz
+    src: "{{ credstore_trust_anchor }}"
     copy: yes
     dest: "{{ credstore_cert_dir }}"
     mode: 0644
     owner: root
     group: root
+  when: credstore_trust_anchor_packages is not defined

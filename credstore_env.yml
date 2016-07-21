@@ -13,6 +13,17 @@ credstore_trusted_retrievers: "/C=NL/O=Example/OU=Org/CN=masterportal"
 
 self_authorized_renewers: "/DC=NL/DC=DemoCA/O=*"
 
+# A trust anchor for the Online CA you are planning to support is needed.
+# Specify all the trust anchors and their dependencies here as urls for RPM 
+# packages. These will get installed in order. If you leave this empty, the 
+# scripts will fall back on deplying the trust root from a tarball on your 
+# local machine. The tarball location can be configured with credstore_trust_anchor
+# and it defaults to onlineca.tar.gz.
+
+credstore_trust_anchor_packages: 
+  - "https://dist.eugridpma.info/distribution/igtf/current/experimental/RPMS/ca_DCAROOT-G1-1.75-1.noarch.rpm"
+  - "https://dist.eugridpma.info/distribution/igtf/current/experimental/RPMS/ca_RCauth-Pilot-ICA-G1-1.75-1.noarch.rpm"
+
 # Maximum lifetime of issued proxies by the Credential Store
 
 credstore_max_proxy_lifetime: 264
