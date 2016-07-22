@@ -34,8 +34,9 @@ SSLCryptoDevice builtin
     LogLevel warn
 
     SSLEngine on
-    SSLProtocol all -SSLv2 -SSLv3
-    SSLCipherSuite DEFAULT:!EXP:!SSLv2:!DES:!IDEA:!SEED:+3DES
+    SSLProtocol all -SSLv2 -SSLv3 +TLSv1 
+    SSLHonorCipherOrder On
+    SSLCipherSuite "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH EDH+aRSA !aNULL !eNULL !MEDIUM !LOW !3DES !MD5 !EXP !PSK !SRP !DSS"
     SSLCertificateFile {{ hostcert }}
     SSLCertificateKeyFile {{ hostkey }}
 {% if hostcert_intermediate %}
