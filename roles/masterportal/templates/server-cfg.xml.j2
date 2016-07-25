@@ -13,6 +13,11 @@
                  debug="true"
        />
 
+       <!-- 
+            There is a set of basic scopes supperted in OA2Scopes.basicScopes. In case you would
+            like to support any additional scopes you have to specify them here, otherwise the 
+            Master Portal will reject invalid scope requests.
+       -->
        <scopes handler="org.masterportal.oauth2.server.MPForwardingScopeHandler">
 	  <scope>org.cilogon.userinfo</scope>
        </scopes>
