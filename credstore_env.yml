@@ -21,8 +21,8 @@ self_authorized_renewers: "/DC=NL/DC=DemoCA/O=*"
 # and it defaults to onlineca.tar.gz.
 
 credstore_trust_anchor_packages: 
-  - "https://dist.eugridpma.info/distribution/igtf/current/experimental/RPMS/ca_DCAROOT-G1-1.75-1.noarch.rpm"
-  - "https://dist.eugridpma.info/distribution/igtf/current/experimental/RPMS/ca_RCauth-Pilot-ICA-G1-1.75-1.noarch.rpm"
+  - "https://dist.eugridpma.info/distribution/igtf/current/accredited/RPMS/ca_DCAROOT-G1-1.76-1.noarch.rpm"
+  - "https://dist.eugridpma.info/distribution/igtf/current/accredited/RPMS/ca_RCauth-Pilot-ICA-G1-1.76-1.noarch.rpm"
 
 # Maximum lifetime of issued proxies by the Credential Store
 
