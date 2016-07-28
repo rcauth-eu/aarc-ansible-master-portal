@@ -87,15 +87,18 @@ cd $creddir || error "Cannot change to myproxy credentials directory"
 
 # Loop over all credentials
 i=0
-for cred in *.creds ; do
-    # Grab last certificate in chain, which should be the EEC
-    # The 
-    errtxt=$(sed -n $(sed -n '/BEGIN CERTIFICATE/=' $cred|tail -n1),\$p $cred |\
-	openssl verify -CApath $cadir -crl_check |\
-	grep error)
-    if [ -n "$errtxt" ];then
-	errnum=$(echo "$errtxt"|sed 's/^error \([0-9]\+\) .*$/\1/')
-	handleerror $errnum $cred || i=$((i+1))
+for cred in ./*.creds ; do
+    # POSIX shell has no nullglob, protect against no matches
+    if [ -e "$cred" ]; then
+	# Grab last certificate in chain, which should be the EEC
+	# The 
+	errtxt=$(sed -n $(sed -n '/BEGIN CERTIFICATE/=' $cred|tail -n1),\$p $cred |\
+	    openssl verify -CApath $cadir -crl_check |\
+	    grep error)
+	if [ -n "$errtxt" ];then
+	    errnum=$(echo "$errtxt"|sed 's/^error \([0-9]\+\) .*$/\1/')
+	    handleerror $errnum $cred || i=$((i+1))
+	fi
     fi
 done
 echo "$i credential(s) removed"
