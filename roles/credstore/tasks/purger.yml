@@ -6,9 +6,9 @@
   copy:
     src: myproxy_purge.sh
     dest: /usr/sbin/myproxy_purge.sh
-    owner: myproxy
-    group: myproxy
-    mode: 0700
+    owner: root
+    group: root
+    mode: 0744
 
 - name: copy the myproxy_purge cron.d file
   copy:
