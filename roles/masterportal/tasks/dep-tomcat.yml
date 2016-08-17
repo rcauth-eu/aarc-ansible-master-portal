@@ -16,6 +16,7 @@
     line: "export CATALINA_HOME={{ catalina_home }}"
     regexp: "^export CATALINA_HOME=.*"
     insertafter: EOF
+    backup: yes
 
 #- name: clean up webapps directory
 #  command: /bin/rm -rf "{{ catalina_home }}/webapps/*"
@@ -49,6 +50,7 @@
      owner: "{{ tomcat_user }}"
      group: "{{ tomcat_user }}"
      mode: 0664
+     backup: yes
   when: tomcat_auth.rc != 0
   notify: restart tomcat
 
@@ -69,6 +71,7 @@
      owner: "{{ tomcat_user }}"
      group: "{{ tomcat_user }}"
      mode: 0664
+     backup: yes
   when: tomcat_local_listen.rc != 0
   notify: restart tomcat
 

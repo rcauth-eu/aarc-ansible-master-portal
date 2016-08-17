@@ -17,4 +17,4 @@
     line: "export JAVA_HOME={{ java_home }}"
     regexp: "^export JAVA_HOME=.*"
     insertafter: EOF
-
+    backup: yes

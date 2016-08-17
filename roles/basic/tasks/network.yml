@@ -9,4 +9,5 @@
     dest: "/etc/sysconfig/network-scripts/ifcfg-{{ item }}"
     regexp: "^NM_CONTROLLED=.*"
     line: "NM_CONTROLLED=no"
+    backup: yes
   with_items: "{{ interfaces.stdout_lines }}" 
