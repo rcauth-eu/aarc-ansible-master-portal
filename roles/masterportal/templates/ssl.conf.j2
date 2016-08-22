@@ -17,13 +17,13 @@ SSLCryptoDevice builtin
 
     ServerName {{ inventory_hostname }}
 
+    ProxyPass /{{ mp_server }}/authorized !
     ProxyPass /{{ mp_server }} ajp://127.0.0.1:8009/{{ mp_server }}
     ProxyPass /{{ mp_client }} ajp://127.0.0.1:8009/{{ mp_client }}
     
     # This should only be enabled for testing purposes	
     ProxyPass /vo-portal ajp://127.0.0.1:8009/vo-portal
 
-    ProxyPass /{{ mp_server }}/authorized !
 
     ProxyRequests Off
     UseCanonicalPhysicalPort On
