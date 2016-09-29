@@ -10,6 +10,7 @@
     group: "root"
     mode: 0600
     backup: yes
+  when: masterportal_address is defined 
   notify: restart iptables
 
 - name: add ip6tables config
@@ -20,4 +21,5 @@
     group: "root"
     mode: 0600
     backup: yes
+  when: masterportal_address is defined
   notify: restart ip6tables
