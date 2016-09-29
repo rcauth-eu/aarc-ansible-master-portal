@@ -63,7 +63,7 @@ CREATE TABLE {{ mp_server_db }}.transactions (
   username            		TEXT,
   myproxyUsername     		TEXT,
   access_token_valid 		TINYINT(1) DEFAULT NULL,
-  auth_time 			TIMESTEMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  auth_time 			TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   nonce 			TEXT,
   scopes 			TEXT,
   claims              		TEXT CHARACTER SET 'utf8',
