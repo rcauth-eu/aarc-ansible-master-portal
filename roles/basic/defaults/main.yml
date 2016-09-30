@@ -5,8 +5,21 @@
 ### varabales include, for example, passwords, secrets and other  ###
 ### environment specific information                              ###
 
-# NTP Server
+# Trust root for the host credential. It can be provided either 
+# via an rpm package or a PEM formatted file together with a 
+# signing policy. The two options are not exclusive, and can
+# be used independently of eachother.
 
+# Name of the rpm package to install as trust anchor. This ca be
+# a link to an rpm or a package name from an installed repository
+hostcred_trust_anchor_package: "ca_TERENA-eScience-SSL-CA-3"
+
+# Alternatively, the trust anchor can be installed from a PEM
+# formatted certificate file accompanied by the signign policy
+#hostcred_trust_anchor_pem: "cacert.pem"
+#hostcred_trust_anchor_signing_policy: "cacert.signing_policy"
+
+# NTP Server
 ntp_servers: 
    - ntp1.server.com
    - ntp2.server.com

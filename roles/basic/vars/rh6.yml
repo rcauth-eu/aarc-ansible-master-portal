@@ -9,7 +9,6 @@ general_packages:
   - ntp
   - nscd
   - fetch-crl
-  - ca_TERENA-eScience-SSL-CA-3
 
 disabled_services:
   - NetworkManager
