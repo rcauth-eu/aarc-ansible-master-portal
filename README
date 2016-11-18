@@ -1,79 +1,91 @@
-####################################################################################################
+###############################################################################
 Ansible Deploy Script for Master Portal
-####################################################################################################
+###############################################################################
 
 
 What are these scripts for?
-----------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
-These scripts are for deploying a Master Portal + Credential Store. To find out more about what this
-setup is useful for take a look at: https://wiki.nikhef.nl/grid/CILogon_Pre-Pilot_Work . You can 
-use these scripts to deploy a Master Portal and Credential Store on two separate hosts, or into one
-single host. 
+These scripts are for deploying a Master Portal + Credential Store. To find out
+more about what this setup is useful for take a look at:
+https://wiki.nikhef.nl/grid/CILogon_Pre-Pilot_Work . You can use these scripts
+to deploy a Master Portal and Credential Store on two separate hosts, or into
+one single host. 
 
 
 Prerequisites
----------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
-	1. You need to have host certificates ready for this deployment. Place your PEM formatted  
-	   certificate and key file under the '*.PLACEHOLDER' files in the 'roles/basic/files/' 
-	   directory. The basic role will take care of deploying these into the target machine.
-	   It is assumed that your host certificates are issued by 'TERENA eScience SSL CA 3'. 
-	   If not, you will have to make some modifications to these scripts before executing them!
+	1. You need to have host certificates ready for this deployment. Place
+	   your PEM formatted  certificate and key file under the
+	   '*.PLACEHOLDER' files in the 'roles/basic/files/' directory. The
+	   basic role will take care of deploying these into the target machine.
+	   It is assumed that your host certificates are issued by 'TERENA
+	   eScience SSL CA 3'. If not, you will have to make some modifications
+	   to these scripts before executing them!
 
 
 How to use these scripts?
-----------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 
-Before you begin executing plays make sure to decide whether you're deployment will use two separate 
-hosts for Master Portal and Credential Store, or a single host. Fill in you machine hostname[s] into 
-the 'hosts.inventory' file accordingly. The hostname[s] set in the invertory files will be set on the
+Before you begin executing plays make sure to decide whether you're deployment
+will use two separate hosts for Master Portal and Credential Store, or a single
+host. Fill in you machine hostname[s] into the 'hosts.inventory' file
+accordingly. The hostname[s] set in the invertory files will be set on the
 target machine[s].
 
-There are two different plays you can execute. One for the Credential Store called 'credstore.yml' 
-and one for the Master Portal called 'masterportal.yml'.  Both plays include the basic role, which
-takes care of setting up the environment for both components. 
+There are two different plays you can execute. One for the Credential Store
+called 'credstore.yml' and one for the Master Portal called 'masterportal.yml'.
+Both plays include the basic role, which takes care of setting up the
+environment for both components. 
 
-Make sure to check recommanded modifications below before starting either play! In case of single host 
-deployments, execute 'credstore.yml' first and 'materportal.yml' after. 
+Make sure to check recommanded modifications below before starting either play!
+In case of single host deployments, execute 'credstore.yml' first and
+'materportal.yml' after. 
 
 1. credstore.yml
 
 	a. Fill in required environment variables
 
-	   This play will configure the Credential Server host. Basically, it provides a MyProxy 
-	   Server installation with some configuration. Before starting this play there are a couple 
-	   important variables you should override. You can find these and their explanation in 
+	   This play will configure the Credential Server host. Basically, it
+	   provides a MyProxy Server installation with some configuration.
+	   Before starting this play there are a couple important variables you
+	   should override. You can find these and their explanation in
 	   'credstore_env.yml'.
 
 	b. Provide Online CA tar file
 
-	   MyProxy only stores credentials that it can verify, therefor it's very important to
-	   have the Online CA (which will issue user certificates) present in the trusted 
-	   certificates directory (usually /etc/grid-security/certificates). Make a tarball from 
-	   the Online CA in pem format, together with subject_hash links and signing_policy. Do
-	   not forget the signing policy, since MyProxy will not work without it. The result tarball
-	   should contain these files at the top level, without any direcotry structure, and it
-	   should be places under 'roles/credstore/files/'
+	   MyProxy only stores credentials that it can verify, therefor it's
+	   very important to have the Online CA (which will issue user
+	   certificates) present in the trusted certificates directory (usually
+	   /etc/grid-security/certificates). Make a tarball from the Online CA
+	   in pem format, together with subject_hash links and signing_policy.
+	   Do not forget the signing policy, since MyProxy will not work without
+	   it. The result tarball should contain these files at the top level,
+	   without any direcotry structure, and it should be places under
+	   'roles/credstore/files/'
 
 
 2. masterportal.yml
 
 	a. Fill in the required environment variables
 
-	   Before executing this play, make sure to fill in the required variables listed and 
-	   explained in the 'masterportal_env.yml' file. Look into the masterportal_env.yml.tamplate
-	   for a list of variables you have to override. 
+	   Before executing this play, make sure to fill in the required
+	   variables listed and explained in the 'masterportal_env.yml' file.
+	   Look into the masterportal_env.yml.tamplate for a list of variables
+	   you have to override. 
 
 	b. Verify deploying war files
 
-	   This play is about to deploy the Master Portal war files (mp-oa2-client.war and 
-	   mp-oa2-server.war) and optionally the VO Portal war file (vo-portal.war). Make sure that
-	   these are present in your 'role/masterportal/files' directory. 
+	   This play is about to deploy the Master Portal war files
+	   (mp-oa2-client.war and mp-oa2-server.war) and optionally the VO
+	   Portal war file (vo-portal.war). Make sure that these are present in
+	   your 'role/masterportal/files' directory. 
 
 	c. Tweak iptables rules
 
-	   There is a simple set of iptable rules being deployed by this play. Feel free to customize
-	   this to the needs of your infrastructure. Make sure to leave port 443 accessible. The
-	   iptables file can be found in 'role/masterportal/files'
+	   There is a simple set of iptable rules being deployed by this play.
+	   Feel free to customize this to the needs of your infrastructure. Make
+	   sure to leave port 443 accessible. The iptables file can be found in
+	   'role/masterportal/files'
  
