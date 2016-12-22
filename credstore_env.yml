@@ -26,8 +26,6 @@ credstore_trust_anchor_packages:
 
 # Maximum lifetime of issued proxies by the Credential Store
 
-# Maximum lifetime of issued proxies by the Credential Store
-
 credstore_max_proxy_lifetime: 264
 
 # IP address of the Master Portal trusted by this Credential Store (only 

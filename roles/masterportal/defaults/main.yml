@@ -68,7 +68,7 @@ vo_portal_truststore: "{{ vo_portal_conf_dir }}/trust-store.jks"
 vo_portal_conf: vo-portal-config
 vo_portal_log_dir: "{{ vo_portal_dir }}/log"
 vo_portal_storage_dir: "{{ vo_portal_dir }}/storage"
-vo_portal_conf_lifetime: 86000000
+vo_portal_conf_lifetime: 86400
 
 vo_portal_truststore_pw: changeit
 vo_portal_id: FILLME
