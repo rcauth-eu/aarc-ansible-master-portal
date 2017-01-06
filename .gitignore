@@ -1,0 +1,9 @@
+# Do not include the build artefacts
+/roles/masterportal/files/mp-oa2-client.war
+/roles/masterportal/files/mp-oa2-server.war
+/roles/masterportal/files/oa2-cli.jar
+/roles/masterportal/files/vo-portal.war
+
+# Do not accidentally add the host cert/key
+/roles/basic/files/*.key
+/roles/basic/files/*.crt
