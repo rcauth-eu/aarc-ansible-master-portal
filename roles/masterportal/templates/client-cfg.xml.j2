@@ -16,6 +16,8 @@
 
            <serviceUri>{{ deleg_server_auth }}</serviceUri>
 
+	   <wellKnownUri>{{ deleg_server_auth }}/.well-known/openid-configuration</wellKnownUri>
+
            <id>{{ mp_client_id }}</id>
            <secret>{{ mp_client_secret }}</secret>
 
@@ -55,6 +57,8 @@
            <callbackUri>https://{{ inventory_hostname }}/{{ mp_client }}/ready</callbackUri>
 
            <serviceUri>{{ deleg_server_auth }}</serviceUri>
+
+	   <wellKnownUri>{{ deleg_server_auth }}/.well-known/openid-configuration</wellKnownUri>
 
            <id>{{ mp_client_id }}</id>
            <secret>{{ mp_client_secret }}</secret>
