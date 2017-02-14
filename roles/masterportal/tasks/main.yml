@@ -17,6 +17,7 @@
 
 - include: oa4mp-client.yml
 - include: oa4mp-server.yml
+- include: dep-jwk.yml
 
 # The VO Portal is not part of the Master Portal, it's only a simple 
 # Master Portal client installed alongside it for testing purposes.

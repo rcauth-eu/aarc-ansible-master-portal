@@ -15,6 +15,9 @@ mp_client_conf_lifetime: 950400
 credstore_host: myproxy-credstore
 credstore_port: 7512
 
+# Default JSON web key id:
+mp_server_jwk_key_id: ""
+
 # Delegation Server
 
 # Fill in the delegation server oauth2 endpoint that will be used by this Master Portal

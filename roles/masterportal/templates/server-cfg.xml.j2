@@ -13,6 +13,11 @@
                  debug="true"
        />
 
+       <!-- JSON Web key for signing -->
+       <JSONWebKey defaultKeyID="{{ mp_server_jwk_key_id }}">
+         <path>{{ mp_server_jwk_file }}</path>
+       </JSONWebKey>
+
        <!-- 
             There is a set of basic scopes supperted in OA2Scopes.basicScopes. In case you would
             like to support any additional scopes you have to specify them here, otherwise the 
@@ -75,6 +80,11 @@
                  logFileCount="10"
                  debug="true"
        />
+
+       <!-- JSON Web key for signing -->
+       <JSONWebKey defaultKeyID="{{ mp_server_jwk_key_id }}">
+         <path>{{ mp_server_jwk_file }}</path>
+       </JSONWebKey>
 
        <scopes handler="org.masterportal.oauth2.server.MPForwardingScopeHandler">
 	  <scope>org.cilogon.userinfo</scope>

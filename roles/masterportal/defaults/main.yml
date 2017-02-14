@@ -35,7 +35,6 @@ mp_client_conf_lifetime: 31536000
 mp_client_db_pw: changeme
 mp_client_truststore_pw: changeme
 mp_client_keystore_pw: changeme
-mp_clinet_id: FILLME
 mp_client_secret: FILLME
 
 # OA4MP Server
@@ -46,7 +45,7 @@ mp_server_db_user: oa4mp-server
 mp_server_dir: /var/www/server
 mp_server_conf_dir: "{{ mp_server_dir }}/conf"
 mp_server_conf_file: "{{ mp_server_conf_dir }}/cfg.xml"
-mp_server_truststore: "{{ mp_server_conf_dir }}/trust-store.jks"
+#mp_server_truststore: "{{ mp_server_conf_dir }}/trust-store.jks"
 mp_server_keystore: "/etc/grid-security/hostcred.p12"
 mp_server_conf: mysql-mp-server-config
 #mp_server_conf: filestore-mp-server-config
@@ -54,8 +53,11 @@ mp_server_log_dir: "{{ mp_server_dir }}/log"
 mp_server_storage_dir: "{{ mp_server_dir }}/storage"
 mp_server_tools_dir: "{{ mp_server_dir }}/tools"
 
+mp_server_jwk_file: "{{ mp_server_conf_dir }}/mp.jwk"
+mp_server_jwk_key_id: FILLME
+
 mp_server_db_pw: changeme
-mp_server_truststore_pw: changeme
+#mp_server_truststore_pw: changeme
 mp_server_keystore_pw: changeme
 
 # VO Portal
