@@ -1,9 +1,0 @@
----
-
-- name: copy JSON web keys
-  copy:
-    src: "mp.jwk"
-    dest: "{{ mp_server_jwk_file }}"
-    owner: "{{ tomcat_user }}"
-    group: "{{ tomcat_user }}"
-    mode: 0400

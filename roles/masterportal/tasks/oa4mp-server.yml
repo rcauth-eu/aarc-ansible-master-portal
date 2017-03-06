@@ -67,6 +67,13 @@
     group: "{{ tomcat_user }}"
     mode: 0744
 
+- name: copy JSON web keys
+  copy:
+    src: "mp.jwk"
+    dest: "{{ mp_server_jwk_file }}"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+    mode: 0400
 
 # (no need for a trust store as long as trusted certs are in /etc/grid-security/certificates)
 
