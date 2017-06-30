@@ -1,0 +1,15 @@
+---
+# Create the proxy user
+- include: proxyuser.yml
+
+# Setup the client credentials
+- include: proxycreds.yml
+
+# add the myproxy and authz scripts
+- include: scripts.yml
+
+# Update the sshd config
+- include: sshd.yml
+
+# Update the access.conf file for the proxy user
+- include: accessconf.yml

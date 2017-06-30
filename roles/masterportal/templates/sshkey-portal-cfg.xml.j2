@@ -1,0 +1,34 @@
+<config>
+
+    <client name="default" alias="{{ sshkey_portal_conf }}"/>
+
+    <!-- ############################################################################## -->
+
+    <client name="{{ sshkey_portal_conf }}" address="https://{{ inventory_hostname }}/{{ sshkey_portal }}">
+
+           <logging  logFileName="{{ sshkey_portal_log_dir }}/{{ sshkey_portal }}.log"
+                     logName="SSHKP"
+                     logSize="1000000"
+                     logFileCount="10"
+                     debug="true"/>
+
+           <callbackUri>https://{{ inventory_hostname }}/{{ sshkey_portal }}/ready</callbackUri>
+
+           <serviceUri>https://{{ inventory_hostname }}/{{ mp_server }}</serviceUri>
+
+           <id>{{ sshkey_portal_id }}</id>
+           <secret>{{ sshkey_portal_secret }}</secret>
+
+           <fileStore path="{{ sshkey_portal_storage_dir }}">
+                      <assetStore/>
+           </fileStore>
+
+           <keystore path="{{ sshkey_portal_truststore }}"
+                     type="jks"
+                     password="{{ sshkey_portal_truststore_pw }}"
+                     factory="SunX509" />
+
+    </client>
+
+</config>
+

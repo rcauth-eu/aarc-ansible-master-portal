@@ -1,0 +1,21 @@
+---
+
+# COPY HOST CREDENTIALS AS MYPROXY CLIENT CREDENTIALS
+
+- name: copy proxycert
+  copy:
+    remote_src: true
+    src: "{{ hostcert }}"
+    dest: "{{ proxycert }}"
+    owner: "{{ proxy_user }}"
+    group: "{{ proxy_user }}"
+    mode: 0644
+
+- name: copy proxykey
+  copy:
+    remote_src: true
+    src: "{{ hostkey }}"
+    dest: "{{ proxykey }}"
+    owner: "{{ proxy_user }}"
+    group: "{{ proxy_user }}"
+    mode: 0400

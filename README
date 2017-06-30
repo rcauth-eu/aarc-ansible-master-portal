@@ -6,11 +6,20 @@ Ansible Deploy Script for Master Portal
 What are these scripts for?
 -------------------------------------------------------------------------------
 
-These scripts are for deploying a Master Portal + Credential Store. To find out
-more about what this setup is useful for take a look at:
+These scripts are for deploying a Master Portal + Credential Store + SSH host.
+To find out more about what this setup is useful for take a look at:
 https://wiki.nikhef.nl/grid/CILogon_Pre-Pilot_Work . You can use these scripts
-to deploy a Master Portal and Credential Store on two separate hosts, or into
-one single host. 
+to deploy a Master Portal, Credential Store and SSH host on different hosts, or
+into one single host. 
+Note: the SSH interface consists of 3 parts:
+- MasterPortal: an API inside the mp-oa2-server, consisting of two endpoints.
+  Managed via roles/masterportal/templates/ssl.conf.j2
+- SSH Key portal: like the VO portal, co-hosted a separate TomCat servlet.
+  Managed via roles/masterportal/tasks/sshkey-portal.yml and dep-tomcat.yml
+- SSH host: typically running on a separate server, the actual SSH server
+  contacting the MasterPortal for the list of keys and the credential store for
+  obtaining the proxies.
+  Managed via separate sshhost.yml playbook.
 
 
 Prerequisites
@@ -34,14 +43,15 @@ host. Fill in you machine hostname[s] into the 'hosts.inventory' file
 accordingly. The hostname[s] set in the invertory files will be set on the
 target machine[s].
 
-There are two different plays you can execute. One for the Credential Store
-called 'credstore.yml' and one for the Master Portal called 'masterportal.yml'.
-Both plays include the basic role, which takes care of setting up the
-environment for both components. 
+There are three different plays you can execute. One for the Credential Store
+called 'credstore.yml', one for the SSH host call 'sshhost.yml' and one for the
+Master Portal called 'masterportal.yml'.
+All three plays include the basic role, which takes care of setting up the
+environment for these components. 
 
-Make sure to check recommanded modifications below before starting either play!
-In case of single host deployments, execute 'credstore.yml' first and
-'materportal.yml' after. 
+Make sure to check recommanded modifications below before starting each play!
+In case of single host deployments, execute 'credstore.yml' first,
+then 'sshhost.yml' and then 'masterportal.yml' last.
 
 1. credstore.yml
 
@@ -66,7 +76,14 @@ In case of single host deployments, execute 'credstore.yml' first and
 	   'roles/credstore/files/'
 
 
-2. masterportal.yml
+2. sshhost.yml
+
+	a. Fill in the required environment variables
+
+	   Before executing this play, make sure to fill in the required
+	   variables listed and explained in the 'sshhost_env.yml' file.
+
+3. masterportal.yml
 
 	a. Fill in the required environment variables
 

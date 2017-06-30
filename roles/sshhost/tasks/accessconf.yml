@@ -1,0 +1,9 @@
+---
+- name: add proxy user to access.conf
+  blockinfile:
+     dest: "/etc/security/access.conf"
+     backup: yes
+     marker: "# {mark} SSH ANSIBLE MANAGED BLOCK"
+     insertbefore: "# BEGIN BASIC ANSIBLE MANAGED BLOCK"
+     block: |
+       + : {{ proxy_user }} : ALL

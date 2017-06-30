@@ -1,0 +1,10 @@
+---
+- hosts: sshhost
+  remote_user: root
+  vars_files:
+    - basic_env.yml
+    - sshhost_env.yml
+    - secrets_env.yml
+  roles:
+    - basic
+    - sshhost

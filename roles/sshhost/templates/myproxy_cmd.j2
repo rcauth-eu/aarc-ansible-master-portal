@@ -1,0 +1,29 @@
+#!/bin/sh
+if [ "$1" = "" ];then
+    echo "Error: missing argument" >&2
+    exit 1
+fi
+
+username="$1"
+proxyfile=$(mktemp /tmp/x509up_u$(id -u).XXXXXX)
+logfile=$(mktemp /tmp/logfile.XXXXXX)
+hostname={{ credstore_host }}
+passphrase={{ credstore_pw }}
+
+echo $passphrase |\
+    ( X509_USER_CERT={{ proxycert }} \
+      X509_USER_KEY={{ proxykey }} \
+      myproxy-logon -l "$username" \
+		  -s "$hostname" \
+		  -S -o $proxyfile \
+		  -v \
+		  > $logfile 2>&1 )
+
+if [ $? -ne 0 ];then
+    echo -n "Error: " >&2
+    tail -n2 $logfile >&2
+    rm -f $logfile $proxyfile
+    exit 1
+fi
+cat $proxyfile
+rm -f $proxyfile $logfile

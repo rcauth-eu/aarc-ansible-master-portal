@@ -18,10 +18,18 @@
 - include: oa4mp-client.yml
 - include: oa4mp-server.yml
 
+# Setup the self-service SSH public key upload portal. This can be used in
+# combination with the SSH host (see the sshhost playbook) to download proxy
+# certificates using SSH and a public key.
+
+- include: sshkey-portal.yml
+  when: sshkey_portal is defined
+
 # The VO Portal is not part of the Master Portal, it's only a simple 
 # Master Portal client installed alongside it for testing purposes.
 
 - include: vo-portal.yml
+  when: vo_portal is defined
 
 - include: iptables.yml
 

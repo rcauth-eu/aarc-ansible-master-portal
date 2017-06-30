@@ -2,10 +2,16 @@
 
 # Configure access to machine with authconfig
 
-- name: add access.conf file
-  template:
-    src: access.conf.j2
+- name: add only root user to access.conf file
+  blockinfile:
     dest: "/etc/security/access.conf"
+    backup: yes
+    marker: "# {mark} BASIC ANSIBLE MANAGED BLOCK"
+    insertafter: "#- : ALL : ALL"
+    block: |
+      + : root : LOCAL 127.0.01 ::1 cron crond localhost.localdomain
+      + : root : ALL
+      - : ALL : ALL
     owner: "root"
     group: "root"
     mode: 0644

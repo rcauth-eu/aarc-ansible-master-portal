@@ -1,0 +1,21 @@
+---
+
+# Installs the myproxy and ssh authZ cmd scripts
+
+- name: add myproxy_cmd script
+  template:
+    src: myproxy_cmd.j2
+    dest: "{{ myproxy_cmd }}"
+    owner: "root"
+    group: "{{ proxy_user }}"
+    mode: 0750
+    backup: yes
+
+- name: add authz_cmd script
+  template:
+    src: authz_cmd.j2
+    dest: "{{ authz_cmd }}"
+    owner: "root"
+    group: "root"
+    mode: 0755
+    backup: yes
