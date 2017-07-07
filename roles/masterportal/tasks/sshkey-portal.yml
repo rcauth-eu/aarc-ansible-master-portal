@@ -1,0 +1,83 @@
+---
+
+# make sure directory structure is in place
+
+- name: sshkeyportal directory exists
+  file: 
+    path: "{{ sshkey_portal_dir }}"
+    state: directory
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+
+- name: sshkeyportal conf dir exists
+  file: 
+    path: "{{ sshkey_portal_conf_dir }}"
+    state: directory
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+
+
+- name: sshkeyportal log exists
+  file: 
+    path: "{{ sshkey_portal_log_dir }}"
+    state: directory
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+
+- name: sshkeyportal storage exists
+  file: 
+    path: "{{ sshkey_portal_storage_dir }}"
+    state: directory
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+
+- name: sshkeyportal config file
+  template:
+    src: sshkey-portal-cfg.xml.j2
+    dest: "{{ sshkey_portal_conf_file }}"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+    mode: 0600
+    backup: yes
+
+# (no need for a trust store as long as trusted certs are in /etc/grid-security/certificates)
+
+- name: retrive all trusted CAs
+  command: "find {{ certificates }} -type f -name '*.pem'"
+  register: trusted_cas
+
+- name: add trusted CAs to client trust store
+  raw: /usr/bin/keytool -list -keystore "{{ sshkey_portal_truststore }}" -storepass "{{ sshkey_portal_truststore_pw }}" -alias `basename "{{ item }}"` || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore "{{ sshkey_portal_truststore }}" -storepass "{{ sshkey_portal_truststore_pw }}" -alias `basename "{{ item }}"`  -file "{{ item }}"
+  with_items: "{{ trusted_cas.stdout_lines }}"
+
+- name: add the right permission to the trust store
+  file:
+    path: "{{ sshkey_portal_truststore }}"
+    owner: tomcat
+    group: tomcat
+    mode: 0644
+
+# deploy war file
+
+- name: stop tomcat for the war switch
+  service:
+    name: "{{ tomcat_service }}"
+    state: stopped
+
+- name: delete old deployment
+  file:
+    path: "{{item}}"
+    state: absent
+  with_items:
+    - "{{ catalina_home }}/webapps/{{ sshkey_portal }}"
+    - "{{ catalina_home }}/webapps/{{ sshkey_portal }}.war"
+
+- name: copy war 
+  copy:
+    src: sshkey-portal.war
+    dest: "{{ catalina_home }}/webapps/{{ sshkey_portal }}.war"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+    mode: 0644
+  notify: restart tomcat
+

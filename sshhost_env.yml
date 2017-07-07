@@ -1,0 +1,7 @@
+---
+# Hostname of the Master Portal, used for a curl cmdline to obtain the list of
+# ssh public keys and corresponding users.
+masterportal_host: masterportal.host
+
+# Hostname of the myproxy server, used for obtaining the proxy certificate from.
+credstore_host: myproxy-credstore.host

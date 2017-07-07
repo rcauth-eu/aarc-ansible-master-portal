@@ -4,7 +4,7 @@
 
     <!-- ############################################################################## -->
 
-    <service name="mysql-mp-server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true">
+    <service name="mysql-mp-server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true" refreshTokenEnabled="{{ mp_server_refreshtokens }}">
 
        <logging  logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
                  logName="MP"
@@ -17,6 +17,9 @@
        <JSONWebKey defaultKeyID="{{ mp_server_jwk_key_id }}">
          <path>{{ mp_server_jwk_file }}</path>
        </JSONWebKey>
+
+       <!-- Specify allowed number of SSH keys -->
+       <sshkeys max="5"/>
 
        <!-- 
             There is a set of basic scopes supperted in OA2Scopes.basicScopes. In case you would
@@ -34,6 +37,7 @@
                          <transactions/>
                          <clients/>
                          <clientApprovals/>
+			 <sshKeys/>
        </mysql>
 
        <myproxy host="{{ credstore_host }}" port="{{ credstore_port }}" password="{{ credstore_pw }}">
@@ -72,7 +76,7 @@
 
     <!-- ############################################################################## -->
 
-    <service name="filestore-mp-server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true">
+    <service name="filestore-mp-server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true" refreshTokenEnabled="{{ mp_server_refreshtokens }}">
 
        <logging  logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
                  logName="MP"

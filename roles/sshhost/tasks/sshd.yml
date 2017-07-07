@@ -1,0 +1,26 @@
+---
+
+# custom sshd configuration
+
+- name: set ssh authorized keys command
+  blockinfile:
+    dest: /etc/ssh/sshd_config
+    backup: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    insertbefore: "#AuthorizedKeysCommand none"
+    # Option has a different name for RH6/RH7
+    block: |
+      AuthorizedKeysCommand {{ authz_cmd }}
+      {% if OS == "RH6" %}
+      AuthorizedKeysCommandRunAs nobody
+      {% else %}
+      AuthorizedKeysCommandUser nobody
+      {% endif %}
+    mode: 0600
+    owner: root
+    group: root
+  register: authz_cmd
+
+- name: restart sshd
+  service: name=sshd state=restarted enabled=yes
+  when: authz_cmd.changed

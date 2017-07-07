@@ -1,0 +1,20 @@
+#!/bin/sh
+# Set as
+#  AuthorizedKeysCommand <THIS FILE>
+# in sshd_config
+if [ "$1" != "{{ proxy_user }}" ];then
+    echo "Skipping user \"$1\"" > /tmp/logfile
+    exit
+fi
+
+url=https://{{ masterportal_host }}:8443/{{ mp_server }}/{{ sshkey_listing }}
+cmd="command=\"{{ myproxy_cmd }} \1\""
+{% if (OS == "RH6") or (OS == "RH7") %}
+# Note neither RH6 nor RH7 has restrict yet
+opts=',no-port-forwarding,no-x11-forwarding,no-agent-forwarding,no-pty,no-user-rc'
+{% else %}
+opts=',restrict'
+{% endif %}
+
+sedcmd="s#\([^ ]\+\) \(.*\)\$#${cmd}${opts} \2#"
+curl -s --capath {{ certificates }} $url|sed "$sedcmd"

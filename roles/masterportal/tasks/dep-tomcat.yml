@@ -104,6 +104,7 @@
           <param-value>default</param-value>
        </context-param>
 
+       {% if vo_portal is defined %}
        <context-param>
           <param-name>oa4mp:vp-oa2.client.config.file</param-name>
           <param-value>{{ vo_portal_conf_file }}</param-value>
@@ -112,6 +113,19 @@
           <param-name>oa4mp:vp-oa2.client.config.name</param-name>
           <param-value>default</param-value>
        </context-param>
+       {% endif %}
+
+       {% if sshkey_portal is defined %}
+       <context-param>
+          <param-name>oa4mp:sp-oa2.client.config.file</param-name>
+          <param-value>{{ sshkey_portal_conf_file }}</param-value>
+       </context-param>
+       <context-param>
+          <param-name>oa4mp:sp-oa2.client.config.name</param-name>
+          <param-value>default</param-value>
+       </context-param>
+       {% endif %}
+
   notify: restart tomcat
 
 # add javax.mail jar

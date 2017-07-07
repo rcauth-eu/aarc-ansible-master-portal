@@ -10,6 +10,10 @@
 -I INPUT -i lo -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
+{% if ssh_address is defined %}
+-A INPUT -m state --state NEW -m tcp -p tcp -s {{ ssh_address }} --dport 8443 -j ACCEPT
+{% endif %}
+
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
 
 -A INPUT -m state --state NEW -p tcp --dport 22 -j LOG --log-prefix "SSH ACCEPT: "

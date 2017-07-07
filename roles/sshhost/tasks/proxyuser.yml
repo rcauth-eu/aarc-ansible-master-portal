@@ -1,0 +1,7 @@
+---
+- name: create proxy user account
+  user:
+    name: "{{ proxy_user }}"
+    comment: "sshkey myproxy account"
+    createhome: no
+    home: /

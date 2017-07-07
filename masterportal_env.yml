@@ -12,8 +12,14 @@ mp_client_conf_lifetime: 950400
 # Set the MyProxy Credential Store that will store all the incoming used proxies. Make sure to 
 # fill in the right hostname (even if it's localhost!), othewise the SSL connection will break!
 
-credstore_host: myproxy-credstore
+credstore_host: myproxy-credstore.host
 credstore_port: 7512
+
+# SSH host IP address: the SSH host is allowed to contact the */sshkeylisting
+# endpoint on :8443 for obtaining the list of SSH public keys + corresponding
+# usernames. This address is used for the IP tables rule.
+
+ssh_address: 127.0.0.1
 
 # Default JSON web key id:
 mp_server_jwk_key_id: ""

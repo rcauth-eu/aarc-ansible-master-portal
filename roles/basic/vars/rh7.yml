@@ -28,3 +28,4 @@ igtf_current_baseurl: "http://dist.eugridpma.info/distribution/igtf/current-new/
 epelrpm: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
 epelkey: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7"
 
+OS: "RH7"

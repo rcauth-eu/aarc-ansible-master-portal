@@ -25,3 +25,5 @@ igtfkey: "https://dl.igtf.net/distribution/igtf/current-new/GPG-KEY-EUGridPMA-RP
 igtf_current_baseurl: "http://dist.eugridpma.info/distribution/igtf/current-new/"
 epelrpm: "https://dl.fedoraproject.org/pub/epel/6/{{ ansible_architecture }}/epel-release-6-8.noarch.rpm"
 epelkey: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-6"
+
+OS: "RH6"

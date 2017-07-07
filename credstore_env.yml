@@ -1,17 +1,17 @@
 ---
 
 # Fill in the Master Portal DN. This is going to be trusted by the MyProxy
-# Credential Store. This is generally the hostcert DN of the Master Portal
+# Credential Store for proxy upload and retrieval. This is generally the
+# hostcert DN of the Master Portal.
 
-credstore_accepted_credentials: "/C=NL/O=Example/OU=Org/CN=masterportal"
-credstore_authorized_retrievers: "/C=NL/O=Example/OU=Org/CN=masterportal"
-credstore_authorized_renewers: "/C=NL/O=Example/OU=Org/CN=masterportal"
-credstore_trusted_retrievers: "/C=NL/O=Example/OU=Org/CN=masterportal"
+masterportal_credentials: "/C=NL/O=Example/OU=Org/CN=masterportal"
 
-# Fill in authorized DN prefix if you want to enable self-renewal of
-# the stored certificates 
+# Fill in the SSH Host DN. This is also going to be trusted by the MyProxy
+# Credential Store. This is generally the hostcert DN of the SSH host.
+# If the SSH host is not used or co-hosted with the Master Portal, this can be
+# left out.
 
-self_authorized_renewers: "/DC=NL/DC=DemoCA/O=*"
+sshhost_credentials: "/C=NL/O=Example/OU=Org/CN=ssh-host"
 
 # A trust anchor for the Online CA you are planning to support is needed.
 # Specify all the trust anchors and their dependencies here as urls for RPM 
@@ -29,8 +29,13 @@ credstore_trust_anchor_packages:
 credstore_max_proxy_lifetime: 264
 
 # IP address of the Master Portal trusted by this Credential Store (only 
-# used for IP table rules. Ignore this if Credential Store is running
-# on the same host as the Master Portal
+# used for IP table rules). Can be ignored if Credential Store is running
+# on the same host as the Master Portal.
 
 # masterportal_address: 123.123.123.123
 
+# IP address for the SSH host trusted by this Credential Store (only 
+# used for IP table rules). Can be ignored if Credential Store is running
+# on the same host as the SSH host or if no SSH host is being configured.
+
+# ssh_address: 123.123.123.123

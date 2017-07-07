@@ -74,6 +74,21 @@ CREATE TABLE {{ mp_server_db }}.transactions (
   UNIQUE INDEX username (username(255),access_token(255))
 );
 
+CREATE TABLE {{ mp_server_db }}.ssh_keys (
+{% if OS == "RH6" %}
+/* 255 breaks on RH6: use there 210 & 120 instead */
+  username      VARCHAR(210) NOT NULL,
+  label         VARCHAR(120) NOT NULL,
+{% else %}
+  username      VARCHAR(255) NOT NULL,
+  label         VARCHAR(255) NOT NULL,
+{% endif %}
+  pub_key	TEXT NOT NULL,
+  description	TEXT,
+  import_time	TIMESTAMP,
+  PRIMARY KEY (username, label)
+);
+
 COMMIT;
 /* Now to grant restricted access. The  tables have to exist before this step */
 
@@ -90,6 +105,10 @@ GRANT ALL ON {{ mp_server_db }}.callbacks
         IDENTIFIED BY '{{ mp_server_db_pw }}';
 
 GRANT ALL ON {{ mp_server_db }}.transactions
+        TO '{{ mp_server_db_user }}'@'localhost'
+        IDENTIFIED BY '{{ mp_server_db_pw }}';
+
+GRANT ALL ON {{ mp_server_db }}.ssh_keys
         TO '{{ mp_server_db_user }}'@'localhost'
         IDENTIFIED BY '{{ mp_server_db_pw }}';
 

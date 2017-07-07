@@ -11,10 +11,11 @@ hostcert_intermediate: /etc/grid-security/certificates/TERENA-eScience-SSL-CA-3.
 #mysql_root_password: changeme
 mariadb_root_password: changeme
 
-# oa4mp
+# oa4mp (sub)endpoints
 
 mp_server: mp-oa2-server
 mp_client: mp-oa2-client
+sshkey_listing: sshkeylisting
 
 # OA4MP Client 
 
@@ -53,6 +54,10 @@ mp_server_log_dir: "{{ mp_server_dir }}/log"
 mp_server_storage_dir: "{{ mp_server_dir }}/storage"
 mp_server_tools_dir: "{{ mp_server_dir }}/tools"
 
+# Whether we use refreshtokens
+mp_server_refreshtokens: "true"
+
+# JSON web key used for signing id_tokens
 mp_server_jwk_file: "{{ mp_server_conf_dir }}/mp.jwk"
 mp_server_jwk_key_id: FILLME
 
@@ -62,6 +67,8 @@ mp_server_keystore_pw: changeme
 
 # VO Portal
 
+# When vo_portal is undefined, the VO portal will not be deployed or
+# configured
 vo_portal: vo-portal
 vo_portal_dir: /var/www/voportal
 vo_portal_conf_dir: "{{ vo_portal_dir }}/conf"
@@ -75,6 +82,23 @@ vo_portal_conf_lifetime: 86400
 vo_portal_truststore_pw: changeit
 vo_portal_id: FILLME
 vo_portal_secret: FILLME
+
+# SSH Key portal
+
+# When sshkey_portal is undefined, the sshkey portal will not be deployed or
+# configured
+sshkey_portal: sshkey-portal
+sshkey_portal_dir: /var/www/sshkeyportal
+sshkey_portal_conf_dir: "{{ sshkey_portal_dir }}/conf"
+sshkey_portal_conf_file: "{{ sshkey_portal_conf_dir }}/cfg.xml"
+sshkey_portal_truststore: "{{ sshkey_portal_conf_dir }}/trust-store.jks"
+sshkey_portal_conf: sshkey-portal-config
+sshkey_portal_log_dir: "{{ sshkey_portal_dir }}/log"
+sshkey_portal_storage_dir: "{{ sshkey_portal_dir }}/storage"
+
+sshkey_portal_truststore_pw: changeit
+sshkey_portal_id: FILLME
+sshkey_portal_secret: FILLME
 
 # credential store
 

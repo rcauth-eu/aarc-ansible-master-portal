@@ -1,20 +1,13 @@
-{% if credstore_accepted_credentials is defined %}
-accepted_credentials		"{{ credstore_accepted_credentials }}"
-{% endif %}
-{% if credstore_authorized_retrievers is defined %}
-authorized_retrievers		"{{ credstore_authorized_retrievers }}"
-{% endif %}
-{% if credstore_authorized_renewers is defined %}
-authorized_renewers		"{{ credstore_authorized_renewers }}"
-default_renewers     		"{{ credstore_authorized_renewers }}"
-{% endif %}
-{% if credstore_trusted_retrievers is defined %}
-trusted_retrievers		"{{ credstore_trusted_retrievers }}"
-{% endif %}
-
-{% if self_authorized_renewers is defined %}
-authorized_renewers		"{{ self_authorized_renewers }}"
-allow_self_authorization        True
+# MyProxy needs to have as a minimum:
+# - accepted_credentials - who is allowed to store credentials
+# - authorized_retrievers - who is allowed to get a delegation using passphrase
+# We skip renewal, i.e. where an existing proxy is used as authentication
+# These ones are for the MasterPortal host
+accepted_credentials		"{{ masterportal_credentials }}"
+authorized_retrievers		"{{ masterportal_credentials }}"
+{% if (sshhost_credentials is defined) and (sshhost_credentials != masterportal_credentials) %}
+# Next one is for the SSH host
+authorized_retrievers		"{{ sshhost_credentials }}"
 {% endif %}
 
 cert_dir 			{{ credstore_cert_dir }}

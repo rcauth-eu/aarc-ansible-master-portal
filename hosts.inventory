@@ -9,3 +9,6 @@ masterportal.host
 
 [credstore]
 credstore.host
+
+[sshhost]
+sshhost.host
