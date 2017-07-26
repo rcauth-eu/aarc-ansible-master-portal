@@ -31,6 +31,18 @@ httpd_packages:
 
 httpd_service: httpd
 
+# myproxy
+
+myproxy_client_packages:
+  - myproxy
+
+myproxy_server_packages:
+  - myproxy
+  - myproxy-server
+  - myproxy-voms
+  - myproxy-admin
+  - myproxy-doc
+
 # mysql
 
 mysql_packages:
