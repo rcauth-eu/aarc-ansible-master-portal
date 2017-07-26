@@ -1,11 +1,5 @@
 ---
 
-# Install myproxy dependency
-
-- name: install myproxy commandline tools
-  yum: name={{item}} state=present
-  with_items: "{{ myproxy_client_packages }}"
-
 # Installs the myproxy and ssh authZ cmd scripts
 
 - name: add myproxy_cmd script
