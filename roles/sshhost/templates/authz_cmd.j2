@@ -7,7 +7,7 @@ if [ "$1" != "{{ proxy_user }}" ];then
     exit
 fi
 
-url=https://{{ masterportal_host }}:8443/{{ mp_server }}/{{ sshkey_listing }}
+url="https://{{ masterportal_host }}:8443/{{ mp_server }}/{{ sshkey_listing }}"
 cmd="command=\"{{ myproxy_cmd }} \1\""
 {% if (OS == "RH6") or (OS == "RH7") %}
 # Note neither RH6 nor RH7 has restrict yet
@@ -17,4 +17,4 @@ opts=',restrict'
 {% endif %}
 
 sedcmd="s#\([^ ]\+\) \(.*\)\$#${cmd}${opts} \2#"
-curl -s --capath {{ certificates }} $url|sed "$sedcmd"
+curl -s --capath {{ certificates }} "$url"|sed "$sedcmd"
