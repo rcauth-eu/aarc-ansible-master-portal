@@ -14,9 +14,9 @@
 
            <callbackUri>https://{{ inventory_hostname }}/{{ sshkey_portal }}/ready</callbackUri>
 
-           <wellKnownUri>https://{{ inventory_hostname }}/{{ mp_server }}/.well-known/openid-configuration</wellKnownUri>
-
            <serviceUri>https://{{ inventory_hostname }}/{{ mp_server }}</serviceUri>
+
+           <wellKnownUri>https://{{ inventory_hostname }}/{{ mp_server }}/.well-known/openid-configuration</wellKnownUri>
 
            <id>{{ sshkey_portal_id }}</id>
            <secret>{{ sshkey_portal_secret }}</secret>
