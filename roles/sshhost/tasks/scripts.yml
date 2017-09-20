@@ -24,3 +24,11 @@
     group: "root"
     mode: 0755
     backup: yes
+
+- name: ensure authz_cmd_log file exists
+  file:
+    path: "{{ authz_cmd_log }}"
+    state: touch
+    owner: "nobody"
+    group: "nobody"
+    mode: 0600
