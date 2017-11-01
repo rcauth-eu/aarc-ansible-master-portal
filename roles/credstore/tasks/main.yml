@@ -6,6 +6,9 @@
 
 - include: deploy-trustedca.yml
 
+# Need the IGTF distribution to be able to talk to VOMS servers
+- include: deploy-igtf-distrib.yml
+
 # this is only needed if the Credential Store runs on a separate host from the
 # Master Portal, otherwise we are allowed via the related/established rule
 - include: iptables.yml

@@ -13,6 +13,9 @@
 #- include: dep-mysql.yml
 - include: dep-mariadb.yml
 
+# Make sure the keyutil jar file is remotely available
+- include: dep-keyutil.yml
+
 # Include tasks to deploy master portal
 
 - include: oa4mp-client.yml

@@ -24,6 +24,11 @@ credstore_trust_anchor_packages:
   - "ca_DCAROOT-G1"
   - "ca_RCauth-Pilot-ICA-G1"
 
+# Need IGTF distribution for connecting to VOMS servers. Probably only need
+# classic for that
+ca_policies_igtf:
+  - ca_policy_igtf-classic
+
 # Maximum lifetime of issued proxies by the Credential Store
 
 credstore_max_proxy_lifetime: 264

@@ -1,0 +1,12 @@
+---
+
+- name: install IGTF distribution for VOMS interaction
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ ca_policies_igtf }}"
+  register: igtf_distro
+
+- name: update fetch-crl in background
+  shell: "nohup fetch-crl -q -p20 < /dev/null > /dev/null 2>&1 &"
+  when: igtf_distro.changed

@@ -45,16 +45,11 @@
 # (no need for a trust store as long as trusted certs are in /etc/grid-security/certificates)
 # place trust and key stores
 
-- name: retrive all trusted CAs
-  command: "find {{ certificates }} -type f -name '*.pem'"
-  register: trusted_cas
-
 - name: add trusted CAs to client trust store
-  raw: "/usr/bin/keytool -list -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias `basename {{ item }}` || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore {{ mp_client_truststore }} -storepass {{ mp_client_truststore_pw }} -alias `basename {{ item }}`  -file {{ item }}"
-  with_items: "{{ trusted_cas.stdout_lines }}"
+  raw: "java -jar {{ keyutil_jar }} -i -F -n {{ mp_client_truststore }} -p {{ mp_client_truststore_pw }} -e {{ certificates }}/*.pem"
 
 - name: add the right permission to the trust store
-  file: 
+  file:
     path: "{{ mp_client_truststore }}"
     owner: tomcat
     group: tomcat

@@ -1,0 +1,12 @@
+---
+
+# Make sure we'll have the keyutil jar
+# See https://www.petefreitag.com/item/830.cfm and
+# https://github.com/use-sparingly/keyutil
+
+- name: copy over keyutil jar file
+  copy:
+    src: "{{ keyutil_jar }}"
+    dest: "/root/{{ keyutil_jar }}"
+    mode: 0644
+    force: no

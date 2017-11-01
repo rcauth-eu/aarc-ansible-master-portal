@@ -17,6 +17,9 @@ mp_server: mp-oa2-server
 mp_client: mp-oa2-client
 sshkey_listing: sshkeylisting
 
+# Keyutil jar file
+keyutil_jar: keyutil-0.4.0.jar
+
 # OA4MP Client 
 
 mp_client_db: oa2client
