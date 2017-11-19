@@ -1,29 +1,214 @@
-#!/bin/sh
+#!/bin/bash
+#
+# Copyright (c) NWO-I / Nikhef 2017-
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Authors:
+# 2017-
+#    Mischa Sall\'e <msalle@nikhef.nl>
+
+# First (and only) cmdline parameter is the username
 if [ "$1" = "" ];then
     echo "Error: missing argument" >&2
     exit 1
 fi
 
+# Set default variables
 username="$1"
-proxyfile=$(mktemp /tmp/x509up_u$(id -u).XXXXXX)
-logfile=$(mktemp /tmp/logfile.XXXXXX)
-hostname={{ credstore_host }}
-passphrase={{ credstore_pw }}
 
-echo $passphrase |\
-    ( X509_USER_CERT={{ proxycert }} \
-      X509_USER_KEY={{ proxykey }} \
-      myproxy-logon -l "$username" \
-		  -s "$hostname" \
-		  -S -o $proxyfile \
-		  -v \
-		  > $logfile 2>&1 )
+vomses="{{ vomses }}"			# vomses file or directory
+lifetime="{{ default_lifetime }}"	# default returned proxy lifetime
+maxlifetime="{{ max_lifetime }}"	# maximum returned proxy lifetime
+sshhost="{{ inventory_hostname }}"    	# SSH host
+voportalhost="{{ masterportal_host }}"	# VO portal host 
+myproxyserver="{{ credstore_host }}"	# myproxy server
+passphrase="{{ credstore_pw }}"		# credential passphrase
 
-if [ $? -ne 0 ];then
-    echo -n "Error: " >&2
-    tail -n2 $logfile >&2
+
+# Prints helptext on stdout
+showhelp()	{
+    cat << EOF
+usage: ssh proxy@${sshhost} [OPTION]...
+ 
+Valid options are:
+ time=HOURS   proxylifetime in hours (default: $lifetime, maximum: $maxlifetime)
+ voms=FQAN    add VOMS FQAN (repeat for multiple FQANs, default: none)
+ info         give user & proxy information
+ help         show this helptext
+
+EOF
+    echo "Supported VOs:"
+    if [ -d "$vomses" ];then
+	echo " $(cut -d'"' -f2 ${vomses}/*|sort -u|tr '\n' ' ')"
+    else
+	echo " $(cut -d'"' -f2 $vomses|sort -u|tr '\n' ' ')"
+    fi
+
+cat << EOF
+
+Returns a proxy certificate on stdout when the MasterPortal contains a valid
+credential. Use e.g. https://${voportalhost}/vo-portal/ once every 10 days
+to provide for the latter.
+
+EOF
+    exit $1
+}
+
+# Error function: first print message, then help text
+error()	{
+    echo "$@" >&2
+    echo >&2
+    showhelp 1
+}
+
+# Does a poor-man's myproxy-info by obtaining an actual proxy chain and then
+# obtain the remaining lifetime of the second proxy in the chain
+info_alt()  {
+    local proxyfile=$(mktemp /tmp/x509up_u$(id -u).XXXXXX)
+    local logfile=$(mktemp /tmp/logfile.XXXXXX)
+    local rc=0
+    local enddate dt days h m s
+
+    echo "username: $username"
+
+    export X509_USER_CERT="{{ proxycert }}"
+    export X509_USER_KEY="{{ proxykey }}"
+    myproxy-logon -l "$username" -s "$myproxyserver" -S -o $proxyfile -v \
+		  -Q "{{ testreq }}" \
+		  > $logfile 2>&1 <<< "$passphrase"
+
+    # First handle the error cases
+    if [ $? -ne 0 ];then
+	if grep -q "certificate has expired" $logfile ; then
+	    echo "timeleft: 0:00:00  (0.0 days)"
+	elif grep -q "No credentials exist for" $logfile ; then
+	    echo "No credential"
+	else
+	    # non-standard (real) error 
+	    echo "Error: " >&2
+	    tail -n2 $logfile|sed 's/^/ /' >&2
+	    rc=1
+	fi
+    else
+	# get enddate of second proxy and obtain the remaining seconds.
+	enddate=$(sed -n '/END CERTIFICATE/,$p' $proxyfile|\
+		  openssl x509 -enddate -noout|cut -d'=' -f2-)
+	dt=$(($(date +%s -d "${enddate}")-$(date +%s)))
+	# get # of days as float
+	days=$(awk "BEGIN { print ( $dt / 24 / 3600 ) }")
+	# get hours, minutes, seconds
+	s=$((h=dt/3600, dt-=h*3600, m=dt/60, dt-m*60))
+	printf "timeleft: %d:%02d:%02d  (%.1f days)\n" $h $m $s $days
+    fi
+    # Tidy up temp files
     rm -f $logfile $proxyfile
-    exit 1
-fi
-cat $proxyfile
-rm -f $proxyfile $logfile
+    exit $rc
+}
+
+# Does a (reduced) myproxy-info request and exits. On success prints the
+# username and remaining proxy lifetime. The exitvalue is non-zero on error.
+info()	{
+    local logfile=$(mktemp /tmp/logfile.XXXXXX)
+    local rc=0
+
+    export X509_USER_CERT="{{ proxycert }}"
+    export X509_USER_KEY="{{ proxykey }}"
+    myproxy-info -l "$username" -s "$myproxyserver" > $logfile 2>&1
+
+    if [ $? -ne 0 ];then
+        if grep -q "no credentials found for user" $logfile;then
+	    echo "No credential for user $username"
+        else
+	    echo "Error: " >&2
+	    tail -n2 $logfile|sed 's/^/ /' >&2
+	    rc=1
+        fi
+    else
+	egrep "username|timeleft" $logfile | sed 's/^ \+//'
+    fi
+    rm -f $logfile
+    exit $rc
+}
+
+# Does a myproxy-logon request and exits. On success prints the
+# resulting proxy. The exitvalue is non-zero on error.
+getproxy()	{
+    local proxyfile=$(mktemp /tmp/x509up_u$(id -u).XXXXXX)
+    local logfile=$(mktemp /tmp/logfile.XXXXXX)
+    local rc=0
+
+    export X509_USER_CERT="{{ proxycert }}"
+    export X509_USER_KEY="{{ proxykey }}"
+    export VOMS_USERCONF=$vomses
+    myproxy-logon -l "$username" -s "$myproxyserver" -S -o $proxyfile -v \
+		  -t "$lifetime" $voms \
+		  > $logfile 2>&1 <<< "$passphrase"
+
+    if [ $? -ne 0 ];then
+	echo "Error: " >&2
+	tail -n2 $logfile|sed 's/^/ /' >&2
+	rc=1
+    else
+	cat $proxyfile
+    fi
+    rm -f $logfile $proxyfile
+    exit $rc
+}
+
+########################################################################
+# Main program
+########################################################################
+
+# Get ssh provided options
+declare -a voms
+for cmd in $SSH_ORIGINAL_COMMAND;do
+    case "$cmd" in
+	info)   # Print username, remaining time, then exit
+		info_alt
+		;;
+	help)   # Print help text and exit
+		showhelp 0
+		;;
+        time=*) value="${cmd:5}"
+		# Check value is a number
+                if [ -n "${value//[[:digit:]]/}" ];then
+		    error "Error: time should be just a number"
+		fi
+		if [ "${value}" -gt "${maxlifetime}" ];then
+		    lifetime="$maxlifetime"
+		else
+		    lifetime="$value"
+		fi
+		;;
+	voms=*) group="[a-zA-Z0-9][a-zA-Z0-9_.-]\+"
+		value="${cmd:5}"
+		# Check value against https://www.ogf.org/documents/GFD.182.pdf
+		if echo "$value"|\
+		    grep -q "^${group}\(:\(/${group}\)\+\(/Role=${group}\)*\)*$"
+		then
+		    # add valid voms option
+		    voms="$voms -m $value"
+		else
+	 	    error "Error: voms should be of form VO or" \
+			  "VO:/VO/subgroup or VO:/VO/subgroup/Role=..."
+		fi
+		;;
+	*)      # Unknown option, print error and exit
+		error "Error: Invalid option \"$cmd\""
+		;;
+    esac
+done
+
+# Now do the myproxy-get-delegation and exit 
+getproxy

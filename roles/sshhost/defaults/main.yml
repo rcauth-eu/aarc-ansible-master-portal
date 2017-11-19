@@ -6,6 +6,8 @@ authz_cmd: /usr/local/sbin/authz_cmd
 authz_cmd_log: /var/log/authz_cmd.log
 myproxy_cmd: /usr/local/sbin/myproxy_cmd
 
+testreq: /usr/local/share/testreq.pem
+
 proxy_user: proxy
 certificates: /etc/grid-security/certificates
 hostcert: /etc/grid-security/hostcert.pem
@@ -13,4 +15,9 @@ hostkey: /etc/grid-security/hostkey.pem
 proxycert: /etc/grid-security/proxycert.pem
 proxykey: /etc/grid-security/proxykey.pem
 
+# vomses file or directory, for retrieving VOMS proxies
+vomses: /etc/vomses
 
+# Default and maximum returned proxy lifetimes
+default_lifetime: 12
+max_lifetime: 72

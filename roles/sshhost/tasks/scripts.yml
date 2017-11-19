@@ -16,6 +16,14 @@
     mode: 0750
     backup: yes
 
+- name: copy test CSR file
+  copy:
+    src: testreq.pem
+    dest: "{{ testreq }}"
+    owner: "root"
+    group: "root"
+    mode: 0744
+
 - name: add authz_cmd script
   template:
     src: authz_cmd.j2
