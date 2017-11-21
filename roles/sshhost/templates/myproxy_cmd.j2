@@ -42,10 +42,11 @@ showhelp()	{
 usage: ssh proxy@${sshhost} [OPTION]...
  
 Valid options are:
- time=HOURS   proxylifetime in hours (default: $lifetime, maximum: $maxlifetime)
- voms=FQAN    add VOMS FQAN (repeat for multiple FQANs, default: none)
- info         give user & proxy information
- help         show this helptext
+ time=HOURS    proxylifetime in hours (default: $lifetime, maximum: $maxlifetime)
+ voms=VO|FQAN  add VOMS info (repeat for multiple FQANs, default: none)
+               e.g. voms=testvo or voms=testvo:/testvo/Role=member
+ info          give user & proxy information
+ help          show this helptext
 
 EOF
     echo "Supported VOs:"
