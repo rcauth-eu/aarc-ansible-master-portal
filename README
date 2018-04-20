@@ -44,15 +44,15 @@ Prerequisites
 
 	3. You need to create a JSON Web Keys file.
 	   - Create a dummy config file:
-	     `echo '<config>\n<service/>\n</config>' > tmp.conf`
+	      echo '<config>\n<service/>\n</config>' > tmp.conf
 	   - Run the oa2-cli tool locally:
-	     `java -jar ./roles/delegserver/files/oa2-cli.jar -cfg tmp.conf`
-	   - Choose `use keys` then run `create`
+	      java -jar ./roles/delegserver/files/oa2-cli.jar -cfg tmp.conf
+	   - Choose "use keys" then run "create"
 	   - Choose as filename './roles/delegserver/files/mp.jwk'
 	   - exit the commandline tool (enter 'exit' twice)
 	   - remove the 'tmp.conf' file
 	   Lookup the 'kid' in the created file, use e.g. the RS256 key and
-	   enter the value as `mp_server_jwk_key_id` in 'masterportal_env.yml'
+	   enter the value as 'mp_server_jwk_key_id' in 'masterportal_env.yml'
 
 
 How to use these scripts?
