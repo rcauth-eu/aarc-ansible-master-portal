@@ -46,9 +46,9 @@ Prerequisites
 	   - Create a dummy config file:
 	      echo '<config>\n<service/>\n</config>' > tmp.conf
 	   - Run the oa2-cli tool locally:
-	      java -jar ./roles/delegserver/files/oa2-cli.jar -cfg tmp.conf
+	      java -jar ./roles/masterportal/files/oa2-cli.jar -cfg tmp.conf
 	   - Choose "use keys" then run "create"
-	   - Choose as filename './roles/delegserver/files/mp.jwk'
+	   - Choose as filename './roles/masterportal/files/mp.jwk'
 	   - exit the commandline tool (enter 'exit' twice)
 	   - remove the 'tmp.conf' file
 	   Lookup the 'kid' in the created file, use e.g. the RS256 key and
