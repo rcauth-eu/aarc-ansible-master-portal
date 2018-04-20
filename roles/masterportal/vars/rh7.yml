@@ -3,7 +3,8 @@
 # java constants
 
 java_download_url: "https://javadl.sun.com/webapps/download/AutoDL?BundleId=114680"
-javax_mail_url: "https://java.net/projects/javamail/downloads/download/javax.mail.jar"
+#javax_mail_url: "https://java.net/projects/javamail/downloads/download/javax.mail.jar"
+javax_mail_url: "https://github.com/javaee/javamail/releases/download/JAVAMAIL-1_6_1/javax.mail.jar"
 java_home: /usr/java/default
 
 # tomcat constants
@@ -12,11 +13,14 @@ tomcat_packages:
  - tomcat
  - tomcat-admin-webapps
 
-tomcat_extra_packages:
-  - jglobus-jsse
-  - jglobus-ssl-proxies
+#tomcat_extra_packages:
+#  - javamail
 
-tomcat_extra_libs: /usr/share/java/jglobus
+#tomcat_jglobus_packages:
+#  - jglobus-jsse
+#  - jglobus-ssl-proxies
+
+#tomcat_extra_libs: /usr/share/java/jglobus
 
 catalina_home: /usr/share/tomcat
 tomcat_user: tomcat
@@ -77,4 +81,3 @@ postgresql_packages:
 
 postgresql_connector_path: /usr/share/java
 postgresql_connector: postgresql-jdbc.jar
-                                           

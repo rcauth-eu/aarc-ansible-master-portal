@@ -18,6 +18,10 @@
     insertafter: EOF
     backup: yes
 
+#- name: install javamail (for javax.mail)
+#  yum: name={{ item }} state=present
+#  with_items: "{{ tomcat_extra_packages }}"
+
 #- name: clean up webapps directory
 #  command: /bin/rm -rf "{{ catalina_home }}/webapps/*"
 #  when: tomcat_install.changed
@@ -25,17 +29,29 @@
 # Install jglobus-jsse and globus-ssl-proxies (this is only needed for limited proxies!)
 #- name: install jglobus
 #  yum: name={{ item }} state=present
-#  with_items:
-#    - jglobus-jsse 
-#    - jglobus-ssl-proxies
+#  with_items: "{{ tomcat_jglobus_packages }}"
+
+#- name: find extra jar libraries for linking
+#  command: find "{{ tomcat_extra_libs }}" -maxdepth 1 -type f -name '*.jar' -exec basename {} \;
+#  register: extra_libs
+
+#- name: make a link to the jglobus jars
+#  file:
+#    src: "{{ tomcat_extra_libs }}/{{ item }}"
+#    dest: "{{ catalina_home }}/lib/{{ item }}"
+#    owner: root
+#    group: root
+#    state: link
+#  with_items: "{{ extra_libs.stdout_lines }}"
 
 # configurations
 
 # close unused ports?  
 
 # set tomcatAuthentication="false" so REMOTE_USER will be taken over from apache
+# and only listen on localhost
 
-- name: check if tomcat authnetication is disabled (ignore errors)
+- name: check if tomcat authentication is disabled (ignore errors)
   command: grep 'Connector.*port="8009".*address="127.0.0.1" tomcatAuthentication="false"' "{{ catalina_home }}/conf/server.xml"
   ignore_errors: True
   changed_when: False
@@ -54,7 +70,7 @@
   when: tomcat_auth.rc != 0
   notify: restart tomcat
 
-# only listen on localhost
+# only listen on localhost on 8080
 
 - name: check if listening address is set to localhost
   command: grep 'Connector.*port="8080".*address="127.0.0.1"' "{{ catalina_home }}/conf/server.xml"
@@ -129,12 +145,12 @@
   notify: restart tomcat
 
 # add javax.mail jar
+# Note: we could use the RPM for javamail, but is ancient and only for CentOS7
 
 - name: download javax.mail jar
   get_url:
     url: "{{ javax_mail_url }}"
     dest: "{{ catalina_home }}/lib/javax.mail.jar"
-
 - name: set permission on javax.mail
   file:
     path: "{{ catalina_home }}/lib/javax.mail.jar"
@@ -142,7 +158,6 @@
     group: root
     mode: 0644
 
-# add mail resource to context.xml
 # enable cross-context
 
 - name: adding context.xml (crossContext enabled)

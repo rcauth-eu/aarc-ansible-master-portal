@@ -90,7 +90,7 @@ vo_portal_secret: FILLME
 
 # When sshkey_portal is undefined, the sshkey portal will not be deployed or
 # configured
-sshkey_portal: sshkey-portal
+sshkey_portal: sshkeys
 sshkey_portal_dir: /var/www/sshkeyportal
 sshkey_portal_conf_dir: "{{ sshkey_portal_dir }}/conf"
 sshkey_portal_conf_file: "{{ sshkey_portal_conf_dir }}/cfg.xml"
