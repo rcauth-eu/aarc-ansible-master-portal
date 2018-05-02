@@ -7,12 +7,13 @@
   with_items: "{{ credstore_trust_anchor_packages | default([]) }}"
   when: credstore_trust_anchor_packages is defined
 
-- name: unpack onlineca.tar.gz into /etc/grid-security/certificates
+- name: unpack trust_anchors into /etc/grid-security/certificates
   unarchive:
-    src: "{{ credstore_trust_anchor }}"
+    src: "{{ item }}"
     copy: yes
     dest: "{{ credstore_cert_dir }}"
     mode: 0644
     owner: root
     group: root
+  with_items: "{{ credstore_trust_anchor_tarballs }}"
   when: credstore_trust_anchor_packages is not defined

@@ -5,7 +5,7 @@
 certificates: /etc/grid-security/certificates
 hostcert: /etc/grid-security/hostcert.pem
 hostkey: /etc/grid-security/hostkey.pem
-hostcert_intermediate: /etc/grid-security/certificates/TERENA-eScience-SSL-CA-3.pem
+hostcert_intermediate:
 
 # DB
 #mysql_root_password: changeme

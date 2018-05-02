@@ -5,4 +5,6 @@ credstore_max_proxy_lifetime: 12
 credstore_allow_voms_attribute_requests: true
 credstore_voms_userconf: /etc/vomses/
 
-credstore_trust_anchor: onlineca.tar.gz
+credstore_trust_anchor_tarballs:
+    - onlineca.tar.gz
+    - internalca.tar.gz

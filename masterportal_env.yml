@@ -1,5 +1,8 @@
 ---
 
+# When the hostcert is signed by an intermediate CA, specify the pem file here:
+hostcert_intermediate: /etc/grid-security/certificates/TERENA-eScience-SSL-CA-3.pem
+
 # OA4MP Client
 
 # Configure the mp_client_conf_lifetime to set the lifetime sent with every /getcert request to

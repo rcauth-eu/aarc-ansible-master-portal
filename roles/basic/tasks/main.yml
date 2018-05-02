@@ -2,6 +2,7 @@
 
 # include tasks to execute
 
+- include: selinux.yml
 - include: sshd.yml
 - include: repos.yml
 - include: general.yml

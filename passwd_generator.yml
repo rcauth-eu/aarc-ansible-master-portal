@@ -1,21 +1,20 @@
 ---
 
 - name: "look for existing password: {{ item }}"
-  command: "grep '^{{ item }}.*' {{ passwd_generator_file }}"
+  command: "grep '^{{ item }}: CHANGEME' {{ passwd_generator_file }}"
   ignore_errors: yes 
-  changed_when: False
   register: passwd_lookup
 
 - name: "generate new password for {{ item }}"
   shell: "openssl rand -base64 21 | tr '[/+]' 'X' | tr -d '\n'"
   register: new_passwd
-  when: passwd_lookup.rc != 0
+  when: passwd_lookup.rc == 0
 
 - name: "fill in new password for {{ item }} in file"
   lineinfile:
     dest: "{{ passwd_generator_file }}"
-    regexp: "^{{ item }}.*"
+    regexp: "^{{ item }}: CHANGEME"
     line: "{{ item }}: {{ new_passwd.stdout }}"
     state: present
-  when: passwd_lookup.rc != 0
+  when: passwd_lookup.rc == 0
 

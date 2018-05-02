@@ -1,0 +1,8 @@
+---
+
+# Change selinux settings
+
+- name: put selinux in permissive mode
+  selinux:
+    policy: targeted
+    state: permissive

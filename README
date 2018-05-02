@@ -50,9 +50,15 @@ Prerequisites
 	   - Choose "use keys" then run "create"
 	   - Choose as filename './roles/masterportal/files/mp.jwk'
 	   - exit the commandline tool (enter 'exit' twice)
-	   - remove the 'tmp.conf' file
+	   - remove the 'tmp.conf' and 'log.xml' files
 	   Lookup the 'kid' in the created file, use e.g. the RS256 key and
 	   enter the value as 'mp_server_jwk_key_id' in 'masterportal_env.yml'
+
+	4. You need to create the passphrases for the different components.
+	   This can be done using the secrets.yml playbook.
+	   Note that you also will have to fill in the client ID and Secret for
+	   the VO-portal and/or SSH keys portal (when applicable). They can
+	   obviously only be obtained once the MasterPortal has been installed.
 
 
 How to use these scripts?
@@ -86,7 +92,7 @@ then 'sshhost.yml' and then 'masterportal.yml' last.
 
 	b. Provide Online CA tar file
 
-	   MyProxy only stores credentials that it can verify, therefor it's
+	   MyProxy only stores credentials that it can verify, therefore it's
 	   very important to have the Online CA (which will issue user
 	   certificates) present in the trusted certificates directory (usually
 	   /etc/grid-security/certificates). Make a tarball from the Online CA
