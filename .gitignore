@@ -1,8 +1,16 @@
 # Do not include the build artefacts
+/roles/masterportal/files/oa2-cli.jar
 /roles/masterportal/files/mp-oa2-client.war
 /roles/masterportal/files/mp-oa2-server.war
-/roles/masterportal/files/oa2-cli.jar
 /roles/masterportal/files/vo-portal.war
+/roles/masterportal/files/sshkey-portal.war
+/roles/masterportal/files/keyutil*.jar
+
+# Do not accidentally add the created secrets_env.yml
+/secrets_env.yml
+
+# Do not accidentally add the JSON web keys
+/roles/masterportal/files/mp.jwk
 
 # Do not accidentally add the host cert/key
 /roles/basic/files/*.key

@@ -97,7 +97,7 @@
 # convert hostcert into pkcs12, so that oa4mp can load it in its keystore
 
 - name: add hostcert to keystore
-  command: openssl pkcs12 -export -in "{{ hostcert }}" -inkey "{{ hostkey }}" -out "{{ mp_server_keystore }}" -name hostcred -CApath "{{ certificates }}" -chain -passout "pass:{{ mp_server_keystore_pw }}"
+  command: openssl pkcs12 -export -in "{{ hostcert }}" -inkey "{{ hostkey }}" -out "{{ mp_server_keystore }}" -name hostcred -CApath "{{ certificates }}" -chain -passout "pass:{{ mp_keystore_pw }}"
 
 - name: add the right permission to the key store
   file:

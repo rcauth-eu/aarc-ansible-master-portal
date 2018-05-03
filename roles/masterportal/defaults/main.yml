@@ -20,6 +20,12 @@ sshkey_listing: sshkeylisting
 # Keyutil jar file
 keyutil_jar: keyutil-0.4.0.jar
 
+# The keystore is used for BOTH MP Client and MP Server to access the
+# Credential Store therefore we set only a single passwords (mp_keystore_pw).
+# This way the two components can share a single keystore. The keystore usually
+# contains the hostcert of the Master Portal.
+mp_keystore_pw: changeme
+
 # OA4MP Client 
 
 mp_client_db: oa2client
@@ -38,7 +44,6 @@ mp_client_conf_lifetime: 31536000
 
 mp_client_db_pw: changeme
 mp_client_truststore_pw: changeme
-mp_client_keystore_pw: changeme
 mp_client_secret: FILLME
 
 # OA4MP Server
@@ -66,7 +71,6 @@ mp_server_jwk_key_id: FILLME
 
 mp_server_db_pw: changeme
 #mp_server_truststore_pw: changeme
-mp_server_keystore_pw: changeme
 
 # VO Portal
 

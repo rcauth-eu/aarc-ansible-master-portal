@@ -43,7 +43,7 @@
        <myproxy host="{{ credstore_host }}" port="{{ credstore_port }}" password="{{ credstore_pw }}">
                  <keystore path="{{ mp_server_keystore }}"
                            type="pkcs12"
-                           password="{{ mp_server_keystore_pw }}"
+                           password="{{ mp_keystore_pw }}"
                            factory="SunX509" />
 		 <!-- 
 			The default lifetime set in seconds is used in case there is no proxylifetime value 
@@ -103,7 +103,7 @@
        <myproxy host="{{ credstore_host }}" port="{{ credstore_port }}" password="{{ credstore_pw }}">
                  <keystore path="{{ mp_server_keystore }}"
                            type="pkcs12"
-                           password="{{ mp_server_keystore_pw }}"
+                           password="{{ mp_keystore_pw }}"
                            factory="SunX509" />
        </myproxy>
 
