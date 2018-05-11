@@ -18,76 +18,24 @@
 
 # INSTALLING TRUST ANCHOR OF HOST CERTIFICATE FROM RPM
 
-# install trust root from an rpm package
-- name: deploy trust anchor for host credential (from rpm)
+# install trust root from rpm package(s)
+- name: deploy trust anchor(s) from rpm
   yum:
-    name: "{{ hostcred_trust_anchor_package }}"
+    name: "{{ item }}"
     state: present
-  when: hostcred_trust_anchor_package is defined
+  with_items: "{{ trust_anchor_packages }}"
+  when: trust_anchor_packages is defined
 
-# INSTALLING TRUST ANCHOR OF HOST CERTIFICATE FROM FILE
+# INSTALLING TRUST ANCHOR OF HOST CERTIFICATE FROM TARBALL
 
-# install trust root from PEM file
-- name: deploy trust anchor for host credential (from PEM)
-  copy:
-    src: "{{ hostcred_trust_anchor_pem }}"
-    dest: "/etc/grid-security/certificates/{{ hostcred_trust_anchor_pem }}"
+# install trust root from tarball file
+- name: unpack trust anchor(s) from tarball
+  unarchive:
+    src: "{{ item }}"
+    copy: yes
+    dest: "{{ x509_cert_dir }}"
+    mode: 0644
     owner: root
     group: root
-    mode: 0644
-  when: hostcred_trust_anchor_pem is defined
-
-# get subject hash of CA
-- name: getting subject hash of trust anchor
-  shell: "openssl x509 -in /etc/grid-security/certificates/{{ hostcred_trust_anchor_pem }} -noout -subject_hash | tr -d '\n'"
-  register: subject_hash
-  when: hostcred_trust_anchor_pem is defined
-
-# get subject hash old of CA
-- name: getting subject hash old of trust anchor
-  shell: "openssl x509 -in /etc/grid-security/certificates/{{ hostcred_trust_anchor_pem }} -noout -subject_hash_old | tr -d '\n'"
-  register: subject_hash_old
-  when: hostcred_trust_anchor_pem is defined
-
-# make a link with the subject hash
-- name: create subject hash symlink
-  file:
-    src: "{{ hostcred_trust_anchor_pem }}"
-    dest: "/etc/grid-security/certificates/{{ subject_hash.stdout }}.0"
-    state: link
-  when: hostcred_trust_anchor_pem is defined
-
-# make a link with the subject hash old
-- name: create subject hash old symlink
-  file:
-    src: "{{ hostcred_trust_anchor_pem }}"
-    dest: "/etc/grid-security/certificates/{{ subject_hash_old.stdout }}.0"
-    state: link
-  when: hostcred_trust_anchor_pem is defined
-
-# install signing policy belonging to trust root
-- name: deploy signing policy belonging to trust root
-  copy:
-    src: "{{ hostcred_trust_anchor_signing_policy }}"
-    dest: "/etc/grid-security/certificates/{{ hostcred_trust_anchor_signing_policy }}"
-    owner: root
-    group: root
-    mode: 0644
-  when: hostcred_trust_anchor_signing_policy is defined
-
-# make a link with the subject hash to signing policy
-- name: create subject hash symlink to signing policy
-  file:
-    src: "{{ hostcred_trust_anchor_signing_policy }}"
-    dest: "/etc/grid-security/certificates/{{ subject_hash.stdout }}.signing_policy"
-    state: link
-  when: hostcred_trust_anchor_signing_policy is defined
-
-# make a link with the subject hash old to signing policy
-- name: create subject hash old symlink to signing policy
-  file:
-    src: "{{ hostcred_trust_anchor_signing_policy }}"
-    dest: "/etc/grid-security/certificates/{{ subject_hash_old.stdout }}.signing_policy"
-    state: link
-  when: hostcred_trust_anchor_signing_policy is defined
-
+  with_items: "{{ trust_anchor_tarballs }}"
+  when: trust_anchor_tarballs is defined

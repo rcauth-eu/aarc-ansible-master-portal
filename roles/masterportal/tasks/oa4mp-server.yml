@@ -80,7 +80,7 @@
 # place trust and key store
 
 #- name: retrieve all trusted CAs
-#  command: "find {{ certificates }} -type f -name '*.pem'"
+#  command: "find {{ x509_cert_dir }} -type f -name '*.pem'"
 #  register: trusted_cas
 
 #- name: add trusted CAs to client trust store
@@ -97,7 +97,7 @@
 # convert hostcert into pkcs12, so that oa4mp can load it in its keystore
 
 - name: add hostcert to keystore
-  command: openssl pkcs12 -export -in "{{ hostcert }}" -inkey "{{ hostkey }}" -out "{{ mp_server_keystore }}" -name hostcred -CApath "{{ certificates }}" -chain -passout "pass:{{ mp_keystore_pw }}"
+  command: openssl pkcs12 -export -in "{{ hostcert }}" -inkey "{{ hostkey }}" -out "{{ mp_server_keystore }}" -name hostcred -CApath "{{ x509_cert_dir }}" -chain -passout "pass:{{ mp_keystore_pw }}"
 
 - name: add the right permission to the key store
   file:

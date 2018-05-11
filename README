@@ -42,7 +42,10 @@ Prerequisites
 	       https://github.com/rcauth-eu/keyutil
 	   for details
 
-	3. You need to create a JSON Web Keys file.
+	3. Download a new Oracle Java RPM (8 has been verified), and rename or
+	   create a symlink in 'roles/masterportal/files/' named jre.rpm.
+
+	4. You need to create a JSON Web Keys file.
 	   - Create a dummy config file:
 	      echo '<config>\n<service/>\n</config>' > tmp.conf
 	   - Run the oa2-cli tool locally:
@@ -54,7 +57,7 @@ Prerequisites
 	   Lookup the 'kid' in the created file, use e.g. the RS256 key and
 	   enter the value as 'mp_server_jwk_key_id' in 'masterportal_env.yml'
 
-	4. You need to create the passphrases for the different components.
+	5. You need to create the passphrases for the different components.
 	   This can be done using the secrets.yml playbook.
 	   Note that you also will have to fill in the client ID and Secret for
 	   the VO-portal and/or SSH keys portal (when applicable). They can

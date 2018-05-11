@@ -20,7 +20,7 @@ opts=',restrict'
 sedcmd="s#\([^ ]\+\) \(.*\)\$#${cmd}${opts} \2#"
 
 curllog=$(mktemp /tmp/curl_errorXXXXXX)
-curl -Ss --capath {{ certificates }} "$url" 2>>$curllog |sed "$sedcmd"
+curl -Ss --capath "{{ x509_cert_dir }}" "$url" 2>>$curllog |sed "$sedcmd"
 retval=${PIPESTATUS[0]}
 # Check exitstatus of cURL
 if [ $retval -ne 0 ];then

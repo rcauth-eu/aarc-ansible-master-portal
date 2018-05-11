@@ -1,5 +1,25 @@
 ---
 
+# Trust anchors: for the credstore this MUST include:
+# - CA for hostcert of masterportal, credstore and sshhost
+# - OnlineCA (i.e. the backend CA for the online CA)
+# Settings here override those in basic_env.yml
+
+# trust anchor as RPM
+#trust_anchor_packages:
+#  - "ca_DCAROOT-G1"
+#  - "ca_RCauth-Pilot-ICA-G1"
+
+# trust anchor as tarball
+#trust_anchor_tarballs:
+#  - "onlineca.tar.gz"
+#  - "internalca.tar.gz"
+
+# Additionally need IGTF distribution when we want to connect to VOMS servers.
+# Probably only need classic for that
+ca_policies_igtf:
+  - ca_policy_igtf-classic
+
 # Fill in the Master Portal DN. This is going to be trusted by the MyProxy
 # Credential Store for proxy upload and retrieval. This is generally the
 # hostcert DN of the Master Portal.
@@ -13,21 +33,6 @@ masterportal_credentials: "/C=NL/O=Example/OU=Org/CN=masterportal"
 
 sshhost_credentials: "/C=NL/O=Example/OU=Org/CN=ssh-host"
 
-# A trust anchor for the Online CA you are planning to support is needed.
-# Specify all the trust anchors and their dependencies here as urls for RPM 
-# packages. These will get installed in order. If you leave this empty, the 
-# scripts will fall back on deplying the trust root from a tarball on your 
-# local machine. The tarball location can be configured with credstore_trust_anchor
-# and it defaults to onlineca.tar.gz.
-
-credstore_trust_anchor_packages: 
-  - "ca_DCAROOT-G1"
-  - "ca_RCauth-Pilot-ICA-G1"
-
-# Need IGTF distribution for connecting to VOMS servers. Probably only need
-# classic for that
-ca_policies_igtf:
-  - ca_policy_igtf-classic
 
 # Maximum lifetime of issued proxies by the Credential Store
 

@@ -1,12 +1,12 @@
 ---
 
-# Install latest sun java 1.8
+# Install Oracle JRE
 
-- name: download java 8
-  get_url:
-    url: "{{ java_download_url }}"
+- name: copy jre RPM
+  copy:
+    src: jre.rpm
     dest: /tmp/jre.rpm
-- name: make sure java 8 is installed
+- name: install java jre RPM
   yum:
     name: /tmp/jre.rpm
     state: present

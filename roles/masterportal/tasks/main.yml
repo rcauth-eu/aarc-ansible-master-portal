@@ -2,39 +2,39 @@
 
 # Include dependencies
 
-- include: dep-java.yml
-- include: dep-tomcat.yml
-- include: dep-httpd.yml
+- include_tasks: dep-java.yml
+- include_tasks: dep-tomcat.yml
+- include_tasks: dep-httpd.yml
 
 # Currently the Master Portal does not support database backend
 # This will be fixed in to future, but for now, filesystem backend
 # is used.
 
-#- include: dep-mysql.yml
-- include: dep-mariadb.yml
+#- include_tasks: dep-mysql.yml
+- include_tasks: dep-mariadb.yml
 
 # Make sure the keyutil jar file is remotely available
-- include: dep-keyutil.yml
+- include_tasks: dep-keyutil.yml
 
 # Include tasks to deploy master portal
 
-- include: oa4mp-client.yml
-- include: oa4mp-server.yml
+- include_tasks: oa4mp-client.yml
+- include_tasks: oa4mp-server.yml
 
 # Setup the self-service SSH public key upload portal. This can be used in
 # combination with the SSH host (see the sshhost playbook) to download proxy
 # certificates using SSH and a public key.
 
-- include: sshkey-portal.yml
+- include_tasks: sshkey-portal.yml
   when: sshkey_portal is defined
 
 # The VO Portal is not part of the Master Portal, it's only a simple 
 # Master Portal client installed alongside it for testing purposes.
 
-- include: vo-portal.yml
+- include_tasks: vo-portal.yml
   when: vo_portal is defined
 
-- include: iptables.yml
+- include_tasks: iptables.yml
 
 # list of enabled services
 

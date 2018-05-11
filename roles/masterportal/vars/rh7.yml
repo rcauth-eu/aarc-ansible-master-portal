@@ -2,8 +2,6 @@
 
 # java constants
 
-java_download_url: "https://javadl.sun.com/webapps/download/AutoDL?BundleId=114680"
-#javax_mail_url: "https://java.net/projects/javamail/downloads/download/javax.mail.jar"
 javax_mail_url: "https://github.com/javaee/javamail/releases/download/JAVAMAIL-1_6_1/javax.mail.jar"
 java_home: /usr/java/default
 

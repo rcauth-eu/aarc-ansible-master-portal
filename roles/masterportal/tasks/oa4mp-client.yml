@@ -42,11 +42,11 @@
     mode: 0600
     backup: yes
 
-# (no need for a trust store as long as trusted certs are in /etc/grid-security/certificates)
+# (no need for a trust store as long as trusted certs are in x509_cert_dir)
 # place trust and key stores
 
 - name: add trusted CAs to client trust store
-  raw: "java -jar {{ keyutil_jar }} -i -F -n {{ mp_client_truststore }} -p {{ mp_client_truststore_pw }} -e {{ certificates }}/*.pem"
+  raw: "java -jar {{ keyutil_jar }} -i -F -n {{ mp_client_truststore }} -p {{ mp_client_truststore_pw }} -e {{ x509_cert_dir }}/*.pem"
 
 - name: add the right permission to the trust store
   file:
@@ -58,7 +58,7 @@
 # convert hostcert into pkcs12, so that oa4mp can load it in its keystore
 
 - name: add hostcert to keystore
-  command: "openssl pkcs12 -export -in {{ hostcert }} -inkey {{ hostkey }} -out {{ mp_client_keystore }} -name hostcred -CApath {{ certificates }} -chain -passout pass:{{ mp_keystore_pw }}"
+  command: "openssl pkcs12 -export -in {{ hostcert }} -inkey {{ hostkey }} -out {{ mp_client_keystore }} -name hostcred -CApath {{ x509_cert_dir }} -chain -passout pass:{{ mp_keystore_pw }}"
 
 - name: add the right permission to the key store
   file: 

@@ -43,7 +43,7 @@
 # (no need for a trust store as long as trusted certs are in /etc/grid-security/certificates)
 
 - name: add trusted CAs to client trust store
-  raw: "java -jar {{ keyutil_jar }} -i -F -n {{ vo_portal_truststore }} -p {{ vo_portal_truststore_pw }} -e {{ certificates }}/*.pem"
+  raw: "java -jar {{ keyutil_jar }} -i -F -n {{ vo_portal_truststore }} -p {{ vo_portal_truststore_pw }} -e {{ x509_cert_dir }}/*.pem"
 
 - name: add the right permission to the trust store
   file:

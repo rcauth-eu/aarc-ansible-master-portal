@@ -2,9 +2,9 @@
 
 # certificates
 
-certificates: /etc/grid-security/certificates
-hostcert: /etc/grid-security/hostcert.pem
-hostkey: /etc/grid-security/hostkey.pem
+# Note: /etc/grid-security/certificates is defined in the
+# basic role as x509_cert_dir. hostcert and hostkey are also defined in the
+# basic role
 hostcert_intermediate:
 
 # DB

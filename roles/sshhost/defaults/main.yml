@@ -9,9 +9,6 @@ myproxy_cmd: /usr/local/sbin/myproxy_cmd
 testreq: /usr/local/share/testreq.pem
 
 proxy_user: proxy
-certificates: /etc/grid-security/certificates
-hostcert: /etc/grid-security/hostcert.pem
-hostkey: /etc/grid-security/hostkey.pem
 proxycert: /etc/grid-security/proxycert.pem
 proxykey: /etc/grid-security/proxykey.pem
 

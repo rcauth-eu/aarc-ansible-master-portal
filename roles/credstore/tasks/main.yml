@@ -1,20 +1,15 @@
 ---
-- include: myproxy-credstore.yml
-
-# The CA certificate bundle from the appropriate Delegation Server has to be copied to the 
-# Credential Store, so that incoming certificates can be verified for storage
-
-- include: deploy-trustedca.yml
+- include_tasks: myproxy-credstore.yml
 
 # Need the IGTF distribution to be able to talk to VOMS servers
-- include: deploy-igtf-distrib.yml
+- include_tasks: deploy-igtf-distrib.yml
 
 # this is only needed if the Credential Store runs on a separate host from the
 # Master Portal, otherwise we are allowed via the related/established rule
-- include: iptables.yml
+- include_tasks: iptables.yml
 
 # add the purging script to clean up expired/revoked certificates
-- include: purger.yml
+- include_tasks: purger.yml
 
 - name: start myproxy
   service: name=myproxy-server state=restarted enabled=yes

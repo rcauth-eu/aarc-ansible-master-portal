@@ -2,14 +2,14 @@
 
 # include tasks to execute
 
-- include: selinux.yml
-- include: sshd.yml
-- include: repos.yml
-- include: general.yml
-- include: network.yml
-- include: hostcreds.yml
-- include: access.yml
-- include: iptables.yml
+- include_tasks: selinux.yml
+- include_tasks: sshd.yml
+- include_tasks: repos.yml
+- include_tasks: general.yml
+- include_tasks: network.yml
+- include_tasks: hostcreds.yml
+- include_tasks: access.yml
+- include_tasks: iptables.yml
 
 # list of disabled services
 

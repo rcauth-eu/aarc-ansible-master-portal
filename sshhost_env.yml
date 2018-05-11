@@ -1,7 +1,8 @@
 ---
 # Hostname of the Master Portal, used for a curl cmdline to obtain the list of
-# ssh public keys and corresponding users.
-masterportal_host: masterportal.host
+# ssh public keys and corresponding users. Usually just taken from inventory.
+masterportal_host: "{{ groups.masterportal.0 }}"
 
 # Hostname of the myproxy server, used for obtaining the proxy certificate from.
-credstore_host: myproxy-credstore.host
+# Usually just taken from inventory.
+credstore_host: "{{ groups.credstore.0 }}"
