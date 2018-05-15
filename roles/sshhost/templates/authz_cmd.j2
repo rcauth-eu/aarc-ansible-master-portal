@@ -7,8 +7,13 @@ if [ "$1" != "{{ proxy_user }}" ];then
     exit
 fi
 
+# logfile
 authzlog="{{ authz_cmd_log }}"
+# MasterPortal key listing endpoint 
 url="https://{{ masterportal_host }}:8443/{{ mp_server }}/{{ sshkey_listing }}"
+# local list from (e.g.) COmanage, leave empty to skip
+localfile="{{ ssh_key_list_file }}"
+# Command to run for user (filled in as \1)
 cmd="command=\"{{ myproxy_cmd }} \1\""
 {% if (OS == "RH6") or (OS == "RH7") %}
 # Note neither RH6 nor RH7 has restrict yet
@@ -17,16 +22,45 @@ opts=',no-port-forwarding,no-x11-forwarding,no-agent-forwarding,no-pty,no-user-r
 opts=',restrict'
 {% endif %}
 
+# sed cmd, expects "username" "ssh-key"
 sedcmd="s#\([^ ]\+\) \(.*\)\$#${cmd}${opts} \2#"
 
+
+# Log function
+mylog()	{
+    date +"%b %d %T  $*" >> $authzlog
+}
+
+# Run cURL to the MasterPortal sshkey listing endpoint
 curllog=$(mktemp /tmp/curl_errorXXXXXX)
 curl -Ss --capath "{{ x509_cert_dir }}" "$url" 2>>$curllog |sed "$sedcmd"
 retval=${PIPESTATUS[0]}
 # Check exitstatus of cURL
 if [ $retval -ne 0 ];then
-    date +"%b %d %T  cURL $url failed" >> $authzlog
+    mylog "cURL $url failed"
     cat $curllog >> $authzlog
     echo >> $authzlog
 fi
 rm $curllog
+
+# Add content of ssh_key_list file if set
+if [ -n "$localfile" ];then
+    if [ -f "$localfile" -a -r "$localfile" ];then
+	# File exists, dump it through sed. Note that sed often gives a broken pipe
+	# when running as authorized_keys_command, so ignore it's exit value
+	sed "$sedcmd" "$localfile"
+    else
+	# Set correct error return value: only set when cURL succeeded
+	if [ $retval -eq 0 ];then
+	    retval=1
+	fi
+	# log the type of error
+	if [ -e "$localfile" ];then
+	    mylog "Error: \"$localfile\" exists but is not a readable file"
+	else
+	    mylog "Warning: \"$localfile\" appears not to exist"
+	fi
+    fi
+fi
+
 exit $retval

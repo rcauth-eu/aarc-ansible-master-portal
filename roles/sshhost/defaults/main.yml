@@ -5,6 +5,8 @@ sshkey_listing: sshkeylisting
 authz_cmd: /usr/local/sbin/authz_cmd
 authz_cmd_log: /var/log/authz_cmd.log
 myproxy_cmd: /usr/local/sbin/myproxy_cmd
+# Local list of ssh keys, e.g. synced from a COmanage
+ssh_key_list_file: ""
 
 testreq: /usr/local/share/testreq.pem
 
