@@ -6,6 +6,9 @@
 /roles/masterportal/files/sshkey-portal.war
 /roles/masterportal/files/keyutil*.jar
 
+# Do not include the jre.rpm (probably symlink)
+/roles/masterportal/files/jre.rpm
+
 # Do not accidentally add the created secrets_env.yml
 /secrets_env.yml
 
