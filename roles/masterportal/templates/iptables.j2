@@ -16,8 +16,18 @@
 
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
 
+# Make sure SSH is accessible from the world for the SSH host
+{% if groups.sshhost.0 == groups.masterportal.0 %}
+# MasterPortal and SSH host are the same, i.e. ssh access for MasterPortal also
+# needs to be world accessible
 -A INPUT -m state --state NEW -p tcp --dport 22 -j LOG --log-prefix "SSH ACCEPT: "
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+{% else %}
+# MasterPortal and SSH host are different, i.e. ssh access for MasterPortal can
+# be restricted
+-A INPUT -m state --state NEW -p tcp --dport 22 -j LOG --log-prefix "SSH ACCEPT: "
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+{% endif %}
 
 -A INPUT -m limit --limit 2/min -j LOG --log-uid --log-prefix "iptables:INPUT: "
 -A INPUT -j DROP

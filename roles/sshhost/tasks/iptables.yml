@@ -1,0 +1,23 @@
+---
+
+# iptables rules for SSH host
+
+- name: add iptables config
+  template:
+    src: iptables.j2
+    dest: "/etc/sysconfig/iptables"
+    owner: "root"
+    group: "root"
+    mode: 0600
+    backup: yes
+  notify: restart iptables
+
+- name: add ip6tables config
+  template:
+    src: ip6tables.j2
+    dest: "/etc/sysconfig/ip6tables"
+    owner: "root"
+    group: "root"
+    mode: 0600
+    backup: yes
+  notify: restart ip6tables
