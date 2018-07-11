@@ -32,7 +32,6 @@
 - name: unpack trust anchor(s) from tarball
   unarchive:
     src: "{{ item }}"
-    copy: yes
     dest: "{{ x509_cert_dir }}"
     mode: 0644
     owner: root
