@@ -12,3 +12,6 @@ credstore.host
 
 [sshhost]
 sshhost.host
+
+[all:vars]
+configdir=config/PLACEHOLDER/

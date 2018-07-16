@@ -24,44 +24,46 @@ Note: the SSH interface consists of 3 parts:
 
 Prerequisites
 -------------------------------------------------------------------------------
-
-	1. You need to have host certificates ready for this deployment. Place
-	   your PEM formatted  certificate and key file under the
-	   '*.PLACEHOLDER' files in the 'roles/basic/files/' directory. The
-	   basic role will take care of deploying these into the target machine.
-	   It is assumed that your host certificates are issued by 'TERENA
-	   eScience SSL CA 3'. If not, you will have to make some modifications
-	   to these scripts before executing them!
-
-	2. Make sure you have replaced all the relevant .war and .jar
-	   .PLACEHOLDER files in 'roles/masterportal/files/' replaced with the
-	   actual files. See
-	       https://github.com/rcauth-eu/aarc-master-portal
-	       https://github.com/rcauth-eu/aarc-vo-portal
-	       https://github.com/rcauth-eu/aarc-ssh-portal
-	       https://github.com/rcauth-eu/keyutil
-	   for details
-
-	3. Download a new Oracle Java RPM (8 has been verified), and rename or
-	   create a symlink in 'roles/masterportal/files/' named jre.rpm.
-
-	4. You need to create a JSON Web Keys file.
-	   - Create a dummy config file:
-	      echo '<config>\n<service/>\n</config>' > tmp.conf
-	   - Run the oa2-cli tool locally:
-	      java -jar ./roles/masterportal/files/oa2-cli.jar -cfg tmp.conf
-	   - Choose "use keys" then run "create"
-	   - Choose as filename './roles/masterportal/files/mp.jwk'
-	   - exit the commandline tool (enter 'exit' twice)
-	   - remove the 'tmp.conf' and 'log.xml' files
-	   Lookup the 'kid' in the created file, use e.g. the RS256 key and
-	   enter the value as 'mp_server_jwk_key_id' in 'masterportal_env.yml'
-
-	5. You need to create the passphrases for the different components.
-	   This can be done using the secrets.yml playbook.
-	   Note that you also will have to fill in the client ID and Secret for
-	   the VO-portal and/or SSH keys portal (when applicable). They can
-	   obviously only be obtained once the MasterPortal has been installed.
+ 
+ 1. You need to have host certificates ready for this deployment. Place your PEM
+    formatted  certificate and key file under the '*.PLACEHOLDER' files in the
+    'roles/basic/files/' directory. The basic role will take care of deploying
+    these into the target machine.
+    It is assumed that your host certificates are issued by 'TERENA eScience SSL
+    CA 3'. If not, you will have to make some modifications to these scripts
+    before executing them!
+ 
+ 2. Make sure you have replaced all the relevant .war and .jar .PLACEHOLDER
+    files in 'roles/masterportal/files/' replaced with the actual files. See
+        https://github.com/rcauth-eu/aarc-master-portal
+        https://github.com/rcauth-eu/aarc-vo-portal
+        https://github.com/rcauth-eu/aarc-ssh-portal
+        https://github.com/rcauth-eu/keyutil
+    for details
+ 
+ 3. Download a new Oracle Java RPM (8 has been verified), and rename or create a
+    symlink in 'roles/masterportal/files/' named jre.rpm.
+ 
+ 4. You need to create a JSON Web Keys file.
+    - Create a dummy config file:
+       echo '<config>\n<service/>\n</config>' > tmp.conf
+    - Run the oa2-cli tool locally:
+       java -jar ./roles/masterportal/files/oa2-cli.jar -cfg tmp.conf
+    - Choose "use keys" then run "create"
+    - Choose as filename './roles/masterportal/files/mp.jwk'
+    - exit the commandline tool (enter 'exit' twice)
+    - remove the 'tmp.conf' and 'log.xml' files
+    Lookup the 'kid' in the created file, use e.g. the RS256 key and enter the
+    value as 'mp_server_jwk_key_id' in 'masterportal_env.yml'
+ 
+ 5. You need to create the passphrases for the different components.
+    This can be done using the secrets.yml playbook. Run it using
+	ansible-playbook -e configdir=<path-to-config-dir> secrets.yml
+    or set already the right configdir in your inventory file and run
+	ansible-playbook -i hosts.inventory secrets.yml
+    Note that you also will have to fill in the client ID and Secret for
+    the VO-portal and/or SSH keys portal (when applicable). They can
+    obviously only be obtained once the MasterPortal has been installed.
 
 
 How to use these scripts?
@@ -70,8 +72,12 @@ How to use these scripts?
 Before you begin executing plays make sure to decide whether you're deployment
 will use two separate hosts for Master Portal and Credential Store, or a single
 host. Fill in you machine hostname[s] into the 'hosts.inventory' file
-accordingly. The hostname[s] set in the invertory files will be set on the
-target machine[s].
+accordingly.
+You can set a configdir variable in the inventory, which will be used as prefix
+when including the different _env.yml files described below. This makes it easy
+to have different inventory files for different layouts, but each with the same
+playbooks.
+The hostname[s] set in the invertory files will be set on the target machine[s].
 
 There are three different plays you can execute. One for the Credential Store
 called 'credstore.yml', one for the SSH host call 'sshhost.yml' and one for the
@@ -79,13 +85,13 @@ Master Portal called 'masterportal.yml'.
 All three plays include the basic role, which takes care of setting up the
 environment for these components. 
 
-Make sure to check recommanded modifications below before starting each play!
+Make sure to check recommended modifications below before starting each play!
 In case of single host deployments, execute 'credstore.yml' first,
 then 'sshhost.yml' and then 'masterportal.yml' last.
 
 1. credstore.yml
 
-	a. Fill in required environment variables
+	a. Fill in required environment variables in credstore_env.yml
 
 	   This play will configure the Credential Server host. Basically, it
 	   provides a MyProxy Server installation with some configuration.
@@ -98,24 +104,25 @@ then 'sshhost.yml' and then 'masterportal.yml' last.
 	   MyProxy only stores credentials that it can verify, therefore it's
 	   very important to have the Online CA (which will issue user
 	   certificates) present in the trusted certificates directory (usually
-	   /etc/grid-security/certificates). Make a tarball from the Online CA
-	   in pem format, together with subject_hash links and signing_policy.
-	   Do not forget the signing policy, since MyProxy will not work without
+	   /etc/grid-security/certificates).
+	   In case of a demo CA, make or get a tarball from the Online CA in pem
+	   format, together with subject_hash links and signing_policy. It must
+	   also contain the signing policy, since MyProxy will not work without
 	   it. The result tarball should contain these files at the top level,
-	   without any direcotry structure, and it should be places under
-	   'roles/credstore/files/'
+	   without any directory structure, and the tarball should be placed
+	   under 'roles/credstore/files/'
 
 
 2. sshhost.yml
 
-	a. Fill in the required environment variables
+	a. Fill in the required environment variables in sshhost_env.yml
 
 	   Before executing this play, make sure to fill in the required
 	   variables listed and explained in the 'sshhost_env.yml' file.
 
 3. masterportal.yml
 
-	a. Fill in the required environment variables
+	a. Fill in the required environment variables in masterportal_env.yml
 
 	   Before executing this play, make sure to fill in the required
 	   variables listed and explained in the 'masterportal_env.yml' file.
@@ -127,12 +134,12 @@ then 'sshhost.yml' and then 'masterportal.yml' last.
 	   This play is about to deploy the Master Portal war files
 	   (mp-oa2-client.war and mp-oa2-server.war) and optionally the VO
 	   Portal war file (vo-portal.war). Make sure that these are present in
-	   your 'role/masterportal/files' directory. 
+	   your 'roles/masterportal/files' directory. 
 
 	c. Tweak iptables rules
 
 	   There is a simple set of iptable rules being deployed by this play.
 	   Feel free to customize this to the needs of your infrastructure. Make
 	   sure to leave port 443 accessible. The iptables file can be found in
-	   'role/masterportal/files'
+	   'roles/masterportal/files'
  

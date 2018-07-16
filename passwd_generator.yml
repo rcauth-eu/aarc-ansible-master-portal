@@ -1,7 +1,7 @@
 ---
 
 - name: "look for existing password: {{ item }}"
-  command: "grep '^{{ item }}: CHANGEME' {{ passwd_generator_file }}"
+  command: "grep '^{{ item }}: CHANGEME' {{ abs_passwd_generator_file }}"
   ignore_errors: yes 
   register: passwd_lookup
 
@@ -12,9 +12,8 @@
 
 - name: "fill in new password for {{ item }} in file"
   lineinfile:
-    dest: "{{ passwd_generator_file }}"
+    dest: "{{ abs_passwd_generator_file }}"
     regexp: "^{{ item }}: CHANGEME"
     line: "{{ item }}: {{ new_passwd.stdout }}"
     state: present
   when: passwd_lookup.rc == 0
-
