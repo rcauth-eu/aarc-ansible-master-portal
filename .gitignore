@@ -1,3 +1,13 @@
+# Do not accidentally add the created secrets_env.yml in any directory
+secrets_env.yml
+
+# Do not accidentally add the host cert/key
+/roles/basic/files/*.key
+/roles/basic/files/*.crt
+
+# Do not accidentally add the JSON web keys
+/roles/masterportal/files/*.jwk
+
 # Do not include the build artefacts
 /roles/masterportal/files/oa2-cli.jar
 /roles/masterportal/files/mp-oa2-client.war
@@ -9,12 +19,3 @@
 # Do not include the jre.rpm (probably symlink)
 /roles/masterportal/files/jre.rpm
 
-# Do not accidentally add the created secrets_env.yml
-/secrets_env.yml
-
-# Do not accidentally add the JSON web keys
-/roles/masterportal/files/mp.jwk
-
-# Do not accidentally add the host cert/key
-/roles/basic/files/*.key
-/roles/basic/files/*.crt
