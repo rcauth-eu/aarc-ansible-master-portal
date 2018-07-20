@@ -9,3 +9,10 @@
   service:
     name: ip6tables
     state: restarted
+
+# restarting the network with the 'service' command breaks the ansible play
+# this seems to be an ansible gitch
+# http://earlruby.org/2015/04/restarting-network-interfaces-in-ansible/
+
+- name: restart network
+  shell: service network restart; sleep 3

@@ -1,48 +1,42 @@
 ---
+########################################################################
+### OVERRIDDEN VALUES FOR THE masterportal ROLE
+########################################################################
 
-# Trust anchors: for the MasterPortal this MUST include:
-# - CA for hostcert of masterportal, credstore and sshhost
-# - CA for hostcert of delegation server
-# Settings here override those in basic_env.yml
+### Trust anchors: for the MasterPortal this MUST include:
+### - CA for hostcert of masterportal, credstore and sshhost
+### - CA for hostcert of delegation server
+### Settings here override also those in common_env.yml
 
-# trust anchor as RPM
+### trust anchor as RPM
 #trust_anchor_packages:
 #  - "ca_TERENA-eScience-SSL-CA-3"
 
-# trust anchor as tarball
+### trust anchor as tarball
 #trust_anchor_tarballs:
 #  - "internalca.tar.gz"
 
-# When the hostcert is signed by an intermediate CA, specify the pem file here:
-#hostcert_intermediate: /etc/grid-security/certificates/TERENA-eScience-SSL-CA-3.pem
+### When the hostcert is signed by an intermediate CA,
+### specify the pem file here:
+hostcert_intermediate: /etc/grid-security/certificates/TERENA-eScience-SSL-CA-3.pem
 
-# OA4MP Client
 
-# Configure the mp_client_conf_lifetime to set the lifetime sent with every /getcert request to
-# the delegation server. This will determine the lifetime of the EEC returned by the Online CA,
-# as well as the lifetime of the created Long Lived Proxy Certificate. 
+### Configure the mp_client_conf_lifetime to set the lifetime sent with every
+### /getcert request to the delegation server. This will determine the lifetime
+### of the EEC returned by the Online CA, as well as the lifetime of the created
+### Long Lived Proxy Certificate. 
 mp_client_conf_lifetime: 950400
 
-# Credential Store
 
-# Set the MyProxy Credential Store that will store all the incoming used
-# proxies. Make sure to fill in the right hostname (even if it's localhost!),
-# othewise the SSL connection will break! Usually taken from inventory.
-
-credstore_host: "{{ groups.credstore.0 }}"
-credstore_port: 7512
-
-# SSH host IP address: the SSH host is allowed to contact the */sshkeylisting
-# endpoint on :8443 for obtaining the list of SSH public keys + corresponding
-# usernames. This address is used for the IP tables rule.
-
-ssh_address: 127.0.0.1
-
-# Default JSON web key id:
+### Default JSON web key id:
 mp_server_jwk_key_id: ""
 
-# Delegation Server
 
-# Fill in the delegation server oauth2 endpoint that will be used by this Master Portal
+### Fill in the credstore DN. This is going to be the expected DN of the
+### myproxy-server. Leave undefined to do normal host verification.
+credstore_dn: "/C=NL/O=Example/OU=Org/CN=credstore"
 
+
+### Fill in the delegation server oauth2 endpoint that will be used by this
+### Master Portal
 deleg_server_auth: https://delegation-server/oauth2

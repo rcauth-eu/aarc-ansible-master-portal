@@ -1,0 +1,18 @@
+---
+
+# NTP Setup
+
+- name: add ntp config
+  template:
+    src: ntp.conf.j2
+    dest: "/etc/ntp.conf"
+    owner: "root"
+    group: "root"
+    mode: 0644
+    backup: yes
+  register: ntp_config
+
+- name: restart ntpd
+  service: name=ntpd state=restarted enabled=yes
+  when: ntp_config.changed
+

@@ -19,8 +19,8 @@
   notify: restart httpd
 
 - name: httpoxy config present
-  template:
-    src: 00-httpoxy.conf.j2
+  copy:
+    src: 00-httpoxy.conf
     dest: /etc/httpd/conf.d/00-httpoxy.conf
     owner: root
     group: root

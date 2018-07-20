@@ -1,6 +1,6 @@
 LoadModule ssl_module modules/mod_ssl.so
 Listen 443
-Listen 8443
+Listen {{ sshkey_listing_port }}
 
 SSLPassPhraseDialog  builtin
 SSLSessionCache         shmcb:/var/cache/mod_ssl/scache(512000)
@@ -25,7 +25,7 @@ SSLHonorCipherOrder On
 SSLCipherSuite "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH EDH+aRSA !aNULL !eNULL !MEDIUM !LOW !3DES !MD5 !EXP !PSK !SRP !DSS"
 SSLCertificateFile {{ hostcert }}
 SSLCertificateKeyFile {{ hostkey }}
-{% if hostcert_intermediate %}
+{% if hostcert_intermediate is defined %}
 SSLCertificateChainFile {{ hostcert_intermediate }}
 {% endif %}
 
@@ -38,7 +38,7 @@ Header always set Strict-Transport-Security "max-age=15724800"
 
 CustomLog logs/ssl_request_log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 
-<VirtualHost _default_:8443>
+<VirtualHost _default_:{{ sshkey_listing_port }}>
 
     ServerName {{ inventory_hostname }}
 

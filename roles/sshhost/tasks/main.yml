@@ -8,11 +8,6 @@
 # add the myproxy and authz scripts
 - include_tasks: scripts.yml
 
-# this is strictly speaking only needed if the SSH runs on a separate host from
-# the Master Portal, otherwise it will be covered by the MasterPortal's
-# iptables task
-- include_tasks: iptables.yml
-
 # Update the sshd config
 - include_tasks: sshd.yml
 

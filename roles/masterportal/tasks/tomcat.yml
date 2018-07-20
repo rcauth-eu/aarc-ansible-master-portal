@@ -18,32 +18,6 @@
     insertafter: EOF
     backup: yes
 
-#- name: install javamail (for javax.mail)
-#  yum: name={{ item }} state=present
-#  with_items: "{{ tomcat_extra_packages }}"
-
-#- name: clean up webapps directory
-#  command: /bin/rm -rf "{{ catalina_home }}/webapps/*"
-#  when: tomcat_install.changed
-
-# Install jglobus-jsse and globus-ssl-proxies (this is only needed for limited proxies!)
-#- name: install jglobus
-#  yum: name={{ item }} state=present
-#  with_items: "{{ tomcat_jglobus_packages }}"
-
-#- name: find extra jar libraries for linking
-#  command: find "{{ tomcat_extra_libs }}" -maxdepth 1 -type f -name '*.jar' -exec basename {} \;
-#  register: extra_libs
-
-#- name: make a link to the jglobus jars
-#  file:
-#    src: "{{ tomcat_extra_libs }}/{{ item }}"
-#    dest: "{{ catalina_home }}/lib/{{ item }}"
-#    owner: root
-#    group: root
-#    state: link
-#  with_items: "{{ extra_libs.stdout_lines }}"
-
 # configurations
 
 # close unused ports?  
@@ -158,7 +132,7 @@
     group: root
     mode: 0644
 
-# enable cross-context
+# enable cross-context (also adds mail resource)
 
 - name: adding context.xml (crossContext enabled)
   copy:

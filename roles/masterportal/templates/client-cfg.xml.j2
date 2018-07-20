@@ -1,10 +1,10 @@
 <config>
 
-    <client name="default" alias="{{ mp_client_conf }}"/>
+    <client name="default" alias="client-config"/>
 
     <!-- ############################################################################## -->
 
-    <client name="mysql-mp-client-config" address="https://{{ inventory_hostname }}/{{ mp_client }}">
+    <client name="client-config" address="https://{{ inventory_hostname }}/{{ mp_client }}">
 
            <logging  logFileName="{{ mp_client_log_dir }}/{{ mp_client }}.log"
                      logName="MP"
@@ -23,58 +23,34 @@
 
            <lifetime>{{ mp_client_conf_lifetime }}</lifetime>
 
-           <mysql    username="{{ mp_client_db_user }}"
+{% if mp_client_conf == "fileStore" %}
+
+           <{{ mp_client_conf }} path="{{ mp_client_storage_dir }}">
+               <assetStore/>
+           </{{ mp_client_conf }}>
+
+{% else %}
+
+           <{{ mp_client_conf }}    username="{{ mp_client_db_user }}"
                      password="{{ mp_client_db_pw }}"
                      database="{{ mp_client_db }}"
                      schema="{{ mp_client_db }}">
-                          <assetStore/>
-           </mysql>
+               <assetStore/>
+           </{{ mp_client_conf }}>
+
+{% endif %}
 
            <keystore path="{{ mp_client_truststore }}"
                      type="jks"
                      password="{{ mp_client_truststore_pw }}"
                      factory="SunX509" />
 
-           <myproxy host="{{ credstore_host }}" port="{{ credstore_port }}" password="{{ credstore_pw }}">
-                     <keystore path="{{ mp_client_keystore }}"
-                               type="pkcs12"
-                               password="{{ mp_keystore_pw }}"
-                               factory="SunX509" />
-           </myproxy>
-
-    </client>
-
-    <!-- ############################################################################## -->
-
-    <client name="filestore-mp-client-config" address="https://{{ inventory_hostname }}/{{ mp_client }}">
-
-           <logging  logFileName="{{ mp_client_log_dir }}/{{ mp_client }}.log"
-                     logName="MP"
-                     logSize="1000000"
-                     logFileCount="10"
-                     debug="true"/>
-
-           <callbackUri>https://{{ inventory_hostname }}/{{ mp_client }}/ready</callbackUri>
-
-           <serviceUri>{{ deleg_server_auth }}</serviceUri>
-
-	   <wellKnownUri>{{ deleg_server_auth }}/.well-known/openid-configuration</wellKnownUri>
-
-           <id>{{ mp_client_id }}</id>
-           <secret>{{ mp_client_secret }}</secret>
-
-           <lifetime>{{ mp_client_conf_lifetime }}</lifetime>
-
-           <fileStore path="{{ mp_client_storage_dir }}">
-                      <assetStore/>
-           </fileStore>
-
-           <keystore path="{{ mp_client_truststore }}"
-                     type="jks"
-                     password="{{ mp_client_truststore_pw }}"
-                     factory="SunX509" />
-
-           <myproxy host="{{ credstore_host }}" port="{{ credstore_port }}" password="{{ credstore_pw }}">
+           <myproxy host="{{ credstore_host }}"
+                    port="{{ credstore_port }}"
+                    password="{{ credstore_pw }}">
+{% if credstore_dn is defined %}
+		    serverDN="{{ credstore_dn }}"
+{% endif %}
                      <keystore path="{{ mp_client_keystore }}"
                                type="pkcs12"
                                password="{{ mp_keystore_pw }}"

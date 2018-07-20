@@ -1,5 +1,7 @@
 ---
-general_packages:
+### general packages that should be present
+
+general_packages: 
   - libselinux-python
   - net-tools
   - bind-utils
@@ -7,14 +9,11 @@ general_packages:
   - mailx
   - sysstat
   - ntp
+  - iptables-services
   - nscd
   - fetch-crl
-  - iptables-services
 
-disabled_services:
-#  - NetworkManager
-  - wpa_supplicant
-  - firewalld
+### list of enabled and disabled services 
 
 enabled_services:
   - ntpd
@@ -22,6 +21,13 @@ enabled_services:
   - fetch-crl-cron
   - iptables
   - ip6tables
+
+disabled_services:
+  - NetworkManager
+  - wpa_supplicant
+  - firewalld
+
+### additional repository information
 
 igtfkey: "https://dl.igtf.net/distribution/igtf/current-new/GPG-KEY-EUGridPMA-RPM-3"
 igtf_current_baseurl: "http://dist.eugridpma.info/distribution/igtf/current-new/"

@@ -1,44 +1,36 @@
 ---
 
-# Include dependencies
+### services required for masterportal
 
-- include_tasks: dep-java.yml
-- include_tasks: dep-tomcat.yml
-- include_tasks: dep-httpd.yml
-
-# Currently the Master Portal does not support database backend
-# This will be fixed in to future, but for now, filesystem backend
-# is used.
-
-#- include_tasks: dep-mysql.yml
-- include_tasks: dep-mariadb.yml
+- include_tasks: java.yml
+- include_tasks: tomcat.yml
+- include_tasks: httpd.yml
+- include_tasks: mariadb.yml
+#- include_tasks: mysql.yml
 
 # Make sure the keyutil jar file is remotely available
-- include_tasks: dep-keyutil.yml
+- include_tasks: keyutil.yml
 
 # Include tasks to deploy master portal
 
 - include_tasks: oa4mp-client.yml
 - include_tasks: oa4mp-server.yml
 
-# Setup the self-service SSH public key upload portal. This can be used in
-# combination with the SSH host (see the sshhost playbook) to download proxy
-# certificates using SSH and a public key.
+### Setup the self-service SSH public key upload portal. This can be used in
+### combination with the SSH host (see the sshhost playbook) to download proxy
+### certificates using SSH and a public key.
 
 - include_tasks: sshkey-portal.yml
   when: sshkey_portal is defined
 
-# The VO Portal is not part of the Master Portal, it's only a simple 
-# Master Portal client installed alongside it for testing purposes.
+### The VO Portal is not part of the Master Portal, it's only a simple 
+### Master Portal client installed alongside it for testing purposes.
 
 - include_tasks: vo-portal.yml
   when: vo_portal is defined
 
-- include_tasks: iptables.yml
+### enable services
 
-# list of enabled services
-
-- name: start tomcat
-  service: name={{ tomcat_service }} state=restarted enabled=yes
-- name: start httpd
-  service: name={{ httpd_service }} state=restarted enabled=yes
+- name: enable and start services
+  service: name={{ item }} state=restarted enabled=yes
+  with_items: "{{ enabled_services }}"

@@ -16,6 +16,8 @@
 
            <serviceUri>https://{{ inventory_hostname }}/{{ mp_server }}</serviceUri>
 
+           <wellKnownUri>https://{{ inventory_hostname }}/{{ mp_server }}/.well-known/openid-configuration</wellKnownUri>
+
            <id>{{ vo_portal_id }}</id>
            <secret>{{ vo_portal_secret }}</secret>
 

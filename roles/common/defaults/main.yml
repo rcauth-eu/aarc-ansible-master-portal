@@ -1,0 +1,74 @@
+---
+########################################################################
+### DEFAULT VALUES FOR THE basic ROLE
+########################################################################
+
+### Name of rpm package(s) to install as trust anchor.
+### This can be an rpm or a package name from an installed repository.
+### Alternatively or additionally, a tarball can be installed
+#trust_anchor_packages:
+
+### trust anchor(s) can also be installed from a tarball containing the
+### certificate, signing policy, crl and hashes.
+#trust_anchor_tarballs:
+
+### trust anchor directory
+x509_cert_dir: "/etc/grid-security/certificates"
+
+### Default hostcert and key
+hostcert: /etc/grid-security/hostcert.pem
+hostkey: /etc/grid-security/hostkey.pem
+
+
+### Hostname of the Master Portal, used on the ssh host in a curl cmdline to
+### obtain the list of ssh public keys and corresponding users. Usually just taken
+### from inventory.
+masterportal_host: "{{ groups.masterportal.0 }}"
+
+### oa4mp endpoints and port number of key listing URL on masterportal
+mp_server: mp-oa2-server
+mp_client: mp-oa2-client
+sshkey_listing: sshkeylisting
+sshkey_listing_port: 8443
+
+
+### Default MyProxy Credential Store that will store all the incoming used
+### proxies. Make sure to fill in the right hostname (even if it's localhost!),
+### othewise the SSL connection will break! Usually taken from inventory.
+credstore_host: "{{ groups.credstore.0 }}"
+credstore_port: 7512
+
+
+### IP address of the Master Portal.
+### Can be ignored if Credential Store is running on the same host as the Master
+### Portal.
+#masterportal_address: 123.123.123.123
+
+
+### IP address for the SSH host
+### Can be ignored if SSH host is co-hosted with the Credential Store and the
+### MasterPortal, or when no SSH is configured.
+### Otherwise you must override these with the correct value
+#ssh_address: 123.123.123.123
+
+
+### You must define or override the networks parsed as local and networks/hosts
+### trusted for ssh (the latter must be in the former)
+#local_nets:
+#  - 1.2.3.0/24
+
+#trusted_nets:
+#  - 1.2.3.4/32
+
+### same for IPv6
+#local_nets_v6:
+#  - 1234::/64
+
+#trusted_nets_v6:
+#  - 1234::1/128
+
+
+### NTP Server
+ntp_servers: 
+   - ntp1.pool.ntp.org
+   - ntp2.pool.ntp.org

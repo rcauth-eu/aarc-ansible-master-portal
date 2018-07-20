@@ -1,0 +1,53 @@
+---
+########################################################################
+### OVERRIDDEN VALUES FOR THE common ROLE
+########################################################################
+
+### Name of rpm package(s) to install as trust anchor unless overridden.
+### This can be an rpm or a package name from an installed repository.
+### Alternatively or additionally, a tarball can be installed
+trust_anchor_packages:
+  - "ca_TERENA-eScience-SSL-CA-3"
+
+### trust anchor(s) can also be installed from a tarball containing the
+### certificate, signing policy, crl and hashes.
+#trust_anchor_tarballs:
+#  - "internalca.tar.gz"
+
+
+### IP address of the Master Portal.
+### Can be ignored if Credential Store is running on the same host as the Master
+### Portal.
+#masterportal_address: 123.123.123.123
+
+### IP address for the SSH host
+### Can be ignored if SSH host is co-hosted with the Credential Store and the
+### MasterPortal, or when no SSH is configured
+#ssh_address: 123.123.123.123
+
+
+### Networks parsed as local and networks/hosts
+### trusted for ssh (the latter must be in the former)
+#local_nets:
+#  - 1.2.3.0/24
+
+#trusted_nets:
+#  - 1.2.3.4/32
+
+### same for IPv6
+#local_nets_v6:
+#  - 1234::/64
+
+#trusted_nets_v6:
+#  - 1234::1/128
+
+
+### NTP Server
+ntp_servers: 
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+
+
+### SSH Authorized users taken from LDAP
+#authorized_uids:
+#  - johndoe

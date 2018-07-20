@@ -1,4 +1,8 @@
 ---
+########################################################################
+### DEFAULT VALUES FOR THE credstore ROLE
+########################################################################
+
 credstore_cert_dir: "{{ x509_cert_dir }}"
 credstore_proxy_extfile: /etc/myproxy-proxy-extfile
 credstore_max_proxy_lifetime: 12

@@ -2,8 +2,9 @@
 - hosts: credstore
   remote_user: root
   vars_files:
-    - "{{ configdir }}/basic_env.yml"
+    - "{{ configdir }}/common_env.yml"
     - "{{ configdir }}/credstore_env.yml"
   roles:
+    - common
     - basic
     - credstore

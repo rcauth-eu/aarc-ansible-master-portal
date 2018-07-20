@@ -1,10 +1,10 @@
 <config>
 
-    <service name="default" alias="{{ mp_server_conf }}"/>
+    <service name="default" alias="server-config"/>
 
     <!-- ############################################################################## -->
 
-    <service name="mysql-mp-server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true" refreshTokenEnabled="{{ mp_server_refreshtokens }}">
+    <service name="server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true" refreshTokenEnabled="{{ mp_server_refreshtokens }}">
 
        <logging  logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
                  logName="MP"
@@ -12,6 +12,16 @@
                  logFileCount="10"
                  debug="true"
        />
+
+       <!-- mail setup for new client approval requests -->
+       <mail enabled="{{ mail_enabled }}"
+             debug="{{ mail_debug }}"
+             recipients="{{ mail_recipients }}"
+             server="{{ mail_server }}"
+	     useSSL="{{ mail_use_SSL }}">
+         <messageTemplate>{{ mail_message_template }}</messageTemplate>
+         <subjectTemplate>{{ mail_subject_template }}</subjectTemplate>
+       </mail>
 
        <!-- JSON Web key for signing -->
        <JSONWebKey defaultKeyID="{{ mp_server_jwk_key_id }}">
@@ -30,17 +40,37 @@
 	  <scope>org.cilogon.userinfo</scope>
        </scopes>
 
-       <mysql    username="{{ mp_server_db_user }}" 
-                 password="{{ mp_server_db_pw }}" 
-                 database="{{ mp_server_db }}" 
-                 schema="{{ mp_server_db }}" >
-                         <transactions/>
-                         <clients/>
-                         <clientApprovals/>
-			 <sshKeys/>
-       </mysql>
+{% if mp_server_conf == "fileStore" %}
 
-       <myproxy host="{{ credstore_host }}" port="{{ credstore_port }}" password="{{ credstore_pw }}">
+       <{{ mp_server_conf }} path="{{ mp_server_storage_dir }}">
+           <transactions/>
+           <clients/>
+           <clientApprovals/>
+           <sshKeys/>
+       </{{ mp_server_conf }}>
+
+{% else %}
+
+       <{{ mp_server_conf }} username="{{ mp_server_db_user }}" 
+              password="{{ mp_server_db_pw }}" 
+              database="{{ mp_server_db }}" 
+              schema="{{ mp_server_db }}" >
+           <transactions/>
+           <clients/>
+           <clientApprovals/>
+           <sshKeys/>
+       </{{ mp_server_conf }}>
+
+{% endif %}
+
+
+
+       <myproxy host="{{ credstore_host }}"
+                port="{{ credstore_port }}"
+{% if credstore_dn is defined %}
+		serverDN="{{ credstore_dn }}"
+{% endif %}
+		password="{{ credstore_pw }}">
                  <keystore path="{{ mp_server_keystore }}"
                            type="pkcs12"
                            password="{{ mp_keystore_pw }}"
@@ -68,43 +98,6 @@
                         </validator>
                  </validators>
 
-       </myproxy>
-
-       <!-- <authorizationServlet useHeader="true" requireHeader="true" headerFieldName="eppn" /> -->
-
-    </service>
-
-    <!-- ############################################################################## -->
-
-    <service name="filestore-mp-server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true" refreshTokenEnabled="{{ mp_server_refreshtokens }}">
-
-       <logging  logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
-                 logName="MP"
-                 logSize="1000000"
-                 logFileCount="10"
-                 debug="true"
-       />
-
-       <!-- JSON Web key for signing -->
-       <JSONWebKey defaultKeyID="{{ mp_server_jwk_key_id }}">
-         <path>{{ mp_server_jwk_file }}</path>
-       </JSONWebKey>
-
-       <scopes handler="org.masterportal.oauth2.server.MPForwardingScopeHandler">
-	  <scope>org.cilogon.userinfo</scope>
-       </scopes>
-
-       <fileStore path="{{ mp_server_storage_dir }}">
-               <transactions/>
-               <clients/>
-               <clientApprovals/>
-       </fileStore>
-
-       <myproxy host="{{ credstore_host }}" port="{{ credstore_port }}" password="{{ credstore_pw }}">
-                 <keystore path="{{ mp_server_keystore }}"
-                           type="pkcs12"
-                           password="{{ mp_keystore_pw }}"
-                           factory="SunX509" />
        </myproxy>
 
        <!-- <authorizationServlet useHeader="true" requireHeader="true" headerFieldName="eppn" /> -->

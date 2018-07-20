@@ -1,22 +1,29 @@
 ---
-mp_server: mp-oa2-server
-sshkey_listing: sshkeylisting
+########################################################################
+### DEFAULT VALUES FOR THE sshhost ROLE
+########################################################################
 
+### scripts and log file
 authz_cmd: /usr/local/sbin/authz_cmd
 authz_cmd_log: /var/log/authz_cmd.log
 myproxy_cmd: /usr/local/sbin/myproxy_cmd
-# Local list of ssh keys, e.g. synced from a COmanage
+
+### Local list of ssh keys, e.g. synced from a COmanage
 ssh_key_list_file: ""
 
+### input CSR
 testreq: /usr/local/share/testreq.pem
 
+### account used for retrieving proxies
 proxy_user: proxy
+
+### service credentials for proxy account
 proxycert: /etc/grid-security/proxycert.pem
 proxykey: /etc/grid-security/proxykey.pem
 
-# vomses file or directory, for retrieving VOMS proxies
+### vomses file or directory, for retrieving VOMS proxies
 vomses: /etc/vomses
 
-# Default and maximum returned proxy lifetimes
+### Default and maximum returned proxy lifetimes
 default_lifetime: 12
 max_lifetime: 72

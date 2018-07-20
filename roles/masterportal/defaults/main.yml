@@ -1,32 +1,19 @@
 ---
+########################################################################
+### DEFAULT VALUES FOR THE masterportal ROLE
+########################################################################
 
-# certificates
+### certificates
 
-# Note: /etc/grid-security/certificates is defined in the
-# basic role as x509_cert_dir. hostcert and hostkey are also defined in the
-# basic role
-hostcert_intermediate:
+### define following when the hostcert is signed by an intermediate CA
+#hostcert_intermediate: /etc/grid-security/certificates/TERENA-eScience-SSL-CA-3.pem
 
-# DB
-#mysql_root_password: changeme
-mariadb_root_password: changeme
 
-# oa4mp (sub)endpoints
-
-mp_server: mp-oa2-server
-mp_client: mp-oa2-client
-sshkey_listing: sshkeylisting
-
-# Keyutil jar file
+### Keyutil jar file
 keyutil_jar: keyutil-0.4.0.jar
 
-# The keystore is used for BOTH MP Client and MP Server to access the
-# Credential Store therefore we set only a single passwords (mp_keystore_pw).
-# This way the two components can share a single keystore. The keystore usually
-# contains the hostcert of the Master Portal.
-mp_keystore_pw: changeme
 
-# OA4MP Client 
+### OA4MP Client 
 
 mp_client_db: oa2client
 mp_client_db_user: oa4mp-client
@@ -36,17 +23,14 @@ mp_client_conf_dir: "{{ mp_client_dir }}/conf"
 mp_client_conf_file: "{{ mp_client_conf_dir }}/cfg.xml"
 mp_client_truststore: "{{ mp_client_conf_dir }}/trust-store.jks"
 mp_client_keystore: "/etc/grid-security/hostcred.p12"
-mp_client_conf: mysql-mp-client-config
-#mp_client_conf: filestore-mp-client-config
+mp_client_conf: mysql
+#mp_client_conf: fileStore
 mp_client_log_dir: "{{ mp_client_dir }}/log"
 mp_client_storage_dir: "{{ mp_client_dir }}/storage"
 mp_client_conf_lifetime: 31536000
 
-mp_client_db_pw: changeme
-mp_client_truststore_pw: changeme
-mp_client_secret: FILLME
 
-# OA4MP Server
+### OA4MP Server
 
 mp_server_db: oa2server
 mp_server_db_user: oa4mp-server
@@ -56,26 +40,33 @@ mp_server_conf_dir: "{{ mp_server_dir }}/conf"
 mp_server_conf_file: "{{ mp_server_conf_dir }}/cfg.xml"
 #mp_server_truststore: "{{ mp_server_conf_dir }}/trust-store.jks"
 mp_server_keystore: "/etc/grid-security/hostcred.p12"
-mp_server_conf: mysql-mp-server-config
-#mp_server_conf: filestore-mp-server-config
+mp_server_conf: mysql
+#mp_server_conf: fileStore
 mp_server_log_dir: "{{ mp_server_dir }}/log"
 mp_server_storage_dir: "{{ mp_server_dir }}/storage"
 mp_server_tools_dir: "{{ mp_server_dir }}/tools"
 
-# Whether we use refreshtokens
+### Whether we use refreshtokens
 mp_server_refreshtokens: "true"
 
-# JSON web key used for signing id_tokens
+### JSON web key used for signing id_tokens
 mp_server_jwk_file: "{{ mp_server_conf_dir }}/mp.jwk"
-mp_server_jwk_key_id: FILLME
 
-mp_server_db_pw: changeme
-#mp_server_truststore_pw: changeme
 
-# VO Portal
+### Email settings for notifications about new client approval requests.
+### See http://grid.ncsa.illinois.edu/myproxy/oauth/server/configuration/server-email.xhtml
+mail_server: "localhost"
+mail_recipients: "root@localhost"
+mail_enabled: "true"
+mail_use_SSL: "false"
+mail_debug: "true"
+mail_message_template: "{{ mp_server_conf_dir }}/mail_message.template"
+mail_subject_template: "{{ mp_server_conf_dir }}/mail_subject.template"
 
-# When vo_portal is undefined, the VO portal will not be deployed or
-# configured
+### VO Portal
+
+### When vo_portal is undefined, the VO portal will not be deployed or
+### configured
 vo_portal: vo-portal
 vo_portal_dir: /var/www/voportal
 vo_portal_conf_dir: "{{ vo_portal_dir }}/conf"
@@ -86,14 +77,11 @@ vo_portal_log_dir: "{{ vo_portal_dir }}/log"
 vo_portal_storage_dir: "{{ vo_portal_dir }}/storage"
 vo_portal_conf_lifetime: 86400
 
-vo_portal_truststore_pw: changeit
-vo_portal_id: FILLME
-vo_portal_secret: FILLME
 
-# SSH Key portal
+### SSH Key portal
 
-# When sshkey_portal is undefined, the sshkey portal will not be deployed or
-# configured
+### When sshkey_portal is undefined, the sshkey portal will not be deployed or
+### configured
 sshkey_portal: sshkeys
 sshkey_portal_dir: /var/www/sshkeyportal
 sshkey_portal_conf_dir: "{{ sshkey_portal_dir }}/conf"
@@ -102,17 +90,3 @@ sshkey_portal_truststore: "{{ sshkey_portal_conf_dir }}/trust-store.jks"
 sshkey_portal_conf: sshkey-portal-config
 sshkey_portal_log_dir: "{{ sshkey_portal_dir }}/log"
 sshkey_portal_storage_dir: "{{ sshkey_portal_dir }}/storage"
-
-sshkey_portal_truststore_pw: changeit
-sshkey_portal_id: FILLME
-sshkey_portal_secret: FILLME
-
-# credential store
-
-credstore_host: host.myproxy.com
-credstore_port: 7512
-credstore_pw: changeme
-
-# delegation server
-
-deleg_server_auth: https://www.example.com/oauth2

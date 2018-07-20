@@ -49,6 +49,26 @@
     mode: 0600
     backup: yes
 
+# copy mail templates
+
+- name: mail message template file
+  template:
+    src: mail_message.template.j2
+    dest: "{{ mail_message_template }}"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+    mode: 0600
+    backup: yes
+
+- name: mail subject template file
+  template:
+    src: mail_subject.template.j2
+    dest: "{{ mail_subject_template }}"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+    mode: 0600
+    backup: yes
+
 # copy tools for client approval
 
 - name: copy client approval jar
@@ -74,25 +94,6 @@
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
     mode: 0400
-
-# (no need for a trust store as long as trusted certs are in /etc/grid-security/certificates)
-
-# place trust and key store
-
-#- name: retrieve all trusted CAs
-#  command: "find {{ x509_cert_dir }} -type f -name '*.pem'"
-#  register: trusted_cas
-
-#- name: add trusted CAs to client trust store
-#  raw: /usr/bin/keytool -list -keystore "{{ mp_server_truststore }}" -storepass "{{ mp_server_truststore_pw }}" -alias `basename "{{ item }}"` || /usr/bin/keytool -importcert -noprompt -trustcacerts -keystore "{{ mp_server_truststore }}" -storepass "{{ mp_server_truststore_pw }}" -alias `basename "{{ item }}"`  -file "{{ item }}"
-#  with_items: "{{ trusted_cas.stdout_lines }}"
-
-#- name: add the right permission to the trust store
-#  file:
-#    path: "{{ mp_server_truststore }}"
-#    owner: tomcat
-#    group: tomcat
-#    mode: 0644
 
 # convert hostcert into pkcs12, so that oa4mp can load it in its keystore
 

@@ -11,16 +11,6 @@ tomcat_packages:
  - tomcat6
  - tomcat6-admin-webapps
 
-# Note: javamail does NOT exist on CentOS6
-#tomcat_extra_packages:
-#  - javamail
-
-#tomcat_jglobus_packages:
-#  - jglobus-jsse
-#  - jglobus-ssl-proxies
-
-#tomcat_extra_libs: /usr/share/java/jglobus
-
 catalina_home: /usr/share/tomcat6
 tomcat_user: tomcat
 tomcat_service: tomcat6

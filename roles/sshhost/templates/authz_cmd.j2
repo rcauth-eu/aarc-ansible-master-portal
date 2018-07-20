@@ -10,7 +10,7 @@ fi
 # logfile
 authzlog="{{ authz_cmd_log }}"
 # MasterPortal key listing endpoint 
-url="https://{{ masterportal_host }}:8443/{{ mp_server }}/{{ sshkey_listing }}"
+url="https://{{ masterportal_host }}:{{ sshkey_listing_port }}/{{ mp_server }}/{{ sshkey_listing }}"
 # local list from (e.g.) COmanage, leave empty to skip
 localfile="{{ ssh_key_list_file }}"
 # Command to run for user (filled in as \1)

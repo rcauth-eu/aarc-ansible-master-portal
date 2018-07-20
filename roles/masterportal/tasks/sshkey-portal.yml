@@ -31,6 +31,8 @@
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
 
+# place configuration
+
 - name: sshkeyportal config file
   template:
     src: sshkey-portal-cfg.xml.j2
@@ -40,7 +42,8 @@
     mode: 0600
     backup: yes
 
-# (no need for a trust store as long as trusted certs are in /etc/grid-security/certificates)
+# (no need for a trust store as long as trusted certs are in x509_cert_dir)
+# place trust and key stores
 
 - name: add trusted CAs to client trust store
   raw: "java -jar {{ keyutil_jar }} -i -F -n {{ sshkey_portal_truststore }} -p {{ sshkey_portal_truststore_pw }} -e {{ x509_cert_dir }}/*.pem"

@@ -1,51 +1,38 @@
 ---
+########################################################################
+### OVERRIDDEN VALUES FOR THE credstore ROLE
+########################################################################
 
-# Trust anchors: for the credstore this MUST include:
-# - CA for hostcert of masterportal, credstore and sshhost
-# - OnlineCA (i.e. the backend CA for the online CA)
-# Settings here override those in basic_env.yml
+### Trust anchors: for the credstore this MUST include:
+### - CA for hostcert of masterportal, credstore and sshhost
+### - OnlineCA (i.e. the backend CA for the online CA)
+### Settings here override also those in common_env.yml
 
-# trust anchor as RPM
+### trust anchor as RPM
 #trust_anchor_packages:
 #  - "ca_DCAROOT-G1"
 #  - "ca_RCauth-Pilot-ICA-G1"
 
-# trust anchor as tarball
+### trust anchor as tarball
 #trust_anchor_tarballs:
 #  - "onlineca.tar.gz"
 #  - "internalca.tar.gz"
 
-# Additionally need IGTF distribution when we want to connect to VOMS servers.
-# Probably only need classic for that
+### Additionally need IGTF distribution when we want to connect to VOMS servers.
+### Probably only need classic for that
 ca_policies_igtf:
   - ca_policy_igtf-classic
 
-# Fill in the Master Portal DN. This is going to be trusted by the MyProxy
-# Credential Store for proxy upload and retrieval. This is generally the
-# hostcert DN of the Master Portal.
-
+### Fill in the Master Portal DN. This is going to be trusted by the MyProxy
+### Credential Store for proxy upload and retrieval. This is generally the
+### hostcert DN of the Master Portal.
 masterportal_credentials: "/C=NL/O=Example/OU=Org/CN=masterportal"
 
-# Fill in the SSH Host DN. This is also going to be trusted by the MyProxy
-# Credential Store. This is generally the hostcert DN of the SSH host.
-# If the SSH host is not used or co-hosted with the Master Portal, this can be
-# left out.
-
+### Fill in the SSH Host DN. This is also going to be trusted by the MyProxy
+### Credential Store. This is generally the hostcert DN of the SSH host.
+### If the SSH host is not used or co-hosted with the Master Portal, this can be
+### left out.
 sshhost_credentials: "/C=NL/O=Example/OU=Org/CN=ssh-host"
 
-
-# Maximum lifetime of issued proxies by the Credential Store
-
+### Maximum lifetime of issued proxies by the Credential Store
 credstore_max_proxy_lifetime: 264
-
-# IP address of the Master Portal trusted by this Credential Store (only 
-# used for IP table rules). Can be ignored if Credential Store is running
-# on the same host as the Master Portal.
-
-# masterportal_address: 123.123.123.123
-
-# IP address for the SSH host trusted by this Credential Store (only 
-# used for IP table rules). Can be ignored if Credential Store is running
-# on the same host as the SSH host or if no SSH host is being configured.
-
-# ssh_address: 123.123.123.123

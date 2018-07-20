@@ -4,10 +4,6 @@
 # Need the IGTF distribution to be able to talk to VOMS servers
 - include_tasks: deploy-igtf-distrib.yml
 
-# this is only needed if the Credential Store runs on a separate host from the
-# Master Portal, otherwise we are allowed via the related/established rule
-- include_tasks: iptables.yml
-
 # add the purging script to clean up expired/revoked certificates
 - include_tasks: purger.yml
 

@@ -2,16 +2,57 @@
 :INPUT DROP [0:0]
 :FORWARD DROP [0:0]
 :OUTPUT ACCEPT [0:0]
+:LOCAL-INPUT - [0:0]
+:TRUSTED-INPUT - [0:0]
 
 # INPUT Chain
 
 -I INPUT -i lo -j ACCEPT
 -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 
+{% if groups.sshhost.0 is defined and inventory_hostname == groups.sshhost.0 %}
+# Make sure SSH is accessible from the world for the SSH host
 -A INPUT -m state --state NEW -p tcp --dport 22 -j LOG --log-prefix "SSH ACCEPT: "
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+{% endif %}{# inventory_hostname == groups.sshhost.0 #}
+
+{% if inventory_hostname == groups.credstore.0 %}
+{% if ssh_address is defined %}
+# myproxy must be reachable from ssh host when enabled and not co-hosted
+-A INPUT -m state --state NEW -m tcp -p tcp -s {{ ssh_address }} --dport {{ credstore_port }} -j ACCEPT
+{% endif %}
+{% if masterportal_address is defined %}
+# myproxy must be reachable from masterportal host when not co-hosted
+-A INPUT -m state --state NEW -m tcp -p tcp -s {{ masterportal_address }} --dport {{ credstore_port }} -j ACCEPT
+{% endif %}
+{% endif %}{# inventory_hostname == groups.credstore.0 #}
+
+
+{% for local_net in local_nets %}
+-A INPUT -s {{ local_net }} -j LOCAL-INPUT
+{% endfor %}
+
+{% if inventory_hostname == groups.masterportal.0 %}
+{% if ssh_address is defined %}
+# SSH host needs access to the ssh key listing
+-A INPUT -m state --state NEW -m tcp -p tcp -s {{ ssh_address }} --dport {{ sshkey_listing_port }} -j ACCEPT
+{% endif %}
+#-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
+{% endif %}{# inventory_hostname == groups.masterportal.0 #}
 
 -A INPUT -m limit --limit 2/min -j LOG --log-uid --log-prefix "iptables:INPUT: "
 -A INPUT -j DROP
+
+# LOCAL rules
+{% for trusted_net in trusted_nets %}
+-A LOCAL-INPUT -s {{ trusted_net }} -j TRUSTED-INPUT
+{% endfor %}
+-A LOCAL-INPUT -j REJECT --reject-with icmp-host-prohibited
+
+# TRUSTED rules
+-A TRUSTED-INPUT -p tcp --dport 22 -m state --state NEW -j LOG --log-prefix "SSH ACCEPT: "
+-A TRUSTED-INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
+-A TRUSTED-INPUT -j REJECT --reject-with icmp-host-prohibited
 
 COMMIT

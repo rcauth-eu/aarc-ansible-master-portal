@@ -39,7 +39,7 @@ passphrase="{{ credstore_pw }}"		# credential passphrase
 # Prints helptext on stdout
 showhelp()	{
     cat << EOF
-usage: ssh proxy@${sshhost} [OPTION]...
+usage: ssh {{ proxy_user }}@${sshhost} [OPTION]...
  
 Valid options are:
  time=HOURS    proxylifetime in hours (default: $lifetime, maximum: $maxlifetime)

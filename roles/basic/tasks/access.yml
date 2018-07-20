@@ -10,7 +10,8 @@
     insertafter: "#- : ALL : ALL"
     block: |
       + : root : LOCAL 127.0.01 ::1 cron crond localhost.localdomain
-      + : root : ALL
+      + : root :{% for host in trusted_nets %} {{ host }}{% endfor %} # IPv4
+      + : root :{% for host in trusted_nets_v6 %} {{ host }}{% endfor %} # IPv6
       - : ALL : ALL
     owner: "root"
     group: "root"

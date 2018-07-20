@@ -1,0 +1,12 @@
+---
+
+# Configuring fetchcrl
+
+- name: add fetchcrl config
+  template:
+    src: fetch-crl.conf.j2
+    dest: "/etc/fetch-crl.conf"
+    owner: "root"
+    group: "root"
+    mode: 0644
+    backup: yes

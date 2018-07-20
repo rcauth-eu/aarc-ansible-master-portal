@@ -21,4 +21,3 @@
     mode: 0600
     backup: yes
   notify: restart ip6tables
-
