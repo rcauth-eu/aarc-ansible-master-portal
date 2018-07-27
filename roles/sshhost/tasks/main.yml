@@ -1,15 +1,15 @@
 ---
 # Create the proxy user
-- include_tasks: proxyuser.yml
+- import_tasks: proxyuser.yml
 
 # Setup the client credentials
-- include_tasks: proxycreds.yml
+- import_tasks: proxycreds.yml
 
 # add the myproxy and authz scripts
-- include_tasks: scripts.yml
+- import_tasks: scripts.yml
 
 # Update the sshd config
-- include_tasks: sshd.yml
+- import_tasks: sshd.yml
 
 # Update the access.conf file for the proxy user
-- include_tasks: accessconf.yml
+- import_tasks: accessconf.yml

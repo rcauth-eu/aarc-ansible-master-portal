@@ -27,11 +27,6 @@
 {% endif %}
 {% endif %}{# inventory_hostname == groups.credstore.0 #}
 
-
-{% for local_net in local_nets %}
--A INPUT -s {{ local_net }} -j LOCAL-INPUT
-{% endfor %}
-
 {% if inventory_hostname == groups.masterportal.0 %}
 {% if ssh_address is defined %}
 # SSH host needs access to the ssh key listing
@@ -40,6 +35,11 @@
 #-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
 {% endif %}{# inventory_hostname == groups.masterportal.0 #}
+
+# HANDLE LOCAL ADDRESSES SEPARATELY
+{% for local_net in local_nets %}
+-A INPUT -s {{ local_net }} -j LOCAL-INPUT
+{% endfor %}
 
 -A INPUT -m limit --limit 2/min -j LOG --log-uid --log-prefix "iptables:INPUT: "
 -A INPUT -j DROP

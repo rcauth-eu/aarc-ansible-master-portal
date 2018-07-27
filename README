@@ -64,6 +64,8 @@ Prerequisites
     Note that you also will have to fill in the client ID and Secret for
     the VO-portal and/or SSH keys portal (when applicable). They can
     obviously only be obtained once the MasterPortal has been installed.
+    Afterwards you can re-run ansible, starting from the task
+    "sshkeyportal config file" or "voportal config file"
 
 
 How to use these scripts?
@@ -82,12 +84,13 @@ The hostname[s] set in the invertory files will be set on the target machine[s].
 There are three different plays you can execute. One for the Credential Store
 called 'credstore.yml', one for the SSH host call 'sshhost.yml' and one for the
 Master Portal called 'masterportal.yml'.
+
 All three plays include the basic role, which takes care of setting up the
-environment for these components. 
+environment for these components, including the ip(6)tables rules for all three
+hosts. Feel free to further tweak the template, but make sure to keep the
+different services reachable. See ./roles/basic/templates/
 
 Make sure to check recommended modifications below before starting each play!
-In case of single host deployments, execute 'credstore.yml' first,
-then 'sshhost.yml' and then 'masterportal.yml' last.
 
 1. credstore.yml
 
@@ -112,11 +115,12 @@ then 'sshhost.yml' and then 'masterportal.yml' last.
 	   without any directory structure, and the tarball should be placed
 	   under 'roles/credstore/files/'
 
-
 2. sshhost.yml
 
 	a. Fill in the required environment variables in sshhost_env.yml
 
+	   This play configures the special ssh account (and host) that can be
+	   used to obtain proxy certificates.
 	   Before executing this play, make sure to fill in the required
 	   variables listed and explained in the 'sshhost_env.yml' file.
 
@@ -124,10 +128,10 @@ then 'sshhost.yml' and then 'masterportal.yml' last.
 
 	a. Fill in the required environment variables in masterportal_env.yml
 
+	   This play configures the rest of the MasterPortal, including the web
+	   frontend.
 	   Before executing this play, make sure to fill in the required
 	   variables listed and explained in the 'masterportal_env.yml' file.
-	   Look into the masterportal_env.yml.tamplate for a list of variables
-	   you have to override. 
 
 	b. Verify deploying war files
 
@@ -135,11 +139,3 @@ then 'sshhost.yml' and then 'masterportal.yml' last.
 	   (mp-oa2-client.war and mp-oa2-server.war) and optionally the VO
 	   Portal war file (vo-portal.war). Make sure that these are present in
 	   your 'roles/masterportal/files' directory. 
-
-	c. Tweak iptables rules
-
-	   There is a simple set of iptable rules being deployed by this play.
-	   Feel free to customize this to the needs of your infrastructure. Make
-	   sure to leave port 443 accessible. The iptables file can be found in
-	   'roles/masterportal/files'
- 

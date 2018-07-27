@@ -1,11 +1,11 @@
 ---
-- include_tasks: myproxy-credstore.yml
+- import_tasks: myproxy-credstore.yml
 
 # Need the IGTF distribution to be able to talk to VOMS servers
-- include_tasks: deploy-igtf-distrib.yml
+- import_tasks: deploy-igtf-distrib.yml
 
 # add the purging script to clean up expired/revoked certificates
-- include_tasks: purger.yml
+- import_tasks: purger.yml
 
 - name: start myproxy
   service: name=myproxy-server state=restarted enabled=yes

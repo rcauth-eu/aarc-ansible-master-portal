@@ -2,31 +2,31 @@
 
 ### services required for masterportal
 
-- include_tasks: java.yml
-- include_tasks: tomcat.yml
-- include_tasks: httpd.yml
-- include_tasks: mariadb.yml
-#- include_tasks: mysql.yml
+- import_tasks: java.yml
+- import_tasks: tomcat.yml
+- import_tasks: httpd.yml
+- import_tasks: mariadb.yml
+#- import_tasks: mysql.yml
 
 # Make sure the keyutil jar file is remotely available
-- include_tasks: keyutil.yml
+- import_tasks: keyutil.yml
 
 # Include tasks to deploy master portal
 
-- include_tasks: oa4mp-client.yml
-- include_tasks: oa4mp-server.yml
+- import_tasks: oa4mp-client.yml
+- import_tasks: oa4mp-server.yml
 
 ### Setup the self-service SSH public key upload portal. This can be used in
 ### combination with the SSH host (see the sshhost playbook) to download proxy
 ### certificates using SSH and a public key.
 
-- include_tasks: sshkey-portal.yml
+- import_tasks: sshkey-portal.yml
   when: sshkey_portal is defined
 
 ### The VO Portal is not part of the Master Portal, it's only a simple 
 ### Master Portal client installed alongside it for testing purposes.
 
-- include_tasks: vo-portal.yml
+- import_tasks: vo-portal.yml
   when: vo_portal is defined
 
 ### enable services

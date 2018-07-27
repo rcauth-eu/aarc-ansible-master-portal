@@ -2,20 +2,20 @@
 
 # include tasks to execute
 
-- include_tasks: hostname.yml
-- include_tasks: selinux.yml
-- include_tasks: sshd.yml
+- import_tasks: hostname.yml
+- import_tasks: selinux.yml
+- import_tasks: sshd.yml
 
-- include_tasks: repos.yml
-- include_tasks: yum.yml
+- import_tasks: repos.yml
+- import_tasks: yum.yml
 
-- include_tasks: network.yml
-- include_tasks: iptables.yml
-- include_tasks: access.yml
-- include_tasks: ntpd.yml
+- import_tasks: network.yml
+- import_tasks: iptables.yml
+- import_tasks: access.yml
+- import_tasks: ntpd.yml
 
-- include_tasks: fetchcrl.yml
-- include_tasks: hostcreds.yml
+- import_tasks: fetchcrl.yml
+- import_tasks: hostcreds.yml
 
 # list of disabled services
 # need to stop e.g. firewalld before starting iptables
