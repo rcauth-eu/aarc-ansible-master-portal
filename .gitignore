@@ -1,3 +1,6 @@
+# Skip the .retry files
+/*.retry
+
 # Do not accidentally add the created secrets_env.yml in any directory
 secrets_env.yml
 
