@@ -31,6 +31,12 @@ mp_client: mp-oa2-client
 sshkey_listing: sshkeylisting
 sshkey_listing_port: 8443
 
+### Whether to enable the autoregistration endpoint
+### WARNING: should only be used if the request is ### already verified
+### previously, e.g. via a proxy and OIDC federation
+use_autoregister: false
+autoregister_port: 8444
+
 
 ### Default MyProxy Credential Store that will store all the incoming used
 ### proxies. Make sure to fill in the right hostname (even if it's localhost!),

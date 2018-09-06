@@ -4,7 +4,7 @@
 
     <!-- ############################################################################## -->
 
-    <service name="server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true" refreshTokenEnabled="{{ mp_server_refreshtokens }}">
+    <service name="server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true" refreshTokenEnabled="{{ mp_server_refreshtokens }}" enableAutoRegisterEndpoint="{{ use_autoregister }}">
 
        <logging  logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
                  logName="MP"

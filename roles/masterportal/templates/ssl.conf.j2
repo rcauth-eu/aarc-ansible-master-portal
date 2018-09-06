@@ -1,6 +1,9 @@
 LoadModule ssl_module modules/mod_ssl.so
 Listen 443
 Listen {{ sshkey_listing_port }}
+{% if use_autoregister is defined and use_autoregister == true %}
+Listen {{ autoregister_port }}
+{% endif %}
 
 SSLPassPhraseDialog  builtin
 SSLSessionCache         shmcb:/var/cache/mod_ssl/scache(512000)
@@ -34,9 +37,24 @@ UseCanonicalName On
 
 ProxyRequests Off
 
-Header always set Strict-Transport-Security "max-age=15724800"
+# Only publish Apache as Server string
+ServerTokens Prod
 
 CustomLog logs/ssl_request_log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+
+{% if use_autoregister is defined and use_autoregister == true %}
+# NOTE: Make sure that the autoregistration endpoint is ONLY accessible from the
+# host that ensures the requests are valid. I.e. block port {{ autoregister_port }}
+<VirtualHost _default_:{{ autoregister_port }}>
+    ServerName {{ inventory_hostname }}
+
+    SSLEngine on
+
+    # This provides the autoregistration endpoint
+    ProxyPass /mp-oa2-server/autoregister ajp://127.0.0.1:8009/mp-oa2-server/autoregister
+
+</VirtualHost>
+{% endif %}
 
 <VirtualHost _default_:{{ sshkey_listing_port }}>
 
@@ -56,10 +74,42 @@ CustomLog logs/ssl_request_log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 
     SSLEngine on
 
+    # Enable different security headers, see e.g. https://securityheaders.com/
+    # Enable HSTS
+    Header always set Strict-Transport-Security "max-age=2592000"
+    # Prevent iFrames
+    Header always set X-Frame-Options "SAMEORIGIN"
+    # Prevent XSS attacks: configure the built in reflective XSS protection found
+    # in Internet Explorer, Chrome and Safari (Webkit).
+    Header always set X-Xss-Protection "1; mode=block"
+    # prevents Google Chrome and Internet Explorer from trying to mime-sniff the
+    # content-type of a response away from the one being declared by the server.
+    Header always set X-Content-Type-Options "nosniff"
+    # Still in draft. Instructs the browser to never send the referer header with
+    # requests that are made from your site.
+    Header always set Referrer-Policy no-referrer
+    # Only allow content from ourselves
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+
+
     ProxyPass /{{ mp_server }}/authorized !
+    ProxyPass /{{ mp_server }}/autoregister !
     ProxyPass /{{ mp_server }}/{{ sshkey_listing }} !
 
-    ProxyPass /{{ mp_server }} ajp://127.0.0.1:8009/{{ mp_server }}
+    # Explicitly proxy all the server-subendpoints, instead of the server
+    # endpoint itself.
+    ProxyPass /{{ mp_server }}/token       ajp://127.0.0.1:8009/{{ mp_server }}/token
+#    ProxyPass /{{ mp_server }}/getcert     ajp://127.0.0.1:8009/{{ mp_server }}/getcert
+    ProxyPass /{{ mp_server }}/getproxy    ajp://127.0.0.1:8009/{{ mp_server }}/getproxy
+    ProxyPass /{{ mp_server }}/error       ajp://127.0.0.1:8009/{{ mp_server }}/error
+    ProxyPass /{{ mp_server }}/authorize   ajp://127.0.0.1:8009/{{ mp_server }}/authorize
+    ProxyPass /{{ mp_server }}/register    ajp://127.0.0.1:8009/{{ mp_server }}/register
+    ProxyPass /{{ mp_server }}/.well-known ajp://127.0.0.1:8009/{{ mp_server }}/.well-known
+    ProxyPass /{{ mp_server }}/certs       ajp://127.0.0.1:8009/{{ mp_server }}/certs
+    ProxyPass /{{ mp_server }}/userinfo    ajp://127.0.0.1:8009/{{ mp_server }}/userinfo
+    ProxyPass /{{ mp_server }}/sshkey      ajp://127.0.0.1:8009/{{ mp_server }}/sshkey
+
+    # Proxy the client part
     ProxyPass /{{ mp_client }} ajp://127.0.0.1:8009/{{ mp_client }}
 
 {% if sshkey_portal is defined %}
