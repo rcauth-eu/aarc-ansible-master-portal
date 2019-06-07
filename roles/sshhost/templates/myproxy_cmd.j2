@@ -27,17 +27,17 @@ fi
 # Set default variables
 username="$1"
 
-vomses="{{ vomses }}"			# vomses file or directory
-lifetime="{{ default_lifetime }}"	# default returned proxy lifetime
-maxlifetime="{{ max_lifetime }}"	# maximum returned proxy lifetime
-sshhost="{{ inventory_hostname }}"    	# SSH host
-voportalhost="{{ masterportal_host }}"	# VO portal host 
-myproxyserver="{{ credstore_host }}"	# myproxy server
-passphrase="{{ credstore_pw }}"		# credential passphrase
+vomses="{{ vomses }}"                   # vomses file or directory
+lifetime="{{ default_lifetime }}"       # default returned proxy lifetime
+maxlifetime="{{ max_lifetime }}"        # maximum returned proxy lifetime
+sshhost="{{ inventory_hostname }}"      # SSH host
+voportalhost="{{ masterportal_host }}"  # VO portal host 
+myproxyserver="{{ credstore_host }}"    # myproxy server
+passphrase="{{ credstore_pw }}"         # credential passphrase
 
 
 # Prints helptext on stdout
-showhelp()	{
+showhelp() {
     cat << EOF
 usage: ssh {{ proxy_user }}@${sshhost} [OPTION]...
  
@@ -50,10 +50,13 @@ Valid options are:
 
 EOF
     echo "Supported VOs:"
+    # Note that we don't have a terminal, so cannot use $COLUMNS for fmt
     if [ -d "$vomses" ];then
-	echo " $(cut -d'"' -f2 ${vomses}/*|sort -u|tr '\n' ' ')"
+        echo " $(cut -d'"' -f10 $(find $vomses -not -type d)|sort -u|tr '\n' ' ')"|fmt
+    elif [ -e "$vomses" ];then
+        echo " $(cut -d'"' -f10 $vomses|sort -u|tr '\n' ' ')"|fmt
     else
-	echo " $(cut -d'"' -f2 $vomses|sort -u|tr '\n' ' ')"
+        echo " NONE"
     fi
 
 cat << EOF
@@ -67,7 +70,7 @@ EOF
 }
 
 # Error function: first print message, then help text
-error()	{
+error() {
     echo "$@" >&2
     echo >&2
     showhelp 1
@@ -86,31 +89,31 @@ info_alt()  {
     export X509_USER_CERT="{{ proxycert }}"
     export X509_USER_KEY="{{ proxykey }}"
     myproxy-logon -l "$username" -s "$myproxyserver" -S -o $proxyfile -v \
-		  -Q "{{ testreq }}" \
-		  > $logfile 2>&1 <<< "$passphrase"
+                  -Q "{{ testreq }}" \
+                  > $logfile 2>&1 <<< "$passphrase"
 
     # First handle the error cases
     if [ $? -ne 0 ];then
-	if grep -q "certificate has expired" $logfile ; then
-	    echo "timeleft: 0:00:00  (0.0 days)"
-	elif grep -q "No credentials exist for" $logfile ; then
-	    echo "No credential"
-	else
-	    # non-standard (real) error 
-	    echo "Error: " >&2
-	    tail -n2 $logfile|sed 's/^/ /' >&2
-	    rc=1
-	fi
+        if grep -q "certificate has expired" $logfile ; then
+            echo "timeleft: 0:00:00  (0.0 days)"
+        elif grep -q "No credentials exist for" $logfile ; then
+            echo "No credential"
+        else
+            # non-standard (real) error 
+            echo "Error: " >&2
+            tail -n2 $logfile|sed 's/^/ /' >&2
+            rc=1
+        fi
     else
-	# get enddate of second proxy and obtain the remaining seconds.
-	enddate=$(sed -n '/END CERTIFICATE/,$p' $proxyfile|\
-		  openssl x509 -enddate -noout|cut -d'=' -f2-)
-	dt=$(($(date +%s -d "${enddate}")-$(date +%s)))
-	# get # of days as float
-	days=$(awk "BEGIN { print ( $dt / 24 / 3600 ) }")
-	# get hours, minutes, seconds
-	s=$((h=dt/3600, dt-=h*3600, m=dt/60, dt-m*60))
-	printf "timeleft: %d:%02d:%02d  (%.1f days)\n" $h $m $s $days
+        # get enddate of second proxy and obtain the remaining seconds.
+        enddate=$(sed -n '/END CERTIFICATE/,$p' $proxyfile|\
+                  openssl x509 -enddate -noout|cut -d'=' -f2-)
+        dt=$(($(date +%s -d "${enddate}")-$(date +%s)))
+        # get # of days as float
+        days=$(awk "BEGIN { print ( $dt / 24 / 3600 ) }")
+        # get hours, minutes, seconds
+        s=$((h=dt/3600, dt-=h*3600, m=dt/60, dt-m*60))
+        printf "timeleft: %d:%02d:%02d  (%.1f days)\n" $h $m $s $days
     fi
     # Tidy up temp files
     rm -f $logfile $proxyfile
@@ -119,7 +122,7 @@ info_alt()  {
 
 # Does a (reduced) myproxy-info request and exits. On success prints the
 # username and remaining proxy lifetime. The exitvalue is non-zero on error.
-info()	{
+info() {
     local logfile=$(mktemp /tmp/logfile.XXXXXX)
     local rc=0
 
@@ -129,14 +132,14 @@ info()	{
 
     if [ $? -ne 0 ];then
         if grep -q "no credentials found for user" $logfile;then
-	    echo "No credential for user $username"
+            echo "No credential for user $username"
         else
-	    echo "Error: " >&2
-	    tail -n2 $logfile|sed 's/^/ /' >&2
-	    rc=1
+            echo "Error: " >&2
+            tail -n2 $logfile|sed 's/^/ /' >&2
+            rc=1
         fi
     else
-	egrep "username|timeleft" $logfile | sed 's/^ \+//'
+        egrep "username|timeleft" $logfile | sed 's/^ \+//'
     fi
     rm -f $logfile
     exit $rc
@@ -144,7 +147,7 @@ info()	{
 
 # Does a myproxy-logon request and exits. On success prints the
 # resulting proxy. The exitvalue is non-zero on error.
-getproxy()	{
+getproxy() {
     local proxyfile=$(mktemp /tmp/x509up_u$(id -u).XXXXXX)
     local logfile=$(mktemp /tmp/logfile.XXXXXX)
     local rc=0
@@ -153,15 +156,15 @@ getproxy()	{
     export X509_USER_KEY="{{ proxykey }}"
     export VOMS_USERCONF=$vomses
     myproxy-logon -l "$username" -s "$myproxyserver" -S -o $proxyfile -v \
-		  -t "$lifetime" $voms \
-		  > $logfile 2>&1 <<< "$passphrase"
+                  -t "$lifetime" $voms \
+                  > $logfile 2>&1 <<< "$passphrase"
 
     if [ $? -ne 0 ];then
-	echo "Error: " >&2
-	tail -n2 $logfile|sed 's/^/ /' >&2
-	rc=1
+        echo "Error: " >&2
+        tail -n2 $logfile|sed 's/^/ /' >&2
+        rc=1
     else
-	cat $proxyfile
+        cat $proxyfile
     fi
     rm -f $logfile $proxyfile
     exit $rc
@@ -175,39 +178,39 @@ getproxy()	{
 declare -a voms
 for cmd in $SSH_ORIGINAL_COMMAND;do
     case "$cmd" in
-	info)   # Print username, remaining time, then exit
-		info_alt
-		;;
-	help)   # Print help text and exit
-		showhelp 0
-		;;
+        info)   # Print username, remaining time, then exit
+                info_alt
+                ;;
+        help)   # Print help text and exit
+                showhelp 0
+                ;;
         time=*) value="${cmd:5}"
-		# Check value is a number
+                # Check value is a number
                 if [ -n "${value//[[:digit:]]/}" ];then
-		    error "Error: time should be just a number"
-		fi
-		if [ "${value}" -gt "${maxlifetime}" ];then
-		    lifetime="$maxlifetime"
-		else
-		    lifetime="$value"
-		fi
-		;;
-	voms=*) group="[a-zA-Z0-9][a-zA-Z0-9_.-]\+"
-		value="${cmd:5}"
-		# Check value against https://www.ogf.org/documents/GFD.182.pdf
-		if echo "$value"|\
-		    grep -q "^${group}\(:\(/${group}\)\+\(/Role=${group}\)*\)*$"
-		then
-		    # add valid voms option
-		    voms="$voms -m $value"
-		else
-	 	    error "Error: voms should be of form VO or" \
-			  "VO:/VO/subgroup or VO:/VO/subgroup/Role=..."
-		fi
-		;;
-	*)      # Unknown option, print error and exit
-		error "Error: Invalid option \"$cmd\""
-		;;
+                    error "Error: time should be just a number"
+                fi
+                if [ "${value}" -gt "${maxlifetime}" ];then
+                    lifetime="$maxlifetime"
+                else
+                    lifetime="$value"
+                fi
+                ;;
+        voms=*) group="[a-zA-Z0-9][a-zA-Z0-9_.-]\+"
+                value="${cmd:5}"
+                # Check value against https://www.ogf.org/documents/GFD.182.pdf
+                if echo "$value"|\
+                    grep -q "^${group}\(:\(/${group}\)\+\(/Role=${group}\)*\)*$"
+                then
+                    # add valid voms option
+                    voms="$voms -m $value"
+                else
+                    error "Error: voms should be of form VO or" \
+                          "VO:/VO/subgroup or VO:/VO/subgroup/Role=..."
+                fi
+                ;;
+        *)      # Unknown option, print error and exit
+                error "Error: Invalid option \"$cmd\""
+                ;;
     esac
 done
 
