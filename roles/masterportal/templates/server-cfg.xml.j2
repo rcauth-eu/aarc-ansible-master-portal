@@ -4,103 +4,104 @@
 
     <!-- ############################################################################## -->
 
-    <service name="server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true" refreshTokenEnabled="{{ mp_server_refreshtokens }}" enableAutoRegisterEndpoint="{{ use_autoregister }}">
+    <service name="server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true" refreshTokenEnabled="{{ mp_server_refreshtokens }}" enableAutoRegisterEndpoint="{{ use_autoregister }}" disableDefaultStores="false">
 
-       <logging  logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
+        <logging logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
                  logName="MP"
                  logSize="1000000"
                  logFileCount="10"
-                 debug="true"
-       />
+                 debug="true"/>
 
-       <!-- mail setup for new client approval requests -->
-       <mail enabled="{{ mail_enabled }}"
-             debug="{{ mail_debug }}"
-             recipients="{{ mail_recipients }}"
-             server="{{ mail_server }}"
-	     useSSL="{{ mail_use_SSL }}">
-         <messageTemplate>{{ mail_message_template }}</messageTemplate>
-         <subjectTemplate>{{ mail_subject_template }}</subjectTemplate>
-       </mail>
+        <!-- mail setup for new client approval requests -->
+        <mail enabled="{{ mail_enabled }}"
+              debug="{{ mail_debug }}"
+              recipients="{{ mail_recipients }}"
+              server="{{ mail_server }}"
+              useSSL="{{ mail_use_SSL }}">
+            <messageTemplate>{{ mail_message_template }}</messageTemplate>
+            <subjectTemplate>{{ mail_subject_template }}</subjectTemplate>
+        </mail>
 
-       <!-- JSON Web key for signing -->
-       <JSONWebKey defaultKeyID="{{ mp_server_jwk_key_id }}">
-         <path>{{ mp_server_jwk_file }}</path>
-       </JSONWebKey>
+        <!-- JSON Web key for signing -->
+        <JSONWebKey defaultKeyID="{{ mp_server_jwk_key_id }}">
+            <path>{{ mp_server_jwk_file }}</path>
+        </JSONWebKey>
 
-       <!-- Specify allowed number of SSH keys -->
-       <sshkeys max="5"/>
+        <!-- Specify allowed number of SSH keys -->
+        <sshkeys max="5"/>
 
-       <!-- 
+        <!-- 
             There is a set of basic scopes supperted in OA2Scopes.basicScopes. In case you would
             like to support any additional scopes you have to specify them here, otherwise the 
             Master Portal will reject invalid scope requests.
-       -->
-       <scopes handler="org.masterportal.oauth2.server.MPForwardingScopeHandler">
-	  <scope>org.cilogon.userinfo</scope>
-       </scopes>
+        -->
+        <scopes>
+            <scope>org.cilogon.userinfo</scope>
+        </scopes>
 
 {% if mp_server_conf == "fileStore" %}
 
-       <{{ mp_server_conf }} path="{{ mp_server_storage_dir }}">
-           <transactions/>
-           <clients/>
-           <clientApprovals/>
-           <sshKeys/>
-       </{{ mp_server_conf }}>
+        <{{ mp_server_conf }} path="{{ mp_server_storage_dir }}">
+            <transactions/>
+            <clients/>
+            <clientApprovals/>
+            <sshKeys/>
+        </{{ mp_server_conf }}>
 
 {% else %}
 
-       <{{ mp_server_conf }} username="{{ mp_server_db_user }}" 
-              password="{{ mp_server_db_pw }}" 
-              database="{{ mp_server_db }}" 
-              schema="{{ mp_server_db }}" >
-           <transactions/>
-           <clients/>
-           <clientApprovals/>
-           <sshKeys/>
-       </{{ mp_server_conf }}>
+        <{{ mp_server_conf }} username="{{ mp_server_db_user }}" 
+               password="{{ mp_server_db_pw }}" 
+               database="{{ mp_server_db }}" 
+               schema="{{ mp_server_db }}" >
+            <transactions/>
+            <clients/>
+            <clientApprovals/>
+            <sshKeys/>
+        </{{ mp_server_conf }}>
 
 {% endif %}
 
-
-
-       <myproxy host="{{ credstore_host }}"
-                port="{{ credstore_port }}"
+        <myproxy host="{{ credstore_host }}"
+                 port="{{ credstore_port }}"
 {% if credstore_dn is defined %}
-		serverDN="{{ credstore_dn }}"
+                 serverDN="{{ credstore_dn }}"
 {% endif %}
-		password="{{ credstore_pw }}">
-                 <keystore path="{{ mp_server_keystore }}"
-                           type="pkcs12"
-                           password="{{ mp_keystore_pw }}"
-                           factory="SunX509" />
-		 <!-- 
-			The default lifetime set in seconds is used in case there is no proxylifetime value 
-			provided with the original /getproxy request 
-		 -->
-		 <defaultLifetime>43200</defaultLifetime>
+                 password="{{ credstore_pw }}">
+            <ssl>
+                <keystore>
+                    <path>{{ mp_server_keystore }}</path>
+                    <type>pkcs12</type>
+                    <password>{{ mp_keystore_pw }}</password>
+                    <factory>SunX509</factory>
+                </keystore>
+            </ssl>
+            <!-- 
+                   The default lifetime set in seconds is used in case there is no proxylifetime value 
+                   provided with the original /getproxy request 
+            -->
+            <defaultLifetime>43200</defaultLifetime>
 
-                 <validators>
-                        <validator handler="org.masterportal.oauth2.server.validators.DNValidator">
-                                <input name="input_claim">cert_subject_dn</input>
-                        </validator>
-                        <validator handler="org.masterportal.oauth2.server.validators.LifetimeValidator">
-                                <!-- 
-                                     max_proxy_lifetime is set in the myproxy-server.conf (converted into seconds) 
-                                -->
-                                <input name="max_proxy_lifetime">950400</input>
-                                <!-- 
-                                     the tolerance is a small timeframe in seconds (usually a day) which prevents 
-                                     the Delegation Server from being flooded with requests. 
-                                -->
-                                <input name="tolerance">86400</input>
-                        </validator>
-                 </validators>
+            <validators>
+                <validator handler="eu.rcauth.masterportal.server.validators.DNValidator">
+                    <input name="input_claim">cert_subject_dn</input>
+                </validator>
+                <validator handler="eu.rcauth.masterportal.server.validators.LifetimeValidator">
+                    <!-- 
+                        max_proxy_lifetime is set in the myproxy-server.conf (converted into seconds) 
+                    -->
+                    <input name="max_proxy_lifetime">950400</input>
+                    <!-- 
+                        the tolerance is a small timeframe in seconds (usually a day) which prevents 
+                        the Delegation Server from being flooded with requests. 
+                    -->
+                    <input name="tolerance">86400</input>
+                </validator>
+            </validators>
 
-       </myproxy>
+        </myproxy>
 
-       <!-- <authorizationServlet useHeader="true" requireHeader="true" headerFieldName="eppn" /> -->
+        <!-- <authorizationServlet useHeader="true" requireHeader="true" headerFieldName="eppn" /> -->
 
     </service>
 

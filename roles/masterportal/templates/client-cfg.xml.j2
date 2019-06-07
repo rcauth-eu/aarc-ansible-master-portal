@@ -4,58 +4,69 @@
 
     <!-- ############################################################################## -->
 
-    <client name="client-config" address="https://{{ inventory_hostname }}/{{ mp_client }}">
+    <client name="client-config" address="https://{{ inventory_hostname }}/{{ mp_client }}" debug="true">
 
-           <logging  logFileName="{{ mp_client_log_dir }}/{{ mp_client }}.log"
-                     logName="MP"
-                     logSize="1000000"
-                     logFileCount="10"
-                     debug="true"/>
+        <logging logFileName="{{ mp_client_log_dir }}/{{ mp_client }}.log"
+                 logName="MP"
+                 logSize="1000000"
+                 logFileCount="10"
+                 debug="true"/>
 
-           <callbackUri>https://{{ inventory_hostname }}/{{ mp_client }}/ready</callbackUri>
+        <!-- enable OIDC for ID token, currently default is (still) true -->
+        <OIDCEnabled>true</OIDCEnabled>
 
-           <serviceUri>{{ deleg_server_auth }}</serviceUri>
+        <callbackUri>https://{{ inventory_hostname }}/{{ mp_client }}/ready</callbackUri>
 
-	   <wellKnownUri>{{ deleg_server_auth }}/.well-known/openid-configuration</wellKnownUri>
+        <serviceUri>{{ deleg_server_auth }}</serviceUri>
 
-           <id>{{ mp_client_id }}</id>
-           <secret>{{ mp_client_secret }}</secret>
+        <wellKnownUri>{{ deleg_server_auth }}/.well-known/openid-configuration</wellKnownUri>
 
-           <lifetime>{{ mp_client_conf_lifetime }}</lifetime>
+        <id>{{ mp_client_id }}</id>
+        <secret>{{ mp_client_secret }}</secret>
+
+        <lifetime>{{ mp_client_conf_lifetime }}</lifetime>
 
 {% if mp_client_conf == "fileStore" %}
 
-           <{{ mp_client_conf }} path="{{ mp_client_storage_dir }}">
-               <assetStore/>
-           </{{ mp_client_conf }}>
+        <{{ mp_client_conf }} path="{{ mp_client_storage_dir }}">
+            <assetStore/>
+        </{{ mp_client_conf }}>
 
 {% else %}
 
-           <{{ mp_client_conf }}    username="{{ mp_client_db_user }}"
-                     password="{{ mp_client_db_pw }}"
-                     database="{{ mp_client_db }}"
-                     schema="{{ mp_client_db }}">
-               <assetStore/>
-           </{{ mp_client_conf }}>
+        <{{ mp_client_conf }} username="{{ mp_client_db_user }}"
+                password="{{ mp_client_db_pw }}"
+                database="{{ mp_client_db }}"
+                schema="{{ mp_client_db }}">
+            <assetStore/>
+        </{{ mp_client_conf }}>
 
 {% endif %}
 
-           <keystore path="{{ mp_client_truststore }}"
-                     type="jks"
-                     password="{{ mp_client_truststore_pw }}"
-                     factory="SunX509" />
+        <ssl>
+            <keystore>
+                <path>{{ mp_client_truststore }}</path>
+                <type>jks</type>
+                <password>{{ mp_client_truststore_pw }}</password>
+                <factory>SunX509</factory>
+            </keystore>
+        </ssl>
 
-           <myproxy host="{{ credstore_host }}"
-                    port="{{ credstore_port }}"
-                    password="{{ credstore_pw }}">
+        <myproxy host="{{ credstore_host }}"
+                 port="{{ credstore_port }}"
 {% if credstore_dn is defined %}
-		    serverDN="{{ credstore_dn }}"
+                 serverDN="{{ credstore_dn }}"
 {% endif %}
-                     <keystore path="{{ mp_client_keystore }}"
-                               type="pkcs12"
-                               password="{{ mp_keystore_pw }}"
-                               factory="SunX509" />
-           </myproxy>
+                 password="{{ credstore_pw }}">
+            <ssl>
+                <keystore>
+                    <path>{{ mp_client_keystore }}</path>
+                    <type>pkcs12</type>
+                    <password>{{ mp_keystore_pw }}</password>
+                    <factory>SunX509</factory>
+                </keystore>
+            </ssl>
+        </myproxy>
 
     </client>
 

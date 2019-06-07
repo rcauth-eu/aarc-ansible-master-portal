@@ -4,35 +4,47 @@
 
     <!-- ############################################################################## -->
 
-    <client name="{{ vo_portal_conf }}" address="https://{{ inventory_hostname }}/{{ vo_portal }}">
+    <client name="{{ vo_portal_conf }}" address="https://{{ inventory_hostname }}/{{ vo_portal }}" debug="true">
 
-           <logging  logFileName="{{ vo_portal_log_dir }}/{{ vo_portal }}.log"
-                     logName="VOP"
-                     logSize="1000000"
-                     logFileCount="10"
-                     debug="true"/>
+        <logging logFileName="{{ vo_portal_log_dir }}/{{ vo_portal }}.log"
+                 logName="VOP"
+                 logSize="1000000"
+                 logFileCount="10"
+                 debug="true"/>
 
-           <callbackUri>https://{{ inventory_hostname }}/{{ vo_portal }}/ready</callbackUri>
+        <!-- VO portal doesn't use ID token, only userinfo -->
+        <OIDCEnabled>false</OIDCEnabled>
 
-           <serviceUri>https://{{ inventory_hostname }}/{{ mp_server }}</serviceUri>
+        <callbackUri>https://{{ inventory_hostname }}/{{ vo_portal }}/ready</callbackUri>
 
-           <wellKnownUri>https://{{ inventory_hostname }}/{{ mp_server }}/.well-known/openid-configuration</wellKnownUri>
+        <serviceUri>https://{{ inventory_hostname }}/{{ mp_server }}</serviceUri>
 
-           <id>{{ vo_portal_id }}</id>
-           <secret>{{ vo_portal_secret }}</secret>
+        <wellKnownUri>https://{{ inventory_hostname }}/{{ mp_server }}/.well-known/openid-configuration</wellKnownUri>
 
-           <lifetime>{{ vo_portal_conf_lifetime }}</lifetime>
+        <id>{{ vo_portal_id }}</id>
+        <secret>{{ vo_portal_secret }}</secret>
 
-           <requestProxies>true</requestProxies>
+        <lifetime>{{ vo_portal_conf_lifetime }}</lifetime>
 
-           <fileStore path="{{ vo_portal_storage_dir }}">
-                      <assetStore/>
-           </fileStore>
+        <requestProxies>true</requestProxies>
 
-           <keystore path="{{ vo_portal_truststore }}"
-                     type="jks"
-                     password="{{ vo_portal_truststore_pw }}"
-                     factory="SunX509" />
+        <fileStore path="{{ vo_portal_storage_dir }}">
+            <assetStore/>
+        </fileStore>
+
+        <!-- Add e.g. the userinfo scope for more user claims -->
+        <scopes>
+            <scope>org.cilogon.userinfo</scope>
+        </scopes>
+
+        <ssl>
+            <keystore>
+                <path>{{ vo_portal_truststore }}</path>
+                <type>jks</type>
+                <password>{{ vo_portal_truststore_pw }}</password>
+                <factory>SunX509</factory>
+            </keystore>
+        </ssl>
 
     </client>
 
