@@ -26,6 +26,7 @@ mp_client_keystore: "/etc/grid-security/hostcred.p12"
 mp_client_conf: mysql
 #mp_client_conf: fileStore
 mp_client_log_dir: "{{ mp_client_dir }}/log"
+mp_client_log_size: 1000000
 mp_client_storage_dir: "{{ mp_client_dir }}/storage"
 mp_client_conf_lifetime: 31536000
 
@@ -43,14 +44,22 @@ mp_server_keystore: "/etc/grid-security/hostcred.p12"
 mp_server_conf: mysql
 #mp_server_conf: fileStore
 mp_server_log_dir: "{{ mp_server_dir }}/log"
+mp_server_log_size: 1000000
 mp_server_storage_dir: "{{ mp_server_dir }}/storage"
 mp_server_tools_dir: "{{ mp_server_dir }}/tools"
+### max number of ssh keys per person
+mp_server_max_sshkeys: 5
+### disabled/enabled scopes for the server
+mp_server_disabled_scopes:
+mp_server_enabled_scopes:
+- org.cilogon.userinfo
 
 ### Whether we use refreshtokens
 mp_server_refreshtokens: "true"
 
 ### JSON web key used for signing id_tokens
 mp_server_jwk_file: "{{ mp_server_conf_dir }}/mp.jwk"
+
 
 
 ### Email settings for notifications about new client approval requests.
@@ -74,9 +83,13 @@ vo_portal_conf_file: "{{ vo_portal_conf_dir }}/cfg.xml"
 vo_portal_truststore: "{{ vo_portal_conf_dir }}/trust-store.jks"
 vo_portal_conf: vo-portal-config
 vo_portal_log_dir: "{{ vo_portal_dir }}/log"
+vo_portal_log_size: 1000000
 vo_portal_storage_dir: "{{ vo_portal_dir }}/storage"
 vo_portal_conf_lifetime: 86400
-
+### disabled/enabled scopes for the vo-portal
+vo_portal_disabled_scopes:
+vo_portal_enabled_scopes:
+- org.cilogon.userinfo
 
 ### SSH Key portal
 
@@ -89,4 +102,16 @@ sshkey_portal_conf_file: "{{ sshkey_portal_conf_dir }}/cfg.xml"
 sshkey_portal_truststore: "{{ sshkey_portal_conf_dir }}/trust-store.jks"
 sshkey_portal_conf: sshkey-portal-config
 sshkey_portal_log_dir: "{{ sshkey_portal_dir }}/log"
+sshkey_portal_log_size: 1000000
 sshkey_portal_storage_dir: "{{ sshkey_portal_dir }}/storage"
+### disabled/enabled scopes for the sshkey-portal
+sshkey_portal_disabled_scopes:
+- edu.uiuc.ncsa.myproxy.getcert
+- email
+sshkey_portal_enabled_scopes:
+- org.cilogon.userinfo
+### configuration for displaying the name and IdP
+sshkey_name_claim: name
+sshkey_given_name_claim: given_name
+sshkey_family_name_claim: family_name
+sshkey_idp_display_name_claim: idp_display_name

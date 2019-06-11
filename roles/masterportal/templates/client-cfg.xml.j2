@@ -8,7 +8,7 @@
 
         <logging logFileName="{{ mp_client_log_dir }}/{{ mp_client }}.log"
                  logName="MP"
-                 logSize="1000000"
+                 logSize="{{ mp_client_log_size }}"
                  logFileCount="10"
                  debug="true"/>
 

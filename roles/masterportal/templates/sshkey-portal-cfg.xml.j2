@@ -8,7 +8,7 @@
 
         <logging logFileName="{{ sshkey_portal_log_dir }}/{{ sshkey_portal }}.log"
                  logName="SSHKP"
-                 logSize="1000000"
+                 logSize="{{ sshkey_portal_log_size }}"
                  logFileCount="10"
                  debug="true"/>
 
@@ -31,18 +31,21 @@
         <!-- disable proxy and email scopes which aren't necessary, enable
              userinfo for the IdP name -->
         <scopes>
-            <scope enabled="false">edu.uiuc.ncsa.myproxy.getcert</scope>
-            <scope enabled="false">email</scope>
-            <scope>org.cilogon.userinfo</scope>
+{% for disabled_scope in sshkey_portal_disabled_scopes %}
+            <scope enabled="false">{{ disabled_scope }}</scope>
+{% endfor %}
+{% for enabled_scope in sshkey_portal_enabled_scopes %}
+            <scope>{{ enabled_scope }}</scope>
+{% endfor %}
         </scopes>
 
         <!-- configure the printed name and IdP
              nameClaim is used when set, otherwise
              givenNameClaim+familyNameClaim -->
-        <nameClaim>name</nameClaim>
-        <givenNameClaim>given_name</givenNameClaim>
-        <familyNameClaim>family_name</familyNameClaim>
-        <idpDisplayNameClaim>idp_display_name</idpDisplayNameClaim>
+        <nameClaim>{{ sshkey_name_claim }}</nameClaim>
+        <givenNameClaim>{{ sshkey_given_name_claim }}</givenNameClaim>
+        <familyNameClaim>{{ sshkey_family_name_claim }}</familyNameClaim>
+        <idpDisplayNameClaim>{{ sshkey_idp_display_name_claim}} </idpDisplayNameClaim>
 
         <ssl>
             <keystore>

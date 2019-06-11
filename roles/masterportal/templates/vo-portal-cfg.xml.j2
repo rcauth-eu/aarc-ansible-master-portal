@@ -8,7 +8,7 @@
 
         <logging logFileName="{{ vo_portal_log_dir }}/{{ vo_portal }}.log"
                  logName="VOP"
-                 logSize="1000000"
+                 logSize="{{ vo_portal_log_size }}"
                  logFileCount="10"
                  debug="true"/>
 
@@ -34,7 +34,12 @@
 
         <!-- Add e.g. the userinfo scope for more user claims -->
         <scopes>
-            <scope>org.cilogon.userinfo</scope>
+{% for disabled_scope in vo_portal_disabled_scopes %}
+            <scope enabled="false">{{ disabled_scope }}</scope>
+{% endfor %}
+{% for enabled_scope in vo_portal_enabled_scopes %}
+            <scope>{{ enabled_scope }}</scope>
+{% endfor %}
         </scopes>
 
         <ssl>

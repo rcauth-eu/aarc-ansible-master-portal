@@ -8,7 +8,7 @@
 
         <logging logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
                  logName="MP"
-                 logSize="1000000"
+                 logSize="{{ mp_server_log_size }}"
                  logFileCount="10"
                  debug="true"/>
 
@@ -28,7 +28,7 @@
         </JSONWebKey>
 
         <!-- Specify allowed number of SSH keys -->
-        <sshkeys max="5"/>
+        <sshkeys max="{{ mp_server_max_sshkeys }}"/>
 
         <!--
             There is a set of basic scopes supperted in OA2Scopes.basicScopes.
@@ -37,7 +37,12 @@
             scope requests.
         -->
         <scopes>
-            <scope>org.cilogon.userinfo</scope>
+{% for disabled_scope in mp_server_disabled_scopes %}
+            <scope enabled="false">{{ disabled_scope }}</scope>
+{% endfor %}
+{% for enabled_scope in mp_server_enabled_scopes %}
+            <scope>{{ enabled_scope }}</scope>
+{% endfor %}
         </scopes>
 
 {% if mp_server_conf == "fileStore" %}
