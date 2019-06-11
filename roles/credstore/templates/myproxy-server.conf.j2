@@ -16,7 +16,7 @@ max_proxy_lifetime              {{ credstore_max_proxy_lifetime }}
 
 allow_voms_attribute_requests   {{ credstore_allow_voms_attribute_requests }}
 {% if credstore_allow_voms_attribute_requests == "true"  %}
-#voms_userconf                  {{ credstore_voms_userconf }}
+voms_userconf                   {{ credstore_voms_userconf }}
 {% endif %}
 
 
