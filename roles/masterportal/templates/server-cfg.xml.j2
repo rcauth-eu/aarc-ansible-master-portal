@@ -30,10 +30,11 @@
         <!-- Specify allowed number of SSH keys -->
         <sshkeys max="5"/>
 
-        <!-- 
-            There is a set of basic scopes supperted in OA2Scopes.basicScopes. In case you would
-            like to support any additional scopes you have to specify them here, otherwise the 
-            Master Portal will reject invalid scope requests.
+        <!--
+            There is a set of basic scopes supperted in OA2Scopes.basicScopes.
+            In case you would like to support any additional scopes you have to
+            specify them here, otherwise the Master Portal will reject invalid
+            scope requests.
         -->
         <scopes>
             <scope>org.cilogon.userinfo</scope>
@@ -50,9 +51,9 @@
 
 {% else %}
 
-        <{{ mp_server_conf }} username="{{ mp_server_db_user }}" 
-               password="{{ mp_server_db_pw }}" 
-               database="{{ mp_server_db }}" 
+        <{{ mp_server_conf }} username="{{ mp_server_db_user }}"
+               password="{{ mp_server_db_pw }}"
+               database="{{ mp_server_db }}"
                schema="{{ mp_server_db }}" >
             <transactions/>
             <clients/>
@@ -68,6 +69,7 @@
                  serverDN="{{ credstore_dn }}"
 {% endif %}
                  password="{{ credstore_pw }}">
+
             <ssl>
                 <keystore>
                     <path>{{ mp_server_keystore }}</path>
@@ -76,9 +78,10 @@
                     <factory>SunX509</factory>
                 </keystore>
             </ssl>
-            <!-- 
-                   The default lifetime set in seconds is used in case there is no proxylifetime value 
-                   provided with the original /getproxy request 
+
+            <!--
+                The default lifetime set in seconds is used in case there is no
+                proxylifetime value provided with the original /getproxy request
             -->
             <defaultLifetime>43200</defaultLifetime>
 
@@ -86,14 +89,18 @@
                 <validator handler="eu.rcauth.masterportal.server.validators.DNValidator">
                     <input name="input_claim">cert_subject_dn</input>
                 </validator>
+
                 <validator handler="eu.rcauth.masterportal.server.validators.LifetimeValidator">
-                    <!-- 
-                        max_proxy_lifetime is set in the myproxy-server.conf (converted into seconds) 
+                    <!--
+                        max_proxy_lifetime is set in the myproxy-server.conf
+                        (converted into seconds)
                     -->
                     <input name="max_proxy_lifetime">950400</input>
-                    <!-- 
-                        the tolerance is a small timeframe in seconds (usually a day) which prevents 
-                        the Delegation Server from being flooded with requests. 
+
+                    <!--
+                        the tolerance is a small timeframe in seconds (usually a
+                        day) which prevents the Delegation Server from being
+                        flooded with requests.
                     -->
                     <input name="tolerance">86400</input>
                 </validator>

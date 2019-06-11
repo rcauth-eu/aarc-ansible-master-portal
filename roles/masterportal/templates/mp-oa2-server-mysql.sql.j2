@@ -1,11 +1,12 @@
 /*
-   This script will create the tables for a basic oa4mp install. Since MySQL has *no* varaible
-   support, everything is hard-coded. if you want something other than the default names and 
-   then edit the file.
+   This script will create the tables for a basic oa4mp install. Since MySQL has
+   *no* variable support, everything is hard-coded. if you want something other
+   than the default names and then edit the file.
 */
 
 /*
-Usage: Log in as an administrator (such as root) that can create the user, if need be.
+Usage: Log in as an administrator (such as root) that can create the user, if
+need be.
 
 CREATE USER '{{ mp_server_db_user }}'@'localhost' IDENTIFIED BY '{{ mp_server_db_pw }}';
 
@@ -20,7 +21,8 @@ DEFAULT CHARACTER SET utf8;
 USE {{ mp_server_db }};
 
 /*
-Some useful commands. Lst two list users and will show permissions for a single user on a machine.:
+Some useful commands. Lst two list users and will show permissions for a single
+user on a machine.:
  Show Databases;
  Show schemas;
  SELECT User FROM mysql.user;
@@ -48,25 +50,25 @@ CREATE TABLE {{ mp_server_db }}.client_approvals (
 );
 
 CREATE TABLE {{ mp_server_db }}.transactions (
-  temp_token          		VARCHAR(255) PRIMARY KEY,
-  temp_token_valid    		BOOLEAN,
-  callback_uri        		TEXT,
-  certreq             		TEXT,
-  certlifetime        		BIGINT,
-  client_id           		TEXT,
-  verifier_token      		TEXT,
-  access_token        		TEXT,
-  refresh_token       		TEXT,
-  refresh_token_valid 		BOOLEAN,
-  expires_in          		BIGINT,
-  certificate         		TEXT,
-  username            		TEXT,
-  myproxyUsername     		TEXT,
-  access_token_valid 		TINYINT(1) DEFAULT NULL,
-  auth_time 			TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  nonce 			TEXT,
-  scopes 			TEXT,
-  claims              		TEXT CHARACTER SET 'utf8',
+  temp_token                    VARCHAR(255) PRIMARY KEY,
+  temp_token_valid              BOOLEAN,
+  callback_uri                  TEXT,
+  certreq                       TEXT,
+  certlifetime                  BIGINT,
+  client_id                     TEXT,
+  verifier_token                TEXT,
+  access_token                  TEXT,
+  refresh_token                 TEXT,
+  refresh_token_valid           BOOLEAN,
+  expires_in                    BIGINT,
+  certificate                   TEXT,
+  username                      TEXT,
+  myproxyUsername               TEXT,
+  access_token_valid            TINYINT(1) DEFAULT NULL,
+  auth_time                     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  nonce                         TEXT,
+  scopes                        TEXT,
+  claims                        TEXT CHARACTER SET 'utf8',
   mp_client_session_identifier  TEXT,
   UNIQUE INDEX verifier (verifier_token(255)),
   UNIQUE INDEX accessToken (access_token(255)),
@@ -83,9 +85,9 @@ CREATE TABLE {{ mp_server_db }}.ssh_keys (
   username      VARCHAR(255) NOT NULL,
   label         VARCHAR(255) NOT NULL,
 {% endif %}
-  pub_key	TEXT NOT NULL,
-  description	TEXT,
-  import_time	TIMESTAMP,
+  pub_key       TEXT NOT NULL,
+  description   TEXT,
+  import_time   TIMESTAMP,
   PRIMARY KEY (username, label)
 );
 

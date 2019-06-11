@@ -18,7 +18,7 @@
     mode: 0644
   register: pamaccess_config
 
-- name: execute authconfig 
+- name: execute authconfig
   command: "/usr/sbin/authconfig --kickstart --disablemd5 --passalgo=sha512  --enableshadow --enablecache --enablepamaccess --enablelocauthorize --disablesssd --disablesssdauth --disableldaptls --disableldap --disableldapauth --enablerfc2307 "
   when: pamaccess_config.changed
 

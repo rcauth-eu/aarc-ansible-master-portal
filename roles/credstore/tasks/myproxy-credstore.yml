@@ -9,22 +9,22 @@
     - myproxy
     - myproxy-server
     - myproxy-voms
-    - myproxy-admin 
+    - myproxy-admin
     - myproxy-doc
 - name: add myproxy-server.config
-  template: 
-    src: myproxy-server.conf.j2 
-    dest: /etc/myproxy-server.config 
-    owner: myproxy 
-    group: myproxy 
+  template:
+    src: myproxy-server.conf.j2
+    dest: /etc/myproxy-server.config
+    owner: myproxy
+    group: myproxy
     mode: 0644
     backup: yes
   notify: restart myproxy
 - name: add myproxy proxy extfile
-  template: 
-    src: myproxy-proxy-extfile 
+  template:
+    src: myproxy-proxy-extfile
     dest: "{{ credstore_proxy_extfile }}"
-    owner: myproxy 
+    owner: myproxy
     group: myproxy
     mode: 0644
 - name: give access to host certificate
@@ -40,16 +40,16 @@
     group: myproxy
     mode: 0400
 - name: create hostcert link
-  file: 
-    src: /etc/grid-security/hostcert.pem 
-    dest: /etc/grid-security/myproxy/hostcert.pem 
+  file:
+    src: /etc/grid-security/hostcert.pem
+    dest: /etc/grid-security/myproxy/hostcert.pem
     owner: myproxy
     group: myproxy
     state: link
 - name: create hostkey link
-  file: 
-    src: /etc/grid-security/hostkey.pem 
-    dest: /etc/grid-security/myproxy/hostkey.pem 
+  file:
+    src: /etc/grid-security/hostkey.pem
+    dest: /etc/grid-security/myproxy/hostkey.pem
     owner: myproxy
     group: myproxy
     state: link

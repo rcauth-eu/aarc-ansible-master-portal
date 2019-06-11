@@ -23,7 +23,7 @@ TransferLog logs/ssl_access_log
 LogLevel warn
 
 
-SSLProtocol all -SSLv2 -SSLv3 +TLSv1 
+SSLProtocol all -SSLv2 -SSLv3 +TLSv1
 SSLHonorCipherOrder On
 SSLCipherSuite "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH EDH+aRSA !aNULL !eNULL !MEDIUM !LOW !3DES !MD5 !EXP !PSK !SRP !DSS"
 SSLCertificateFile {{ hostcert }}
@@ -118,7 +118,7 @@ CustomLog logs/ssl_request_log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 {% endif %}
 
 {% if vo_portal is defined %}
-    # This should only be enabled for testing purposes	
+    # This should only be enabled for testing purposes
     ProxyPass /{{ vo_portal }} ajp://127.0.0.1:8009/{{ vo_portal }}
 {% endif %}
 

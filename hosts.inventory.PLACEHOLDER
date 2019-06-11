@@ -2,7 +2,7 @@
 # Configure Master Portal and Credential Store hosts
 
 # In case you want to install them on a single host, just
-# enter the same hostname under both groups 
+# enter the same hostname under both groups
 
 [masterportal]
 masterportal.host

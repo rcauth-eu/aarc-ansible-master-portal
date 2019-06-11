@@ -3,12 +3,12 @@
 # EPEL
 
 - name: adding EPEL GPG key
-  rpm_key: 
+  rpm_key:
     key: "{{ epelkey }}"
     state: present
 
-- name: adding EPEL 
-  yum: 
+- name: adding EPEL
+  yum:
     name: "{{ epelrpm }}"
     state: present
 

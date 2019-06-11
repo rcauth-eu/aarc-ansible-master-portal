@@ -13,7 +13,7 @@
 keyutil_jar: keyutil-0.4.0.jar
 
 
-### OA4MP Client 
+### OA4MP Client
 
 mp_client_db: oa2client
 mp_client_db_user: oa4mp-client

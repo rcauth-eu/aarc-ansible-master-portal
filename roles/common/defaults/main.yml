@@ -75,6 +75,6 @@ credstore_port: 7512
 
 
 ### NTP Server
-ntp_servers: 
+ntp_servers:
    - ntp1.pool.ntp.org
    - ntp2.pool.ntp.org

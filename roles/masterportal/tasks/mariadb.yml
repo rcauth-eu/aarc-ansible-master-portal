@@ -32,13 +32,13 @@
 # check MP Server DB
 
 - name: create MP Server DB
-  mysql_db: 
-    name: "{{ mp_server_db }}" 
+  mysql_db:
+    name: "{{ mp_server_db }}"
     state: present
     login_user: root
     login_password: "{{ mariadb_root_password }}"
   register: server_db
-  when: mariadb_root_password is defined 
+  when: mariadb_root_password is defined
 
 - name: update mariadb MP Server user account
   mysql_user:
@@ -54,22 +54,22 @@
   when: mariadb_root_password is defined
 
 - name: copy MP Server sql script
-  template: 
+  template:
     src: mp-oa2-server-mysql.sql.j2
     dest: /tmp/mp-oa2-server-mysql.sql
   when: server_db is defined and server_db.changed
 
 - name: execute MP Server sql script
-  mysql_db: 
+  mysql_db:
     state: import
-    name: all 
+    name: all
     target: /tmp/mp-oa2-server-mysql.sql
     login_user: root
     login_password: "{{ mariadb_root_password }}"
   when: server_db is defined and server_db.changed
 
 - name: remove MP Server sql script
-  file: 
+  file:
     path: /tmp/mp-oa2-server-mysql.sql
     state: absent
   when: server_db is defined and server_db.changed
@@ -78,7 +78,7 @@
 
 - name: create MP Client DB
   mysql_db:
-    name: "{{ mp_client_db }}"   
+    name: "{{ mp_client_db }}"
     state: present
     login_user: root
     login_password: "{{ mariadb_root_password }}"

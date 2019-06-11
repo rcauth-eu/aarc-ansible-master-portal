@@ -3,14 +3,14 @@
 # make sure directory structure is in place
 
 - name: server directory exists
-  file: 
+  file:
     path: "{{ mp_server_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
 
 - name: server conf dir exists
-  file: 
+  file:
     path: "{{ mp_server_conf_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
@@ -18,7 +18,7 @@
 
 
 - name: server log exists
-  file: 
+  file:
     path: "{{ mp_server_log_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
@@ -122,7 +122,7 @@
     - "{{ catalina_home }}/webapps/{{ mp_server }}"
     - "{{ catalina_home }}/webapps/{{ mp_server }}.war"
 
-- name: copy war 
+- name: copy war
   copy:
     src: mp-oa2-server.war
     dest: "{{ catalina_home }}/webapps/{{ mp_server }}.war"

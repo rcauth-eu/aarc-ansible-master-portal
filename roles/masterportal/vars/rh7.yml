@@ -2,7 +2,7 @@
 
 ### enabled and disabled services
 
-enabled_services: 
+enabled_services:
  - tomcat
  - httpd
  - mariadb
@@ -35,7 +35,7 @@ httpd_service: httpd
 
 ### NOTE
 ### THERE IS NO MYSQL PACKAGE IN CENTOS7 SINCE IT COMES WITH THE MARIADB IMPLEMENTATION
-### YOU CAN INSTALL MTSQL FROM THE REPOSITORY BELOW, BUT THIS WILL NOT WORK PROPERLY 
+### YOU CAN INSTALL MTSQL FROM THE REPOSITORY BELOW, BUT THIS WILL NOT WORK PROPERLY
 
 #mysql_repo_baseurl: http://repo.mysql.com/yum/mysql-5.7-community/el/7/$basearch/
 #mysql_repo_connectors_baseurl: http://repo.mysql.com/yum/mysql-connectors-community/el/7/$basearch/

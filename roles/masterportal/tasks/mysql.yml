@@ -32,8 +32,8 @@
 # check OA4MP Server DB
 
 - name: Create MP Server DB
-  mysql_db: 
-    name: "{{ mp_server_db }}" 
+  mysql_db:
+    name: "{{ mp_server_db }}"
     state: present
     login_user: root
     login_password: "{{ mysql_root_password }}"
@@ -54,15 +54,15 @@
   when: mysql_root_password is defined
 
 - name: copy MP Server sql script
-  template: 
+  template:
     src: mp-oa2-server-mysql.sql.j2
     dest: /tmp/mp-oa2-server-mysql.sql
   when: server_db is defined and server_db.changed
 
 - name: execute MP Server sql script
-  mysql_db: 
+  mysql_db:
     state: import
-    name: all 
+    name: all
     target: /tmp/mp-oa2-server-mysql.sql
     login_user: root
     login_password: "{{ mysql_root_password }}"
@@ -77,8 +77,8 @@
 # check OA4MP Client DB
 
 - name: check MP Client DB
-  mysql_db: 
-    name: "{{ mp_client_db }}" 
+  mysql_db:
+    name: "{{ mp_client_db }}"
     state: present
     login_user: root
     login_password: "{{ mysql_root_password }}"
@@ -99,15 +99,15 @@
   when: mysql_root_password is defined
 
 - name: copy MP Client sql script
-  template: 
+  template:
     src: mp-oa2-client-mysql.sql.j2
     dest: /tmp/mp-oa2-client-mysql.sql
   when: client_db is defined and client_db.changed
 
 - name: execute MP Client sql script
-  mysql_db: 
+  mysql_db:
     state: import
-    name: all 
+    name: all
     target: /tmp/mp-oa2-client-mysql.sql
     login_user: root
     login_password: "{{ mysql_root_password }}"

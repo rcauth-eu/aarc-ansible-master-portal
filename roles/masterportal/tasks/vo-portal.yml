@@ -3,14 +3,14 @@
 # make sure directory structure is in place
 
 - name: voportal directory exists
-  file: 
+  file:
     path: "{{ vo_portal_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
 
 - name: voportal conf dir exists
-  file: 
+  file:
     path: "{{ vo_portal_conf_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
@@ -18,14 +18,14 @@
 
 
 - name: voportal log exists
-  file: 
+  file:
     path: "{{ vo_portal_log_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
 
 - name: voportal storage exists
-  file: 
+  file:
     path: "{{ vo_portal_storage_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
@@ -70,7 +70,7 @@
     - "{{ catalina_home }}/webapps/{{ vo_portal }}"
     - "{{ catalina_home }}/webapps/{{ vo_portal }}.war"
 
-- name: copy war 
+- name: copy war
   copy:
     src: vo-portal.war
     dest: "{{ catalina_home }}/webapps/{{ vo_portal }}.war"

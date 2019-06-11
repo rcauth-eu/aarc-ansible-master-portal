@@ -23,7 +23,7 @@
 - import_tasks: sshkey-portal.yml
   when: sshkey_portal is defined
 
-### The VO Portal is not part of the Master Portal, it's only a simple 
+### The VO Portal is not part of the Master Portal, it's only a simple
 ### Master Portal client installed alongside it for testing purposes.
 
 - import_tasks: vo-portal.yml

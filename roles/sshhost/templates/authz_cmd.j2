@@ -9,7 +9,7 @@ fi
 
 # logfile
 authzlog="{{ authz_cmd_log }}"
-# MasterPortal key listing endpoint 
+# MasterPortal key listing endpoint
 url="https://{{ masterportal_host }}:{{ sshkey_listing_port }}/{{ mp_server }}/{{ sshkey_listing }}"
 # local list from (e.g.) COmanage, leave empty to skip
 localfile="{{ ssh_key_list_file }}"
@@ -27,7 +27,7 @@ sedcmd="s#\([^ ]\+\) \(.*\)\$#${cmd}${opts} \2#"
 
 
 # Log function
-mylog()	{
+mylog() {
     date +"%b %d %T  $*" >> $authzlog
 }
 
@@ -46,20 +46,20 @@ rm $curllog
 # Add content of ssh_key_list file if set
 if [ -n "$localfile" ];then
     if [ -f "$localfile" -a -r "$localfile" ];then
-	# File exists, dump it through sed. Note that sed often gives a broken pipe
-	# when running as authorized_keys_command, so ignore it's exit value
-	sed "$sedcmd" "$localfile"
+        # File exists, dump it through sed. Note that sed often gives a broken pipe
+        # when running as authorized_keys_command, so ignore it's exit value
+        sed "$sedcmd" "$localfile"
     else
-	# Set correct error return value: only set when cURL succeeded
-	if [ $retval -eq 0 ];then
-	    retval=1
-	fi
-	# log the type of error
-	if [ -e "$localfile" ];then
-	    mylog "Error: \"$localfile\" exists but is not a readable file"
-	else
-	    mylog "Warning: \"$localfile\" appears not to exist"
-	fi
+        # Set correct error return value: only set when cURL succeeded
+        if [ $retval -eq 0 ];then
+            retval=1
+        fi
+        # log the type of error
+        if [ -e "$localfile" ];then
+            mylog "Error: \"$localfile\" exists but is not a readable file"
+        else
+            mylog "Warning: \"$localfile\" appears not to exist"
+        fi
     fi
 fi
 

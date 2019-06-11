@@ -3,20 +3,20 @@
 # - authorized_retrievers - who is allowed to get a delegation using passphrase
 # We skip renewal, i.e. where an existing proxy is used as authentication
 # These ones are for the MasterPortal host
-accepted_credentials		"{{ masterportal_credentials }}"
-authorized_retrievers		"{{ masterportal_credentials }}"
+accepted_credentials            "{{ masterportal_credentials }}"
+authorized_retrievers           "{{ masterportal_credentials }}"
 {% if (sshhost_credentials is defined) and (sshhost_credentials != masterportal_credentials) %}
 # Next one is for the SSH host
-authorized_retrievers		"{{ sshhost_credentials }}"
+authorized_retrievers           "{{ sshhost_credentials }}"
 {% endif %}
 
-cert_dir 			{{ credstore_cert_dir }}
-#proxy_extfile 			{{ credstore_proxy_extfile }}
-max_proxy_lifetime		{{ credstore_max_proxy_lifetime }}
+cert_dir                        {{ credstore_cert_dir }}
+#proxy_extfile                  {{ credstore_proxy_extfile }}
+max_proxy_lifetime              {{ credstore_max_proxy_lifetime }}
 
-allow_voms_attribute_requests 	{{ credstore_allow_voms_attribute_requests }}
+allow_voms_attribute_requests   {{ credstore_allow_voms_attribute_requests }}
 {% if credstore_allow_voms_attribute_requests == "true"  %}
-#voms_userconf 			{{ credstore_voms_userconf }}
+#voms_userconf                  {{ credstore_voms_userconf }}
 {% endif %}
 
 

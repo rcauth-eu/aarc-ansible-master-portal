@@ -3,14 +3,14 @@
 # make sure directory structure is in place
 
 - name: sshkeyportal directory exists
-  file: 
+  file:
     path: "{{ sshkey_portal_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
 
 - name: sshkeyportal conf dir exists
-  file: 
+  file:
     path: "{{ sshkey_portal_conf_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
@@ -18,14 +18,14 @@
 
 
 - name: sshkeyportal log exists
-  file: 
+  file:
     path: "{{ sshkey_portal_log_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
 
 - name: sshkeyportal storage exists
-  file: 
+  file:
     path: "{{ sshkey_portal_storage_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
@@ -70,7 +70,7 @@
     - "{{ catalina_home }}/webapps/{{ sshkey_portal }}"
     - "{{ catalina_home }}/webapps/{{ sshkey_portal }}.war"
 
-- name: copy war 
+- name: copy war
   copy:
     src: sshkey-portal.war
     dest: "{{ catalina_home }}/webapps/{{ sshkey_portal }}.war"

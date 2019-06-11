@@ -3,14 +3,14 @@
 # make sure directory structure is in place
 
 - name: client directory exists
-  file: 
+  file:
     path: "{{ mp_client_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
 
 - name: client conf dir exists
-  file: 
+  file:
     path: "{{ mp_client_conf_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
@@ -18,7 +18,7 @@
 
 
 - name: client log exists
-  file: 
+  file:
     path: "{{ mp_client_log_dir }}"
     state: directory
     owner: "{{ tomcat_user }}"
@@ -61,7 +61,7 @@
   command: "openssl pkcs12 -export -in {{ hostcert }} -inkey {{ hostkey }} -out {{ mp_client_keystore }} -name hostcred -CApath {{ x509_cert_dir }} -chain -passout pass:{{ mp_keystore_pw }}"
 
 - name: add the right permission to the key store
-  file: 
+  file:
     path: "{{ mp_client_keystore }}"
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
@@ -82,7 +82,7 @@
     - "{{ catalina_home }}/webapps/{{ mp_client }}"
     - "{{ catalina_home }}/webapps/{{ mp_client }}.war"
 
-- name: copy war 
+- name: copy war
   copy:
     src: mp-oa2-client.war
     dest: "{{ catalina_home }}/webapps/{{ mp_client}}.war"

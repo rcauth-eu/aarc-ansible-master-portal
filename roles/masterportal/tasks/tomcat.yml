@@ -20,7 +20,7 @@
 
 # configurations
 
-# close unused ports?  
+# close unused ports?
 
 # set tomcatAuthentication="false" so REMOTE_USER will be taken over from apache
 # and only listen on localhost

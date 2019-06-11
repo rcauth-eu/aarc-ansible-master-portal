@@ -4,7 +4,7 @@
 
 # You might need to disable SELinux. The setup has not been tested with it yet.
 # Disable SELinux (Shibboleth SP requirement)
-#- name: disable selinux 
+#- name: disable selinux
 #  selinux: state=disabled
 
 - name: put selinux in permissive mode

@@ -2,7 +2,7 @@
 
 - name: "look for existing password: {{ item }}"
   command: "grep '^{{ item }}: CHANGEME' {{ abs_passwd_generator_file }}"
-  ignore_errors: yes 
+  ignore_errors: yes
   register: passwd_lookup
 
 - name: "generate new password for {{ item }}"
