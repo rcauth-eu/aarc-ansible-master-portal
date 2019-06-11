@@ -50,7 +50,7 @@ mp_server_tools_dir: "{{ mp_server_dir }}/tools"
 ### max number of ssh keys per person
 mp_server_max_sshkeys: 5
 ### disabled/enabled scopes for the server
-mp_server_disabled_scopes:
+mp_server_disabled_scopes: []
 mp_server_enabled_scopes:
 - org.cilogon.userinfo
 
@@ -87,7 +87,7 @@ vo_portal_log_size: 1000000
 vo_portal_storage_dir: "{{ vo_portal_dir }}/storage"
 vo_portal_conf_lifetime: 86400
 ### disabled/enabled scopes for the vo-portal
-vo_portal_disabled_scopes:
+vo_portal_disabled_scopes: []
 vo_portal_enabled_scopes:
 - org.cilogon.userinfo
 

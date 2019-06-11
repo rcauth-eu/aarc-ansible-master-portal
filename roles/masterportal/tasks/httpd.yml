@@ -3,8 +3,9 @@
 # Install apache
 
 - name: install httpd
-  yum: name={{item}} state=present
-  with_items: "{{ httpd_packages }}"
+  yum:
+    name: "{{ httpd_packages }}"
+    state: present
 
 # configure
 

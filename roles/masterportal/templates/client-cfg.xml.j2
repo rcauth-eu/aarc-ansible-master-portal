@@ -7,7 +7,7 @@
     <client name="client-config" address="https://{{ inventory_hostname }}/{{ mp_client }}" debug="true">
 
         <logging logFileName="{{ mp_client_log_dir }}/{{ mp_client }}.log"
-                 logName="MP"
+                 logName="MPClient"
                  logSize="{{ mp_client_log_size }}"
                  logFileCount="10"
                  debug="true"/>

@@ -3,8 +3,9 @@
 # Install MariaDB Server
 
 - name: install MariaDB
-  yum: name={{ item }} state=present
-  with_items: "{{ mariadb_packages }}"
+  yum:
+    name: "{{ mariadb_packages }}"
+    state: present
   register: mariadb_installation
 
 - name: make a link to the connector

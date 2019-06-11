@@ -2,9 +2,8 @@
 
 - name: install IGTF distribution for VOMS interaction
   yum:
-    name: "{{ item }}"
+    name: "{{ ca_policies_igtf }}"
     state: present
-  with_items: "{{ ca_policies_igtf }}"
   register: igtf_distro
 
 - name: update fetch-crl in background

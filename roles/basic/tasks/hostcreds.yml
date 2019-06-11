@@ -21,9 +21,8 @@
 # install trust root from rpm package(s)
 - name: deploy trust anchor(s) from rpm
   yum:
-    name: "{{ item }}"
+    name: "{{ trust_anchor_packages }}"
     state: present
-  with_items: "{{ trust_anchor_packages }}"
   when: trust_anchor_packages is defined
 
 # INSTALLING TRUST ANCHOR OF HOST CERTIFICATE FROM TARBALL

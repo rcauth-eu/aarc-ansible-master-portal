@@ -4,9 +4,8 @@
 
 - name: install tomcat
   yum:
-    name: "{{ item }}"
+    name: "{{ tomcat_packages }}"
     state: present
-  with_items: "{{ tomcat_packages }}"
   register: tomcat_install
 
 - name: add CATALINA_HOME to bashrc
