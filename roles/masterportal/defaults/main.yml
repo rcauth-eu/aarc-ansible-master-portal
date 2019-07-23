@@ -27,6 +27,7 @@ mp_client_conf: mysql
 #mp_client_conf: fileStore
 mp_client_log_dir: "{{ mp_client_dir }}/log"
 mp_client_log_size: 1000000
+mp_client_log_debug: "info"
 mp_client_storage_dir: "{{ mp_client_dir }}/storage"
 mp_client_conf_lifetime: 31536000
 
@@ -45,6 +46,7 @@ mp_server_conf: mysql
 #mp_server_conf: fileStore
 mp_server_log_dir: "{{ mp_server_dir }}/log"
 mp_server_log_size: 1000000
+mp_server_log_debug: "info"
 mp_server_storage_dir: "{{ mp_server_dir }}/storage"
 mp_server_tools_dir: "{{ mp_server_dir }}/tools"
 ### max number of ssh keys per person
@@ -84,6 +86,7 @@ vo_portal_truststore: "{{ vo_portal_conf_dir }}/trust-store.jks"
 vo_portal_conf: vo-portal-config
 vo_portal_log_dir: "{{ vo_portal_dir }}/log"
 vo_portal_log_size: 1000000
+vo_portal_log_debug: "info"
 vo_portal_storage_dir: "{{ vo_portal_dir }}/storage"
 vo_portal_conf_lifetime: 86400
 ### disabled/enabled scopes for the vo-portal
@@ -103,6 +106,7 @@ sshkey_portal_truststore: "{{ sshkey_portal_conf_dir }}/trust-store.jks"
 sshkey_portal_conf: sshkey-portal-config
 sshkey_portal_log_dir: "{{ sshkey_portal_dir }}/log"
 sshkey_portal_log_size: 1000000
+sshkey_portal_log_debug: "info"
 sshkey_portal_storage_dir: "{{ sshkey_portal_dir }}/storage"
 ### disabled/enabled scopes for the sshkey-portal
 sshkey_portal_disabled_scopes:

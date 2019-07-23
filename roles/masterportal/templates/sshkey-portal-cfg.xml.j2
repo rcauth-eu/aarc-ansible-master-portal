@@ -4,13 +4,18 @@
 
     <!-- ############################################################################## -->
 
-    <client name="{{ sshkey_portal_conf }}" address="https://{{ inventory_hostname }}/{{ sshkey_portal }}" debug="true">
+    <client name="{{ sshkey_portal_conf }}" address="https://{{ inventory_hostname }}/{{ sshkey_portal }}" debug="{{ sshkey_portal_log_debug }}">
 
         <logging logFileName="{{ sshkey_portal_log_dir }}/{{ sshkey_portal }}.log"
                  logName="SSHKP"
                  logSize="{{ sshkey_portal_log_size }}"
                  logFileCount="10"
-                 debug="true"/>
+{% if sshkey_portal_log_debug|lower == "off" %}
+                 debug="false"
+{% else %}
+                 debug="true"
+{% endif %}
+	/>
 
         <!-- need ID token (e.g. for sub claim), currently default is (still) true -->
         <OIDCEnabled>true</OIDCEnabled>

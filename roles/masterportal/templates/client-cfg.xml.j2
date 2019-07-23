@@ -4,13 +4,18 @@
 
     <!-- ############################################################################## -->
 
-    <client name="client-config" address="https://{{ inventory_hostname }}/{{ mp_client }}" debug="true">
+    <client name="client-config" address="https://{{ inventory_hostname }}/{{ mp_client }}" debug="{{ mp_client_log_debug }}">
 
         <logging logFileName="{{ mp_client_log_dir }}/{{ mp_client }}.log"
                  logName="MPClient"
                  logSize="{{ mp_client_log_size }}"
                  logFileCount="10"
-                 debug="true"/>
+{% if mp_client_log_debug|lower == "off" %}
+                 debug="false"
+{% else %}
+                 debug="true"
+{% endif %}
+	/>
 
         <!-- enable OIDC for ID token, currently default is (still) true -->
         <OIDCEnabled>true</OIDCEnabled>

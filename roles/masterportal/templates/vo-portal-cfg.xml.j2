@@ -4,13 +4,18 @@
 
     <!-- ############################################################################## -->
 
-    <client name="{{ vo_portal_conf }}" address="https://{{ inventory_hostname }}/{{ vo_portal }}" debug="true">
+    <client name="{{ vo_portal_conf }}" address="https://{{ inventory_hostname }}/{{ vo_portal }}" debug="{{ vo_portal_log_debug }}">
 
         <logging logFileName="{{ vo_portal_log_dir }}/{{ vo_portal }}.log"
                  logName="VOP"
                  logSize="{{ vo_portal_log_size }}"
                  logFileCount="10"
-                 debug="true"/>
+{% if vo_portal_log_debug|lower == "off" %}
+                 debug="false"
+{% else %}
+                 debug="true"
+{% endif %}
+	/>
 
         <!-- VO portal doesn't use ID token, only userinfo -->
         <OIDCEnabled>false</OIDCEnabled>

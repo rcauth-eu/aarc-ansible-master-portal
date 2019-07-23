@@ -4,13 +4,18 @@
 
     <!-- ############################################################################## -->
 
-    <service name="server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="true" refreshTokenEnabled="{{ mp_server_refreshtokens }}" enableAutoRegisterEndpoint="{{ use_autoregister }}" disableDefaultStores="false">
+    <service name="server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="{{ mp_server_log_debug }}" refreshTokenEnabled="{{ mp_server_refreshtokens }}" enableAutoRegisterEndpoint="{{ use_autoregister }}" disableDefaultStores="false">
 
         <logging logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
                  logName="MPServer"
                  logSize="{{ mp_server_log_size }}"
                  logFileCount="10"
-                 debug="true"/>
+{% if mp_server_log_debug|lower == "off" %}
+                 debug="false"
+{% else %}
+                 debug="true"
+{% endif %}
+	/>
 
         <!-- mail setup for new client approval requests -->
         <mail enabled="{{ mail_enabled }}"
