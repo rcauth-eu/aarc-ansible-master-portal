@@ -51,10 +51,15 @@ mp_server_storage_dir: "{{ mp_server_dir }}/storage"
 mp_server_tools_dir: "{{ mp_server_dir }}/tools"
 ### max number of ssh keys per person
 mp_server_max_sshkeys: 5
+### scope required for accessing the ssh keys API
+mp_server_sshkey_scope: "eu.rcauth.sshkeys"
 ### disabled/enabled scopes for the server
 mp_server_disabled_scopes: []
 mp_server_enabled_scopes:
 - org.cilogon.userinfo
+### scopes local to the server (not forwarded to the DS)
+mp_server_local_scopes:
+- "{{ mp_server_sshkey_scope }}"
 
 ### Whether we use refreshtokens
 mp_server_refreshtokens: "true"
@@ -114,6 +119,7 @@ sshkey_portal_disabled_scopes:
 - email
 sshkey_portal_enabled_scopes:
 - org.cilogon.userinfo
+- "{{ mp_server_sshkey_scope }}"
 ### configuration for displaying the name and IdP
 sshkey_name_claim: name
 sshkey_given_name_claim: given_name

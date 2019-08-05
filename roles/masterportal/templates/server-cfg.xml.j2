@@ -15,7 +15,7 @@
 {% else %}
                  debug="true"
 {% endif %}
-	/>
+        />
 
         <!-- mail setup for new client approval requests -->
         <mail enabled="{{ mail_enabled }}"
@@ -33,7 +33,8 @@
         </JSONWebKey>
 
         <!-- Specify allowed number of SSH keys -->
-        <sshkeys max="{{ mp_server_max_sshkeys }}"/>
+        <sshkeys max="{{ mp_server_max_sshkeys }}"
+                 scope="{{ mp_server_sshkey_scope }}"/>
 
         <!--
             There is a set of basic scopes supperted in OA2Scopes.basicScopes.
@@ -47,6 +48,9 @@
 {% endfor %}
 {% for enabled_scope in mp_server_enabled_scopes %}
             <scope>{{ enabled_scope }}</scope>
+{% endfor %}
+{% for local_scope in mp_server_local_scopes %}
+            <scope local="true">{{ local_scope }}</scope>
 {% endfor %}
         </scopes>
 
