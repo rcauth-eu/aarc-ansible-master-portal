@@ -21,6 +21,15 @@
 hostcert_intermediate: /etc/grid-security/certificates/TERENA-eScience-SSL-CA-3.pem
 
 
+### Whether to enable the autoregistration endpoint
+### WARNING: should only be used if the request is already verified
+### previously, e.g. via a proxy and OIDC federation
+#use_autoregister: true
+
+### Override mp_server_sshkey_scope: set to empty or nothing to disable the
+### requiring of a special scope for accessing the sshkeys API endpoint.
+#mp_server_sshkey_scope: ""
+
 ### Configure the mp_client_conf_lifetime to set the lifetime sent with every
 ### /getcert request to the delegation server. This will determine the lifetime
 ### of the EEC returned by the Online CA, as well as the lifetime of the created

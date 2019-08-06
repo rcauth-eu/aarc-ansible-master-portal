@@ -36,10 +36,10 @@
         <!-- disable proxy and email scopes which aren't necessary, enable
              userinfo for the IdP name -->
         <scopes>
-{% for disabled_scope in sshkey_portal_disabled_scopes %}
+{% for disabled_scope in sshkey_portal_disabled_scopes if disabled_scope %}
             <scope enabled="false">{{ disabled_scope }}</scope>
 {% endfor %}
-{% for enabled_scope in sshkey_portal_enabled_scopes %}
+{% for enabled_scope in sshkey_portal_enabled_scopes if enabled_scope %}
             <scope>{{ enabled_scope }}</scope>
 {% endfor %}
         </scopes>

@@ -34,7 +34,10 @@
 
         <!-- Specify allowed number of SSH keys -->
         <sshkeys max="{{ mp_server_max_sshkeys }}"
-                 scope="{{ mp_server_sshkey_scope }}"/>
+{% if mp_server_sshkey_scope %}
+                 scope="{{ mp_server_sshkey_scope }}"
+{% endif %}
+        />
 
         <!--
             There is a set of basic scopes supperted in OA2Scopes.basicScopes.
@@ -43,13 +46,13 @@
             scope requests.
         -->
         <scopes>
-{% for disabled_scope in mp_server_disabled_scopes %}
+{% for disabled_scope in mp_server_disabled_scopes if disabled_scope %}
             <scope enabled="false">{{ disabled_scope }}</scope>
 {% endfor %}
-{% for enabled_scope in mp_server_enabled_scopes %}
+{% for enabled_scope in mp_server_enabled_scopes if enabled_scope %}
             <scope>{{ enabled_scope }}</scope>
 {% endfor %}
-{% for local_scope in mp_server_local_scopes %}
+{% for local_scope in mp_server_local_scopes if local_scope %}
             <scope local="true">{{ local_scope }}</scope>
 {% endfor %}
         </scopes>
