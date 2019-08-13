@@ -1,38 +1,58 @@
 /*
-   This script will create the tables for a basic oa4mp install. Since MySQL has *no* varaible
-   support, everything is hard-coded. if you want something other than the default names and
-   then edit the file. The only thing
+   This script will create the tables for a basic oa4mp install. Since MySQL has
+   *no* variable support, everything is hard-coded. if you want something other
+   than the default names and then edit the file.
 */
 
-/* User is created by the ansible scripts */
-/* CREATE USER '{{ mp_client_db_user }}'@'localhost' IDENTIFIED BY '{{ mp_client_db_pw }}'; */
+/*
+Usage: Log in as an administrator (such as root) that can create the user.
+Normally this is done by the ansible script, otherwise it is (probably) also
+done when granting the permissions later on.
 
+CREATE USER '{{ mp_server_db_user }}'@'localhost' IDENTIFIED BY '{{ mp_server_db_pw }}';
+
+Run the rest of this script.
+*/
+
+/* User and database are already created by the ansible script, hence next line
+ * is normally non-functional */
 CREATE DATABASE IF NOT EXISTS {{ mp_client_db }} DEFAULT CHARACTER SET utf8;
-use {{ mp_client_db }};
 
-create table {{ mp_client_db }}.assets  (
-        identifier  varchar(255) Primary key,
-        private_key text,
-        username text,
-        redirect_uri text,
-        certificate text,
-        refresh_token text,
-        access_token text,
-        nonce text,
-        state text,
-        issuedat TIMESTAMP,
-        refresh_lifetime bigint,
-        cert_req text,
-        token text,
-        creation_ts TIMESTAMP,
-        mp_server_request_state text,
-        mp_server_request_code text
-    );
+USE {{ mp_client_db }};
 
-commit;
+/*
+Some useful commands:
+ Show Databases;
+ Show schemas;
+ SELECT User FROM mysql.user;
+ SHOW GRANTS FOR 'user'@'localhost';
+ */
 
-/* Set permissions. The permissions must be granted in MySQL before the tables are created. */
-GRANT ALL PRIVILEGES ON {{ mp_client_db }}.assets TO '{{ mp_client_db_user }}'@'localhost';
+CREATE table assets (
+  identifier  varchar(255) Primary key,
+  private_key text,
+  username text,
+  redirect_uri text,
+  certificate text,
+  refresh_token text,
+  access_token text,
+  nonce text,
+  state text,
+  issuedat TIMESTAMP,
+  refresh_lifetime bigint,
+  cert_req text,
+  token text,
+  creation_ts TIMESTAMP,
+  mp_server_request_state text,
+  mp_server_request_code text
+);
 
 COMMIT;
 
+/* Now grant restricted access. The tables have to exist before this step. */
+
+GRANT ALL ON assets
+        TO '{{ mp_client_db_user }}'@'localhost'
+        IDENTIFIED BY '{{ mp_client_db_pw }}';
+
+COMMIT;

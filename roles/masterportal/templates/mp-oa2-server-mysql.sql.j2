@@ -5,31 +5,30 @@
 */
 
 /*
-Usage: Log in as an administrator (such as root) that can create the user, if
-need be.
+Usage: Log in as an administrator (such as root) that can create the user.
+Normally this is done by the ansible script, otherwise it is (probably) also
+done when granting the permissions later on.
 
 CREATE USER '{{ mp_server_db_user }}'@'localhost' IDENTIFIED BY '{{ mp_server_db_pw }}';
 
-Run the rest of this script. The user must exist before permissions are granted.
+Run the rest of this script.
 */
 
-/* User is created by the ansibel script */
-/* CREATE USER '{{ mp_server_db_user }}'@'localhost' IDENTIFIED BY '{{ mp_server_db_pw }}'; */
+/* User and database are already created by the ansible script, hence next line
+ * is normally non-functional */
+CREATE DATABASE IF NOT EXISTS {{ mp_server_db }} DEFAULT CHARACTER SET utf8;
 
-CREATE DATABASE IF NOT EXISTS {{ mp_server_db }}
-DEFAULT CHARACTER SET utf8;
 USE {{ mp_server_db }};
 
 /*
-Some useful commands. Lst two list users and will show permissions for a single
-user on a machine.:
+Some useful commands:
  Show Databases;
  Show schemas;
  SELECT User FROM mysql.user;
  SHOW GRANTS FOR 'user'@'localhost';
  */
 
-CREATE TABLE {{ mp_server_db }}.clients (
+CREATE TABLE clients (
   client_id     VARCHAR(255) PRIMARY KEY,
   public_key    TEXT,
   name          TEXT,
@@ -38,18 +37,25 @@ CREATE TABLE {{ mp_server_db }}.clients (
   email         TEXT,
   proxy_limited BOOLEAN,
   creation_ts   TIMESTAMP,
-  rt_lifetime bigint,
-  callback_uri  TEXT
+  rt_lifetime   BIGINT,
+  callback_uri  TEXT,
+  issuer        TEXT,
+  ldap          TEXT,
+  scopes        TEXT,
+  sign_tokens   TINYINT(1),
+  cfg           TEXT,
+  public_client TINYINT(1)
 );
 
-CREATE TABLE {{ mp_server_db }}.client_approvals (
+CREATE TABLE client_approvals (
   client_id   VARCHAR(255) PRIMARY KEY,
   approver    TEXT,
   approved    BOOLEAN,
-  approval_ts TIMESTAMP
+  approval_ts TIMESTAMP,
+  status      TEXT
 );
 
-CREATE TABLE {{ mp_server_db }}.transactions (
+CREATE TABLE transactions (
   temp_token                    VARCHAR(255) PRIMARY KEY,
   temp_token_valid              BOOLEAN,
   callback_uri                  TEXT,
@@ -64,19 +70,20 @@ CREATE TABLE {{ mp_server_db }}.transactions (
   certificate                   TEXT,
   username                      TEXT,
   myproxyUsername               TEXT,
-  access_token_valid            TINYINT(1) DEFAULT NULL,
+  access_token_valid            BOOLEAN DEFAULT NULL,
   auth_time                     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   nonce                         TEXT,
   scopes                        TEXT,
   claims                        TEXT CHARACTER SET 'utf8',
   mp_client_session_identifier  TEXT,
+  states                        TEXT,
   UNIQUE INDEX verifier (verifier_token(255)),
   UNIQUE INDEX accessToken (access_token(255)),
   UNIQUE INDEX refreshToken (refresh_token(255)),
   UNIQUE INDEX username (username(255),access_token(255))
 );
 
-CREATE TABLE {{ mp_server_db }}.ssh_keys (
+CREATE TABLE ssh_keys (
 {% if OS == "RH6" %}
 /* 255 breaks on RH6: use there 210 & 120 instead */
   username      VARCHAR(210) NOT NULL,
@@ -92,26 +99,27 @@ CREATE TABLE {{ mp_server_db }}.ssh_keys (
 );
 
 COMMIT;
-/* Now to grant restricted access. The  tables have to exist before this step */
 
-GRANT ALL ON {{ mp_server_db }}.client_approvals
+/* Now grant restricted access. The tables have to exist before this step. */
+
+GRANT ALL ON client_approvals
         TO '{{ mp_server_db_user }}'@'localhost'
         IDENTIFIED BY '{{ mp_server_db_pw }}';
 
-GRANT ALL ON {{ mp_server_db }}.clients
+GRANT ALL ON clients
         TO '{{ mp_server_db_user }}'@'localhost'
         IDENTIFIED BY '{{ mp_server_db_pw }}';
 
-GRANT ALL ON {{ mp_server_db }}.callbacks
+GRANT ALL ON callbacks
         TO '{{ mp_server_db_user }}'@'localhost'
         IDENTIFIED BY '{{ mp_server_db_pw }}';
 
-GRANT ALL ON {{ mp_server_db }}.transactions
+GRANT ALL ON transactions
         TO '{{ mp_server_db_user }}'@'localhost'
         IDENTIFIED BY '{{ mp_server_db_pw }}';
 
-GRANT ALL ON {{ mp_server_db }}.ssh_keys
+GRANT ALL ON ssh_keys
         TO '{{ mp_server_db_user }}'@'localhost'
         IDENTIFIED BY '{{ mp_server_db_pw }}';
 
-commit;
+COMMIT;
