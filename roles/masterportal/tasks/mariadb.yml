@@ -31,11 +31,16 @@
   when: mariadb_installation.changed
 
 # check MP Server DB
+# NOTE: we cannot just check the DB without creating, but to prevent import from
+# running every time we have to run 'present', hence we cannot postpone creating
+# the database until we run import. Creating the DB in the script is therefore
+# not actually needed nor done.
 
 - name: create MP Server DB
   mysql_db:
     name: "{{ mp_server_db }}"
     state: present
+    encoding: utf8
     login_user: root
     login_password: "{{ mariadb_root_password }}"
   register: server_db
@@ -76,11 +81,16 @@
   when: server_db is defined and server_db.changed
 
 # check MP Client DB
+# NOTE: we cannot just check the DB without creating, but to prevent import from
+# running every time we have to run 'present', hence we cannot postpone creating
+# the database until we run import. Creating the DB in the script is therefore
+# not actually needed nor done.
 
 - name: create MP Client DB
   mysql_db:
     name: "{{ mp_client_db }}"
     state: present
+    encoding: utf8
     login_user: root
     login_password: "{{ mariadb_root_password }}"
   register: client_db
@@ -119,4 +129,3 @@
     path: /tmp/mp-oa2-client-mysql.sql
     state: absent
   when: client_db is defined and client_db.changed
-
