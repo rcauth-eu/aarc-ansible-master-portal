@@ -1,0 +1,13 @@
+---
+
+# installing vomses when present
+- name: check vomses
+  local_action: stat path="roles/basic/files/vomses"
+  register: copy_voms
+
+- name: copy vomses
+  copy:
+    src: "vomses"
+    dest: /etc/
+    mode: 0644
+  when: copy_voms.stat.exists

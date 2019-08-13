@@ -33,7 +33,12 @@ Prerequisites
     CA 3'. If not, you will have to make some modifications to these scripts
     before executing them!
 
- 2. Make sure you have replaced all the relevant .war and .jar .PLACEHOLDER
+ 2. For supporting pre-selected VOs in the vo-portal, myproxy-server (credstore)
+    and sshhost, add the relevant vomses configuration in a directory
+    'roles/basic/files/vomses/'. The basic role will take care of copying the
+    contents to the host(s) and into /etc/vomses/.
+
+ 3. Make sure you have replaced all the relevant .war and .jar .PLACEHOLDER
     files in 'roles/masterportal/files/' replaced with the actual files. See
         https://github.com/rcauth-eu/aarc-master-portal
         https://github.com/rcauth-eu/aarc-vo-portal
@@ -41,10 +46,10 @@ Prerequisites
         https://github.com/rcauth-eu/keyutil
     for details
 
- 3. Download a new Oracle Java RPM (8 has been verified), and rename or create a
+ 4. Download a new Oracle Java RPM (8 has been verified), and rename or create a
     symlink in 'roles/masterportal/files/' named jre.rpm.
 
- 4. You need to create a JSON Web Keys file.
+ 5. You need to create a JSON Web Keys file.
     - Create a dummy config file:
        echo '<config>\n<service/>\n</config>' > tmp.conf
     - Run the oa2-cli tool locally:
@@ -56,7 +61,7 @@ Prerequisites
     Lookup the 'kid' in the created file, use e.g. the RS256 key and enter the
     value as 'mp_server_jwk_key_id' in 'masterportal_env.yml'
 
- 5. You need to create the passphrases for the different components.
+ 6. You need to create the passphrases for the different components.
     This can be done using the secrets.yml playbook. Run it using
         ansible-playbook -e configdir=<path-to-config-dir> secrets.yml
     or set already the right configdir in your inventory file and run
