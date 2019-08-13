@@ -131,13 +131,37 @@
     group: root
     mode: 0644
 
-# enable cross-context (also adds mail resource)
+# enable crossContext in context.xml
 
-- name: adding context.xml (crossContext enabled)
-  copy:
-    src: context.xml
+- name: check if crossContext is enabled
+  command: grep '^<Context.*crossContext="true"' "{{ catalina_home }}/conf/context.xml"
+  ignore_errors: True
+  changed_when: False
+  register: tomcat_crosscontext
+
+- name: set crosscontext to enabled in context.xml
+  lineinfile:
+     dest: "{{ catalina_home }}/conf/context.xml"
+     regexp: '^(.*)<Context(.*)$'
+     line: '\1<Context crossContext="true"\2'
+     backrefs: yes
+     owner: "{{ tomcat_user }}"
+     group: "{{ tomcat_user }}"
+     mode: 0664
+     backup: yes
+  when: tomcat_crosscontext.rc != 0
+  notify: restart tomcat
+
+# add mail resource to context.xml
+
+- name: add mail resource to context.xml
+  lineinfile:
     dest: "{{ catalina_home }}/conf/context.xml"
-    owner: root
-    group: root
+    state: present
+    line: "    <Resource name=\"mail/Session\" type=\"javax.mail.Session\" auth=\"Container\"></Resource>"
+    insertbefore: "</Context>"
     mode: 0664
-
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_user }}"
+    backup: yes
+  notify: restart tomcat
