@@ -30,7 +30,7 @@
   changed_when: False
   register: tomcat_auth
 
-- name: disable tomcat authnetication
+- name: disable tomcat authentication
   lineinfile:
      dest: "{{ catalina_home }}/conf/server.xml"
      regexp: '^(.*)<Connector port="8009"(.*)$'
@@ -41,6 +41,25 @@
      mode: 0664
      backup: yes
   when: tomcat_auth.rc != 0
+  notify: restart tomcat
+
+- name: check if tomcat URI encoding is set to UTF-8
+  command: grep 'Connector.*port="8009".*URIEncoding="UTF-8"' "{{ catalina_home }}/conf/server.xml"
+  ignore_errors: True
+  changed_when: False
+  register: tomcat_utf8
+
+- name: set tomcat URI encoding to UTF-8
+  lineinfile:
+     dest: "{{ catalina_home }}/conf/server.xml"
+     regexp: '^(.*)<Connector port="8009"(.*)$'
+     line: '\1<Connector port="8009" URIEncoding="UTF-8"\2'
+     backrefs: yes
+     owner: "{{ tomcat_user }}"
+     group: "{{ tomcat_user }}"
+     mode: 0664
+     backup: yes
+  when: tomcat_utf8.rc != 0
   notify: restart tomcat
 
 # only listen on localhost on 8080
