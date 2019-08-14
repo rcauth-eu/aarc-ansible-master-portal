@@ -5,8 +5,11 @@
 - import_tasks: java.yml
 - import_tasks: tomcat.yml
 - import_tasks: httpd.yml
-- import_tasks: mariadb.yml
-#- import_tasks: mysql.yml
+# next task is for either mysql or mariadb
+- import_tasks: mysql.yml
+
+# backup MariaDB/MySQL database
+- import_tasks: mysql-backup.yml
 
 # Make sure the keyutil jar file is remotely available
 - import_tasks: keyutil.yml

@@ -1,8 +1,8 @@
 ---
 
-# Install MySQL Server
+# Install MariaDB/MySQL Server
 
-- name: install MySQL
+- name: install MariaDB/MySQL
   yum:
     name: "{{ mysql_packages }}"
     state: present
@@ -16,14 +16,14 @@
     group: root
     state: link
 
-# Start MySQL Server
+# Start MariaDB/MySQL Server
 
-- name: start the MySQL service
-  service: name=mysqld state=started enabled=yes
+- name: start the MariaDB/MySQL service
+  service: name={{ mysql_service }} state=started enabled=yes
 
-# Configure root password (but only on fresh mysql installations)
+# Configure root password (but only on fresh installations)
 
-- name: update mysql root password for all root accounts
+- name: update MariaDB/MySQL root password for all root accounts
   mysql_user: name=root host={{ item }} password={{ mysql_root_password }} priv=*.*:ALL,GRANT
   with_items:
     - 127.0.0.1
@@ -46,7 +46,7 @@
   register: server_db
   when: mysql_root_password is defined
 
-- name: update mysql MP Server user account
+- name: update MariaDB/MySQL MP Server user account
   mysql_user:
     name: "{{ mp_server_db_user }}"
     host: "{{ item }}"
@@ -76,7 +76,7 @@
 
 - name: remove MP Server sql script
   file:
-    path: /tmp/oa4mp-server-mysql.sql
+    path: /tmp/mp-oa2-server-mysql.sql
     state: absent
   when: server_db is defined and server_db.changed
 
@@ -96,7 +96,7 @@
   register: client_db
   when: mysql_root_password is defined
 
-- name: update mysql MP Client user account
+- name: update MariaDB/MySQL MP Client user account
   mysql_user:
     name: "{{ mp_client_db_user }}"
     host: "{{ item }}"

@@ -1,11 +1,11 @@
 ---
 
-# java constants
+### java constants
 
 javax_mail_url: "https://github.com/javaee/javamail/releases/download/JAVAMAIL-1_6_1/javax.mail.jar"
 java_home: /usr/java/default
 
-# tomcat constants
+### tomcat constants
 
 tomcat_packages:
  - tomcat6
@@ -15,7 +15,7 @@ catalina_home: /usr/share/tomcat6
 tomcat_user: tomcat
 tomcat_service: tomcat6
 
-# apache
+### apache
 
 httpd_packages:
   - httpd
@@ -24,7 +24,9 @@ httpd_packages:
 
 httpd_service: httpd
 
-# mysql
+### mysql
+
+mysql_service: mysqld
 
 mysql_packages:
   - mysql

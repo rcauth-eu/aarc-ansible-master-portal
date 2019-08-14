@@ -41,6 +41,8 @@ httpd_service: httpd
 #mysql_repo_connectors_baseurl: http://repo.mysql.com/yum/mysql-connectors-community/el/7/$basearch/
 #mysql_repo_gpgkey: https://repo.mysql.com/RPM-GPG-KEY-mysql
 
+#mysql_service: mysqld
+
 #mysql_packages:
 #  - mysql-community-server
 #  - mysql-connector-java
@@ -57,14 +59,16 @@ httpd_service: httpd
 # THE ABOVE EFFECTIVELY MEANS THAT OA4MP WILL RUN WITH 'MYSQL' CONNECTOR AND IMPLEMENTATION
 # BUT THE UNDERLYING DATABASE WILL ACTUALLY BY MARIADB.
 
-mariadb_packages:
+mysql_service: mariadb
+
+mysql_packages:
   - mariadb
   - mariadb-server
   - mysql-connector-java
   - MySQL-python
 
-mariadb_connector_path: /usr/share/java
-mariadb_connector: mysql-connector-java.jar
+mysql_connector_path: /usr/share/java
+mysql_connector: mysql-connector-java.jar
 
 ### postgresql
 
