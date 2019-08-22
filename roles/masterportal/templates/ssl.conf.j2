@@ -91,23 +91,25 @@ CustomLog logs/ssl_request_log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
     # Only allow content from ourselves
     Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
 
-
     ProxyPass /{{ mp_server }}/authorized !
     ProxyPass /{{ mp_server }}/autoregister !
     ProxyPass /{{ mp_server }}/{{ sshkey_listing }} !
 
     # Explicitly proxy all the server-subendpoints, instead of the server
     # endpoint itself.
-    ProxyPass /{{ mp_server }}/token       ajp://127.0.0.1:8009/{{ mp_server }}/token
-#    ProxyPass /{{ mp_server }}/getcert     ajp://127.0.0.1:8009/{{ mp_server }}/getcert
-    ProxyPass /{{ mp_server }}/getproxy    ajp://127.0.0.1:8009/{{ mp_server }}/getproxy
-    ProxyPass /{{ mp_server }}/error       ajp://127.0.0.1:8009/{{ mp_server }}/error
-    ProxyPass /{{ mp_server }}/authorize   ajp://127.0.0.1:8009/{{ mp_server }}/authorize
-    ProxyPass /{{ mp_server }}/register    ajp://127.0.0.1:8009/{{ mp_server }}/register
-    ProxyPass /{{ mp_server }}/.well-known ajp://127.0.0.1:8009/{{ mp_server }}/.well-known
-    ProxyPass /{{ mp_server }}/certs       ajp://127.0.0.1:8009/{{ mp_server }}/certs
-    ProxyPass /{{ mp_server }}/userinfo    ajp://127.0.0.1:8009/{{ mp_server }}/userinfo
-    ProxyPass /{{ mp_server }}/sshkey      ajp://127.0.0.1:8009/{{ mp_server }}/sshkey
+    ProxyPass /{{ mp_server }}/token          ajp://127.0.0.1:8009/{{ mp_server }}/token
+#    ProxyPass /{{ mp_server }}/getcert        ajp://127.0.0.1:8009/{{ mp_server }}/getcert
+    ProxyPass /{{ mp_server }}/getproxy       ajp://127.0.0.1:8009/{{ mp_server }}/getproxy
+    ProxyPass /{{ mp_server }}/error          ajp://127.0.0.1:8009/{{ mp_server }}/error
+    ProxyPass /{{ mp_server }}/authorize      ajp://127.0.0.1:8009/{{ mp_server }}/authorize
+    ProxyPass /{{ mp_server }}/register       ajp://127.0.0.1:8009/{{ mp_server }}/register
+    ProxyPass /{{ mp_server }}/admin-register ajp://127.0.0.1:8009/{{ mp_server }}/admin-register
+    ProxyPass /{{ mp_server }}/clients        ajp://127.0.0.1:8009/{{ mp_server }}/clients
+    ProxyPass /{{ mp_server }}/.well-known    ajp://127.0.0.1:8009/{{ mp_server }}/.well-known
+    ProxyPass /{{ mp_server }}/certs          ajp://127.0.0.1:8009/{{ mp_server }}/certs
+    ProxyPass /{{ mp_server }}/userinfo       ajp://127.0.0.1:8009/{{ mp_server }}/userinfo
+    ProxyPass /{{ mp_server }}/revoke         ajp://127.0.0.1:8009/{{ mp_server }}/revoke
+    ProxyPass /{{ mp_server }}/sshkey         ajp://127.0.0.1:8009/{{ mp_server }}/sshkey
 
     # Proxy the client part
     ProxyPass /{{ mp_client }} ajp://127.0.0.1:8009/{{ mp_client }}
