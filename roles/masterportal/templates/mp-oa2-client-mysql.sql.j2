@@ -1,7 +1,14 @@
 /*
+   NOTE: this script is based on the script shipped with
+   oa4mp-client-oauth2 as oauth2-mysql.sql
+
    This script will create the tables for a basic oa4mp install. Since MySQL has
    *no* variable support, everything is hard-coded. if you want something other
    than the default names and then edit the file.
+
+   Also, the default timestamp must all be CURRENT_TIMESTAMP. It is not allowed
+   to be NULL, but needs to be set or it will be updated on updating of the
+   record. https://mariadb.com/kb/en/library/timestamp/
 */
 
 /*
@@ -28,24 +35,25 @@ Some useful commands:
  SHOW GRANTS FOR 'user'@'localhost';
  */
 
-CREATE table assets (
-  identifier  varchar(255) Primary key,
-  private_key text,
-  username text,
-  redirect_uri text,
-  certificate text,
-  refresh_token text,
-  access_token text,
-  nonce text,
-  state text,
-  issuedat TIMESTAMP,
-  refresh_lifetime bigint,
-  cert_req text,
-  token text,
-  creation_ts TIMESTAMP,
-  mp_server_request_state text,
-  mp_server_request_code text
+CREATE TABLE IF NOT EXISTS assets (
+  identifier              VARCHAR(255) Primary key,
+  private_key             TEXT,
+  username                TEXT,
+  redirect_uri            TEXT,
+  certificate             TEXT,
+  refresh_token           TEXT,
+  access_token            TEXT,
+  nonce                   TEXT,
+  state                   TEXT,
+  issuedat                TIMESTAMP,
+  refresh_lifetime        BIGINT,
+  cert_req                TEXT,
+  token                   TEXT,
+  creation_ts             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  mp_server_request_state TEXT,
+  mp_server_request_code  TEXT
 );
+
 
 COMMIT;
 

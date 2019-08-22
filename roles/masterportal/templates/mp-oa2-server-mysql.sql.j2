@@ -1,7 +1,14 @@
 /*
-   This script will create the tables for a basic oa4mp install. Since MySQL has
+   NOTE: this script is based on the script shipped with
+   oa4mp-server-admin-oauth2 as oauth2-mariadb.sql
+
+   This script will create the tables for a basic mp-oa2-server install. Since MySQL has
    *no* variable support, everything is hard-coded. if you want something other
    than the default names and then edit the file.
+
+   Also, the default timestamp must all be CURRENT_TIMESTAMP. It is not allowed
+   to be NULL, but needs to be set or it will be updated on updating of the
+   record. https://mariadb.com/kb/en/library/timestamp/
 */
 
 /*
@@ -28,34 +35,56 @@ Some useful commands:
  SHOW GRANTS FOR 'user'@'localhost';
  */
 
-CREATE TABLE clients (
+CREATE TABLE IF NOT EXISTS clients (
   client_id     VARCHAR(255) PRIMARY KEY,
   public_key    TEXT,
-  name          TEXT,
+  name          TEXT CHARACTER SET 'utf8',
   home_url      TEXT,
   error_url     TEXT,
   email         TEXT,
   proxy_limited BOOLEAN,
-  creation_ts   TIMESTAMP,
+  creation_ts   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   rt_lifetime   BIGINT,
   callback_uri  TEXT,
-  issuer        TEXT,
-  ldap          TEXT,
+  sign_tokens   BOOLEAN,
   scopes        TEXT,
-  sign_tokens   TINYINT(1),
-  cfg           TEXT,
-  public_client TINYINT(1)
+  issuer        TEXT,
+  public_client BOOLEAN,
+  ldap          TEXT,
+  cfg           TEXT CHARACTER SET 'utf8'
 );
 
-CREATE TABLE client_approvals (
+CREATE TABLE IF NOT EXISTS adminClients (
+  admin_id     VARCHAR(255) PRIMARY KEY,
+  name         TEXT CHARACTER SET 'utf8',
+  secret       TEXT,
+  email        TEXT,
+  creation_ts  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  vo           TEXT,
+  issuer       TEXT
+);
+
+CREATE TABLE IF NOT EXISTS permissions (
+  permission_id VARCHAR(255) PRIMARY KEY,
+  admin_id      VARCHAR(255),
+  client_id     VARCHAR(255),
+  can_approve   BOOLEAN,
+  can_create    BOOLEAN,
+  can_read      BOOLEAN,
+  can_remove    BOOLEAN,
+  can_write     BOOLEAN,
+  creation_ts   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS client_approvals (
   client_id   VARCHAR(255) PRIMARY KEY,
   approver    TEXT,
   approved    BOOLEAN,
-  approval_ts TIMESTAMP,
+  approval_ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   status      TEXT
 );
 
-CREATE TABLE transactions (
+CREATE TABLE IF NOT EXISTS transactions (
   temp_token                    VARCHAR(255) PRIMARY KEY,
   temp_token_valid              BOOLEAN,
   callback_uri                  TEXT,
@@ -68,22 +97,22 @@ CREATE TABLE transactions (
   refresh_token_valid           BOOLEAN,
   expires_in                    BIGINT,
   certificate                   TEXT,
-  username                      TEXT,
-  myproxyUsername               TEXT,
-  access_token_valid            BOOLEAN DEFAULT NULL,
-  auth_time                     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  nonce                         TEXT,
-  scopes                        TEXT,
+  username                      TEXT CHARACTER SET 'utf8',
+  myproxyUsername               TEXT CHARACTER SET 'utf8',
   claims                        TEXT CHARACTER SET 'utf8',
   mp_client_session_identifier  TEXT,
-  states                        TEXT,
+  access_token_valid            BOOLEAN,
+  auth_time                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  nonce                         TEXT,
+  scopes                        TEXT CHARACTER SET 'utf8',
+  states                        TEXT CHARACTER SET 'utf8',
   UNIQUE INDEX verifier (verifier_token(255)),
   UNIQUE INDEX accessToken (access_token(255)),
   UNIQUE INDEX refreshToken (refresh_token(255)),
   UNIQUE INDEX username (username(255),access_token(255))
 );
 
-CREATE TABLE ssh_keys (
+CREATE TABLE IF NOT EXISTS ssh_keys (
 {% if OS == "RH6" %}
 /* 255 breaks on RH6: use there 210 & 120 instead */
   username      VARCHAR(210) NOT NULL,
@@ -110,11 +139,15 @@ GRANT ALL ON clients
         TO '{{ mp_server_db_user }}'@'localhost'
         IDENTIFIED BY '{{ mp_server_db_pw }}';
 
-GRANT ALL ON callbacks
+GRANT ALL ON adminClients
         TO '{{ mp_server_db_user }}'@'localhost'
         IDENTIFIED BY '{{ mp_server_db_pw }}';
 
 GRANT ALL ON transactions
+        TO '{{ mp_server_db_user }}'@'localhost'
+        IDENTIFIED BY '{{ mp_server_db_pw }}';
+
+GRANT ALL ON permissions
         TO '{{ mp_server_db_user }}'@'localhost'
         IDENTIFIED BY '{{ mp_server_db_pw }}';
 
