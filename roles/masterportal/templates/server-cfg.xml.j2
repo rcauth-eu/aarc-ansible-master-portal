@@ -4,7 +4,7 @@
 
     <!-- ############################################################################## -->
 
-    <service name="server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="{{ mp_server_log_debug }}" refreshTokenEnabled="{{ mp_server_refreshtokens }}" enableAutoRegisterEndpoint="{{ use_autoregister }}" disableDefaultStores="false">
+    <service name="server-config" address="https://{{ inventory_hostname }}/{{ mp_server }}" debug="{{ mp_server_log_debug }}" refreshTokenEnabled="{{ mp_server_refreshtokens }}" enableAutoRegisterEndpoint="{{ use_autoregister }}" disableDefaultStores="false" OIDCEnabled="true">
 
         <logging logFileName="{{ mp_server_log_dir }}/{{ mp_server }}.log"
                  logName="MPServer"
