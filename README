@@ -39,12 +39,14 @@ Prerequisites
     contents to the host(s) and into /etc/vomses/.
 
  3. Make sure you have replaced all the relevant .war and .jar .PLACEHOLDER
-    files in 'roles/masterportal/files/' replaced with the actual files. See
+    files in 'roles/masterportal/files/' with the actual files. See
         https://github.com/rcauth-eu/aarc-master-portal
         https://github.com/rcauth-eu/aarc-vo-portal
         https://github.com/rcauth-eu/aarc-ssh-portal
         https://github.com/rcauth-eu/keyutil
-    for details
+    You can either use the prebuilt released artefacts or rebuild from source.
+    For this version of these ansible scripts use the v0.2.0 release of the
+    aarc-* components.
 
  4. Download a new Oracle Java RPM (8 has been verified), and rename or create a
     symlink in 'roles/masterportal/files/' named jre.rpm.
