@@ -37,8 +37,10 @@ hostcert_intermediate: /etc/grid-security/certificates/TERENA-eScience-SSL-CA-3.
 mp_client_conf_lifetime: 950400
 
 
-### Default JSON web key id:
-mp_server_jwk_key_id: ""
+### Override name of the input file for the MasterPortal JSON web key
+#mp_server_jwk_input_file: mp_example.jwk
+### Default MasterPortal JSON web key id:
+mp_server_jwk_key_id: "1234567890ABCDEF1234567890ABCDEF"
 
 
 ### Fill in the credstore DN. This is going to be the expected DN of the

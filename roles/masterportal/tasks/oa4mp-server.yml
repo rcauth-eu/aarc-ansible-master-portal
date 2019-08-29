@@ -89,7 +89,7 @@
 
 - name: copy JSON web keys
   copy:
-    src: "mp.jwk"
+    src: "{{ mp_server_jwk_input_file }}"
     dest: "{{ mp_server_jwk_file }}"
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
@@ -124,7 +124,7 @@
 
 - name: copy war
   copy:
-    src: mp-oa2-server.war
+    src: "{{ mp_server }}.war"
     dest: "{{ catalina_home }}/webapps/{{ mp_server }}.war"
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"

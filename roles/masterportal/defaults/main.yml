@@ -64,7 +64,10 @@ mp_server_local_scopes:
 ### Whether we use refreshtokens
 mp_server_refreshtokens: "true"
 
-### JSON web key used for signing id_tokens
+### Masterportal signing keys
+### src filename
+mp_server_jwk_input_file: mp.jwk
+### dest filename
 mp_server_jwk_file: "{{ mp_server_conf_dir }}/mp.jwk"
 
 
