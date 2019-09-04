@@ -8,9 +8,9 @@ What are these scripts for?
 
 These scripts are for deploying a Master Portal + Credential Store + SSH host.
 To find out more about what this setup is useful for take a look at:
-https://wiki.nikhef.nl/grid/CILogon_Pre-Pilot_Work . You can use these scripts
-to deploy a Master Portal, Credential Store and SSH host on different hosts, or
-into one single host.
+https://wiki.nikhef.nl/grid/RCauth.eu_and_MasterPortal_overview.
+You can use these scripts to deploy a Master Portal, Credential Store and SSH
+host on different hosts, or into one single host.
 Note: the SSH interface consists of 3 parts:
 - MasterPortal: an API inside the mp-oa2-server, consisting of two endpoints.
   Managed via roles/masterportal/templates/ssl.conf.j2
