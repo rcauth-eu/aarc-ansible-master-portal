@@ -8,13 +8,7 @@
     state: present
   register: mysql_installation
 
-- name: make a link to the connector
-  file:
-    src: "{{ mysql_connector_path }}/{{ mysql_connector }}"
-    dest: "{{ catalina_home }}/lib/{{ mysql_connector }}"
-    owner: root
-    group: root
-    state: link
+# Note: we don't install the connector since we rely on the shipped versions
 
 # Start MariaDB/MySQL Server
 

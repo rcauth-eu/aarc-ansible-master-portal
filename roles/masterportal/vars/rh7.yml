@@ -59,16 +59,19 @@ httpd_service: httpd
 # THE ABOVE EFFECTIVELY MEANS THAT OA4MP WILL RUN WITH 'MYSQL' CONNECTOR AND IMPLEMENTATION
 # BUT THE UNDERLYING DATABASE WILL ACTUALLY BY MARIADB.
 
+# Note: we use the shipped mysql-connector-java, not the system one.
+# Also note that the code determines whether we can use
+# mysql-connector-java-5.1.X or mysql-connector-java-8.0.X since they have a
+# different class name for the driver. In either case, we ship along the
+# connector with the war file, so no need for the system version.
+# Note that 5.1.X is required for CentOS6, while 8.0.X can be used for CentOS7.
+
 mysql_service: mariadb
 
 mysql_packages:
   - mariadb
   - mariadb-server
-  - mysql-connector-java
   - MySQL-python
-
-mysql_connector_path: /usr/share/java
-mysql_connector: mysql-connector-java.jar
 
 ### postgresql
 
