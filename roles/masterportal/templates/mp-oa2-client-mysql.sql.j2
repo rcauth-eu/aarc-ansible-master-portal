@@ -37,6 +37,7 @@ Some useful commands:
 
 CREATE TABLE IF NOT EXISTS assets (
   identifier              VARCHAR(255) Primary key,
+  creation_ts             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   private_key             TEXT,
   username                TEXT,
   redirect_uri            TEXT,
@@ -49,7 +50,6 @@ CREATE TABLE IF NOT EXISTS assets (
   refresh_lifetime        BIGINT,
   cert_req                TEXT,
   token                   TEXT,
-  creation_ts             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   mp_server_request_state TEXT,
   mp_server_request_code  TEXT
 );
