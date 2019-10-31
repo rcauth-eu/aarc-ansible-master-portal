@@ -6,11 +6,13 @@ Ansible Deploy Script for Master Portal
 What are these scripts for?
 -------------------------------------------------------------------------------
 
-These scripts are for deploying a Master Portal + Credential Store + SSH host.
+These scripts are for deploying a Master Portal, Credential Store and SSH host.
 To find out more about what this setup is useful for take a look at:
 https://wiki.nikhef.nl/grid/RCauth.eu_and_MasterPortal_overview.
+
 You can use these scripts to deploy a Master Portal, Credential Store and SSH
-host on different hosts, or into one single host.
+host on different hosts, or on one single host.
+
 Note: the SSH interface consists of 3 parts:
 - MasterPortal: an API inside the mp-oa2-server, consisting of two endpoints.
   Managed via roles/masterportal/templates/ssl.conf.j2
@@ -22,74 +24,8 @@ Note: the SSH interface consists of 3 parts:
   Managed via separate sshhost.yml playbook.
 
 
-Prerequisites
--------------------------------------------------------------------------------
-
- 1. You need to have host certificates ready for this deployment. Place your PEM
-    formatted  certificate and key file under the '*.PLACEHOLDER' files in the
-    'roles/basic/files/' directory. The basic role will take care of deploying
-    these into the target machine.
-    It is assumed that your host certificates are issued by 'TERENA eScience SSL
-    CA 3'. If not, you will have to make some modifications to these scripts
-    before executing them!
-
- 2. For supporting pre-selected VOs in the vo-portal, myproxy-server (credstore)
-    and sshhost, add the relevant vomses configuration in a directory
-    'roles/basic/files/vomses/'. The basic role will take care of copying the
-    contents to the host(s) and into /etc/vomses/.
-
- 3. Make sure you have replaced all the relevant .war and .jar .PLACEHOLDER
-    files in 'roles/masterportal/files/' with the actual files. See
-        https://github.com/rcauth-eu/aarc-master-portal
-        https://github.com/rcauth-eu/aarc-vo-portal
-        https://github.com/rcauth-eu/aarc-ssh-portal
-        https://github.com/rcauth-eu/keyutil
-    You can either use the prebuilt released artefacts or rebuild from source.
-    For this version of these ansible scripts use the v0.2.0 release of the
-    aarc-* components.
-
- 4. Download a new Oracle Java RPM (8 has been verified), and rename or create a
-    symlink in 'roles/masterportal/files/' named jre.rpm.
-
- 5. You need to create a JSON Web Keys file to replace mp.jwk.PLACEHOLDER file
-    in 'roles/masterportal/files/':
-    - Create a dummy config file:
-       echo '<config>\n<service/>\n</config>' > tmp.conf
-    - Run the oa2-cli tool locally:
-       java -jar ./roles/masterportal/files/oa2-cli.jar -cfg tmp.conf
-    - Choose "use keys" then run "create"
-    - Choose as filename './roles/masterportal/files/mp.jwk'
-      (if you use a different name, set the corresponding name via
-      mp_server_jwk_input_file in masterportal_env.yml)
-    - exit the commandline tool (enter 'exit' twice)
-    - remove the 'tmp.conf' and 'log.xml' files
-    Lookup the 'kid' in the created file, use e.g. the RS256 key and enter the
-    value as 'mp_server_jwk_key_id' in 'masterportal_env.yml'
-
- 6. You need to create the passphrases for the different components.
-    This can be done using the secrets.yml playbook. Run it using
-        ansible-playbook -e configdir=<path-to-config-dir> secrets.yml
-    or set already the right configdir in your inventory file and run
-        ansible-playbook -i hosts.inventory secrets.yml
-    Note that you also will have to fill in the client ID and Secret for
-    the VO-portal and/or SSH keys portal (when applicable). They can
-    obviously only be obtained once the MasterPortal has been installed.
-    Afterwards you can re-run ansible, starting from the task
-    "sshkeyportal config file" or "voportal config file"
-
-
 How to use these scripts?
 -------------------------------------------------------------------------------
-
-Before you begin executing plays make sure to decide whether you're deployment
-will use two separate hosts for Master Portal and Credential Store, or a single
-host. Fill in you machine hostname[s] into the 'hosts.inventory' file
-accordingly.
-You can set a configdir variable in the inventory, which will be used as prefix
-when including the different _env.yml files described below. This makes it easy
-to have different inventory files for different layouts, but each with the same
-playbooks.
-The hostname[s] set in the invertory files will be set on the target machine[s].
 
 There are three different plays you can execute. One for the Credential Store
 called 'credstore.yml', one for the SSH host call 'sshhost.yml' and one for the
@@ -100,52 +36,134 @@ environment for these components, including the ip(6)tables rules for all three
 hosts. Feel free to further tweak the template, but make sure to keep the
 different services reachable. See ./roles/basic/templates/
 
-Make sure to check recommended modifications below before starting each play!
-
 1. credstore.yml
 
-    a. Fill in required environment variables in credstore_env.yml
-
-       This play will configure the Credential Server host. Basically, it
-       provides a MyProxy Server installation with some configuration.
-       Before starting this play there are a couple important variables you
-       should override. You can find these and their explanation in
-       'credstore_env.yml'.
-
-    b. Provide Online CA tar file
-
-       MyProxy only stores credentials that it can verify, therefore it's very
-       important to have the Online CA (which will issue user certificates)
-       present in the trusted certificates directory (usually
-       /etc/grid-security/certificates).
-       In case of a demo CA, make or get a tarball from the Online CA in pem
-       format, together with subject_hash links and signing_policy. It must also
-       contain the signing policy, since MyProxy will not work without it. The
-       result tarball should contain these files at the top level, without any
-       directory structure, and the tarball should be placed under
-       'roles/credstore/files/'
+    This play configures the Credential Server host. Basically, it provides a
+    MyProxy Server installation with some configuration.
 
 2. sshhost.yml
 
-    a. Fill in the required environment variables in sshhost_env.yml
-
-       This play configures the special ssh account (and host) that can be used
-       to obtain proxy certificates.
-       Before executing this play, make sure to fill in the required variables
-       listed and explained in the 'sshhost_env.yml' file.
+    This play configures the special ssh account (and host) that can be used to
+    obtain proxy certificates.
 
 3. masterportal.yml
 
-    a. Fill in the required environment variables in masterportal_env.yml
+    This play configures the rest of the MasterPortal, including the web
+    frontend.
 
-       This play configures the rest of the MasterPortal, including the web
-       frontend.
-       Before executing this play, make sure to fill in the required variables
-       listed and explained in the 'masterportal_env.yml' file.
+Make sure to check recommended modifications below before starting each play!
 
-    b. Verify deploying war files
 
-       This play is about to deploy the Master Portal war files
-       (mp-oa2-client.war and mp-oa2-server.war) and optionally the VO Portal
-       war file (vo-portal.war). Make sure that these are present in your
-       'roles/masterportal/files' directory.
+Prerequisites
+-------------------------------------------------------------------------------
+
+ 1. Before you begin executing plays you need to decide whether you're
+    deployment will use separate hosts for Master Portal, Credential Store and
+    SSH host, or a single host.
+    Fill in you machine hostname(s) into the 'hosts.inventory' file accordingly.
+    You can set a configdir variable in the inventory, which will be used as
+    prefix when including the different _env.yml files described below. This
+    makes it easy to have different configurations describing different layouts
+    for different inventory files, while still using the same playbooks.
+    The hostname(s) set in the invertory files will be set on the target
+    machine(s).
+
+ 2. You need to have host certificates ready for this deployment. Place your PEM
+    formatted certificate(s) and key(s) files in the 'roles/basic/files/'
+    directory, with names derived from the inventory_hostname. The basic role
+    will take care of deploying these into the target machine.
+    It is assumed that your host certificates are issued by the 'TERENA eScience
+    SSL CA 3'. If not, you will have to make some modifications to these scripts
+    before executing them!
+
+ 3. Provide Online CA tar file or RPM for the credstore:
+    For using the RCauth CA, make sure to specify ca_RCauth-Pilot-ICA-G1 under
+    the trust_anchor_packages in the 'credstore_env.yml' file in the configdir.
+    In case of a demo CA, make or get a tarball from that Online CA in pem
+    format, together with subject_hash links and signing_policy. It must also
+    contain the signing policy, since MyProxy will not work without it.
+    Note: the resulting tarball should contain these files at the top level,
+    without any directory structure. The tarball should be placed under
+    'roles/credstore/files/' and specified under trust_anchor_tarballs.
+
+ 4. For supporting pre-selected VOs in the vo-portal, myproxy-server (credstore)
+    and sshhost, add the relevant vomses configuration in a directory
+    'roles/basic/files/vomses/'. The basic role will take care of copying the
+    contents to the host(s) and into /etc/vomses/.
+
+ 5. Make sure you have replaced all the relevant .war and .jar .PLACEHOLDER
+    files in 'roles/masterportal/files/' with the actual files. See
+        https://github.com/rcauth-eu/aarc-master-portal
+        https://github.com/rcauth-eu/aarc-vo-portal
+        https://github.com/rcauth-eu/aarc-ssh-portal
+        https://github.com/rcauth-eu/keyutil
+    You can either use the prebuilt released artefacts or rebuild from source.
+    For this version of these ansible scripts use the v0.2.0 release of the
+    aarc-* components.
+
+ 6. Download a new Oracle Java RPM (8 has been verified), and rename or create a
+    symlink in 'roles/masterportal/files/' named jre.rpm.
+
+ 7. You need to create a JSON Web Keys file to replace mp.jwk.PLACEHOLDER file
+    in 'roles/masterportal/files/':
+    - Create a dummy config file:
+       cat > tmp.conf << EOF
+       <config>
+       <service disableDefaultStores="false"/>
+       </config>
+       EOF
+    - Run the oa2-cli tool locally:
+       java -jar ./roles/masterportal/files/oa2-cli.jar -cfg tmp.conf
+    - Choose "use keys" then run "create"
+    - Choose as filename './roles/masterportal/files/mp.jwk'
+      (if you use a different name, set the corresponding name via
+      mp_server_jwk_input_file in masterportal_env.yml in the configdir)
+    - exit the commandline tool (enter 'exit' twice)
+    - remove the 'tmp.conf' and 'log.xml' files
+    Lookup the 'kid' in the created file, use e.g. the RS256 key and enter the
+    value as 'mp_server_jwk_key_id' in 'masterportal_env.yml'
+
+ 8. You need to create the passphrases for the different components.
+    This can be done using the secrets.yml playbook. Run it using
+        ansible-playbook -e configdir=<path-to-config-dir> secrets.yml
+    or set already the right configdir in your inventory file and run
+        ansible-playbook -i hosts.inventory secrets.yml
+
+ 9. Register a new client in the delegation server of the online CA (i.e. RCauth
+    CA or demo CA).
+    Go to
+        {{ deleg_server_auth }}/register
+    where deleg_server_auth should match the URL as set in
+    config/*/masterportal_env.yml.
+    Use as Callback URL
+        https://MASTERPORTAL/mp-oa2-client/ready
+    where MASTERPORTAL should match the host as set in the inventory.
+    Fill in the resulting client_id and client_secret as mp_client_id and
+    mp_client_secret in the secrets_env.yml file in the configdir (see above).
+
+ 10. Note that you also will have to fill in the client ID and secret for
+    the VO-portal and/or SSH keys portal (when applicable). They can
+    obviously only be obtained once the MasterPortal has been installed.
+    Hence, after running these scripts for the first time, register two clients
+    via
+        https://MASTERPORTAL/mp-oa2-server/register
+    and choose as Callback URL respectively
+        https://MASTERPORTAL/vo-portal/ready
+        https://MASTERPORTAL/sshkeys/ready
+    where MASTERPORTAL should match the host as set in the inventory
+    For the VO portal you want to select the scopes
+        email
+        edu.uiuc.ncsa.myproxy.getcert
+        openid
+        profile
+        org.cilogon.userinfo
+    while for the sshkeys portal you want to select
+        openid
+        profile
+        org.cilogon.userinfo
+        eu.rcauth.sshkeys
+    Afterwards you can re-run ansible, starting from the task
+    "sshkeyportal config file" or "voportal config file"
+
+ 11. Make sure to fill in any other required environment variables for each role
+     in the configdir _env.yml files.
