@@ -15,6 +15,11 @@ trust_anchor_packages:
 #  - "internalca.tar.gz"
 
 
+### Override input file or directory under roles/basic/files where input for the
+### vomses file or directory is located.
+#vomses_input: "vomses"
+
+
 ### IP address of the Master Portal.
 ### Can be ignored if Credential Store is running on the same host as the Master
 ### Portal.

@@ -2,12 +2,21 @@
 
 # installing vomses when present
 - name: check vomses
-  local_action: stat path="roles/basic/files/vomses"
-  register: copy_voms
+  local_action:
+    module: stat
+    path: "roles/basic/files/{{ vomses_input }}"
+  register: vomses
 
-- name: copy vomses
+- name: copy vomses as directory
   copy:
-    src: "vomses"
-    dest: /etc/
+    src: "{{ vomses_input }}/"
+    dest: /etc/vomses
     mode: 0644
-  when: copy_voms.stat.exists
+  when: vomses.stat.exists and vomses.stat.isdir
+
+- name: copy vomses as file
+  copy:
+    src: "{{ vomses_input }}"
+    dest: /etc/vomses
+    mode: 0644
+  when: vomses.stat.exists and vomses.stat.isdir == False
