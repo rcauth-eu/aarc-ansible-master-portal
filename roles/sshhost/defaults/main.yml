@@ -21,9 +21,6 @@ proxy_user: proxy
 proxycert: /etc/grid-security/proxycert.pem
 proxykey: /etc/grid-security/proxykey.pem
 
-### vomses file or directory, for retrieving VOMS proxies
-vomses: /etc/vomses
-
 ### Default and maximum returned proxy lifetimes
 default_lifetime: 12
 max_lifetime: 72

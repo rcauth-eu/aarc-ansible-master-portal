@@ -10,13 +10,13 @@
 - name: copy vomses as directory
   copy:
     src: "{{ vomses_input }}/"
-    dest: /etc/vomses
+    dest: "{{ vomses_location }}"
     mode: 0644
   when: vomses.stat.exists and vomses.stat.isdir
 
 - name: copy vomses as file
   copy:
     src: "{{ vomses_input }}"
-    dest: /etc/vomses
+    dest: "{{ vomses_location }}"
     mode: 0644
   when: vomses.stat.exists and vomses.stat.isdir == False

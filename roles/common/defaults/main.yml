@@ -19,6 +19,8 @@ x509_cert_dir: "/etc/grid-security/certificates"
 hostcert: /etc/grid-security/hostcert.pem
 hostkey: /etc/grid-security/hostkey.pem
 
+### vomses location, either directory or file
+vomses_location: /etc/vomses
 
 ### Hostname of the Master Portal, used on the ssh host in a curl cmdline to
 ### obtain the list of ssh public keys and corresponding users. Usually just taken
