@@ -73,12 +73,13 @@ vomses_input: "vomses"
 #trusted_nets:
 #  - 1.2.3.4/32
 
-### same for IPv6
+### same for IPv6.
+### Note that /128 in access.conf does not work due to a bug in pam_access.
 #local_nets_v6:
 #  - 1234::/64
 
 #trusted_nets_v6:
-#  - 1234::1/128
+#  - 1234::1
 
 
 ### NTP Server
