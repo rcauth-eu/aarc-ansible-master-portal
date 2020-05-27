@@ -10,7 +10,8 @@ enabled_services:
 ### java constants
 
 javax_mail_url: "https://github.com/javaee/javamail/releases/download/JAVAMAIL-1_6_1/javax.mail.jar"
-java_home: /usr/java/default
+java_package: java-1.8.0-openjdk-headless
+java_home: /usr/lib/jvm/jre-1.8.0
 
 ### tomcat constants
 

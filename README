@@ -101,8 +101,8 @@ Prerequisites
     For this version of these ansible scripts use the v0.2.0 release of the
     aarc-* components.
 
- 6. Download a new Oracle Java RPM (8 has been verified), and rename or create a
-    symlink in 'roles/masterportal/files/' named jre.rpm.
+ 6. The current scripts are using java-1.8.0-openjdk-headless. You can also use
+    Oracle Java 8.
 
  7. You need to create a JSON Web Keys file to replace mp.jwk.PLACEHOLDER file
     in 'roles/masterportal/files/':

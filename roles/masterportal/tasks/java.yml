@@ -1,15 +1,12 @@
 ---
 
-# Install Oracle JRE
+# java tasks
 
-- name: copy jre RPM
-  copy:
-    src: jre.rpm
-    dest: /tmp/jre.rpm
-- name: install java jre RPM
+- name: install java
   yum:
-    name: /tmp/jre.rpm
+    name: "{{ java_package }}"
     state: present
+
 - name: JAVA_HOME present in bashrc
   lineinfile:
     dest: /etc/bashrc
