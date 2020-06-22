@@ -30,11 +30,26 @@ hostcert_intermediate: /etc/grid-security/certificates/TERENA-eScience-SSL-CA-3.
 ### requiring of a special scope for accessing the sshkeys API endpoint.
 #mp_server_sshkey_scope: ""
 
-### Configure the mp_client_conf_lifetime to set the lifetime sent with every
+### Override the mp_client_conf_lifetime to set the lifetime sent with every
 ### /getcert request to the delegation server. This will determine the lifetime
 ### of the EEC returned by the Online CA, as well as the lifetime of the created
 ### Long Lived Proxy Certificate.
-mp_client_conf_lifetime: 950400
+#mp_client_conf_lifetime: "{{ eec_lifetime }}"
+
+### Override the mp_server_conf_lifetime which is used in combination
+### with mp_server_conf_tolerance to set the maximum lifetime for retrieved
+### proxies from the MasterPortal. mp_server_conf_lifetime typically should
+### match max_proxy_lifetime in the myproxy-server.config file (but there in
+### hours).
+#mp_server_conf_lifetime: "{{ max_proxy_lifetime }}"
+
+### Override the mp_server_conf_tolerance, see mp_server_conf_lifetime. This
+### effectively sets a limit to the frequency with which an EEC can be retrieved
+### from the CA.
+#mp_server_conf_tolerance: 86400
+
+### Override default lifetime of returned short-lived proxies in seconds
+#mp_server_conf_def_proxy_lifetime: 43200
 
 
 ### Override name of the input file for the MasterPortal JSON web key

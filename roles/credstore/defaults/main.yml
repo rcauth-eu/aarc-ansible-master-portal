@@ -5,6 +5,5 @@
 
 credstore_cert_dir: "{{ x509_cert_dir }}"
 credstore_proxy_extfile: /etc/myproxy-proxy-extfile
-credstore_max_proxy_lifetime: 12
 credstore_allow_voms_attribute_requests: true
 credstore_voms_userconf: "{{ vomses_location }}"

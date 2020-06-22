@@ -34,6 +34,3 @@ masterportal_credentials: "/C=NL/O=Example/OU=Org/CN=masterportal"
 ### If the SSH host is not used or co-hosted with the Master Portal, this can be
 ### left out.
 sshhost_credentials: "/C=NL/O=Example/OU=Org/CN=ssh-host"
-
-### Maximum lifetime of issued proxies by the Credential Store
-credstore_max_proxy_lifetime: 264

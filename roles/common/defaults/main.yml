@@ -19,8 +19,22 @@ x509_cert_dir: "/etc/grid-security/certificates"
 hostcert: /etc/grid-security/hostcert.pem
 hostkey: /etc/grid-security/hostkey.pem
 
+### Input file or directory under roles/basic/files where input for the
+### vomses file or directory is located.
+vomses_input: "vomses"
+
 ### vomses location, either directory or file
 vomses_location: /etc/vomses
+
+
+### lifetime in seconds of end-entity certificates from the onlineCA (RCauth)
+eec_lifetime: 950400
+
+### maximum lifetime in seconds for proxies retrieved from the MasterPortal and
+### its myproxy-server. For the MasterPortal towards its clients this is
+### combined with a 'tolerance'.
+max_proxy_lifetime: "{{ eec_lifetime }}"
+
 
 ### Hostname of the Master Portal, used on the ssh host in a curl cmdline to
 ### obtain the list of ssh public keys and corresponding users. Usually just taken
@@ -46,10 +60,6 @@ autoregister_port: 8444
 credstore_host: "{{ groups.credstore.0 }}"
 credstore_port: 7512
 
-
-### Input file or directory under roles/basic/files where input for the
-### vomses file or directory is located.
-vomses_input: "vomses"
 
 
 ### IP address of the Master Portal.

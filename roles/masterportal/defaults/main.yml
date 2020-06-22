@@ -29,7 +29,8 @@ mp_client_log_dir: "{{ mp_client_dir }}/log"
 mp_client_log_size: 1000000
 mp_client_log_debug: "info"
 mp_client_storage_dir: "{{ mp_client_dir }}/storage"
-mp_client_conf_lifetime: 31536000
+### requested lifetime for the long-lived proxies stored in the MasterPortal
+mp_client_conf_lifetime: "{{ eec_lifetime }}"
 
 
 ### OA4MP Server
@@ -49,6 +50,17 @@ mp_server_log_size: 1000000
 mp_server_log_debug: "info"
 mp_server_storage_dir: "{{ mp_server_dir }}/storage"
 mp_server_tools_dir: "{{ mp_server_dir }}/tools"
+### (mp_server_conf_lifetime -  mp_server_conf_tolerance) is the maximum
+### requestable lifetime in seconds for short-lived proxies returned by the
+### MasterPortal. mp_server_conf_lifetime typically matches the
+### max_proxy_lifetime defined in the myproxy-server.config (there in hours)
+### while the mp_server_conf_tolerance ensures we cannot overload the CA since
+### the MasterPortal will request new EECs not more often than once every
+### tolerance seconds.
+mp_server_conf_lifetime: "{{ max_proxy_lifetime }}"
+mp_server_conf_tolerance: 86400
+### default lifetime of returned short-lived proxies in seconds
+mp_server_conf_def_proxy_lifetime: 43200
 ### max number of ssh keys per person
 mp_server_max_sshkeys: 5
 ### scope required for accessing the ssh keys API

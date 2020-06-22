@@ -104,7 +104,7 @@
                 The default lifetime set in seconds is used in case there is no
                 proxylifetime value provided with the original /getproxy request
             -->
-            <defaultLifetime>43200</defaultLifetime>
+            <defaultLifetime>{{ mp_server_conf_def_proxy_lifetime }}</defaultLifetime>
 
             <validators>
                 <validator handler="eu.rcauth.masterportal.server.validators.DNValidator">
@@ -116,14 +116,14 @@
                         max_proxy_lifetime is set in the myproxy-server.conf
                         (converted into seconds)
                     -->
-                    <input name="max_proxy_lifetime">950400</input>
+                    <input name="max_proxy_lifetime">{{ mp_server_conf_lifetime }}</input>
 
                     <!--
                         the tolerance is a small timeframe in seconds (usually a
                         day) which prevents the Delegation Server from being
                         flooded with requests.
                     -->
-                    <input name="tolerance">86400</input>
+                    <input name="tolerance">{{ mp_server_conf_tolerance }}</input>
                 </validator>
             </validators>
 

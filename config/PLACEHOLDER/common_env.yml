@@ -20,6 +20,15 @@ trust_anchor_packages:
 #vomses_input: "vomses"
 
 
+### Override lifetime in seconds of end-entity certificates from the onlineCA
+#eec_lifetime: 950400
+
+### Override maximum lifetime in seconds for proxies retrieved from the
+### MasterPortal and its myproxy-server. For the MasterPortal towards its
+### clients this is combined with a 'tolerance'.
+#max_proxy_lifetime: "{{ eec_lifetime }}"
+
+
 ### IP address of the Master Portal.
 ### Can be ignored if Credential Store is running on the same host as the Master
 ### Portal.
