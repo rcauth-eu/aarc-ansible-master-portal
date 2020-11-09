@@ -98,7 +98,7 @@ Prerequisites
         https://github.com/rcauth-eu/aarc-ssh-portal
         https://github.com/rcauth-eu/keyutil
     You can either use the prebuilt released artefacts or rebuild from source.
-    For this version of these ansible scripts use the v0.2.0 release of the
+    For this version of these ansible scripts use the v0.2.1 release of the
     aarc-* components.
 
  6. The current scripts are using java-1.8.0-openjdk-headless. You can also use
