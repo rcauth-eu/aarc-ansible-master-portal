@@ -19,6 +19,11 @@ x509_cert_dir: "/etc/grid-security/certificates"
 hostcert: /etc/grid-security/hostcert.pem
 hostkey: /etc/grid-security/hostkey.pem
 
+
+### Who should get root email
+root_alias: /var/spool/mail/root
+
+
 ### Input file or directory under roles/basic/files where input for the
 ### vomses file or directory is located.
 vomses_input: "vomses"

@@ -17,6 +17,8 @@
 - import_tasks: fetchcrl.yml
 - import_tasks: hostcreds.yml
 
+- import_tasks: postfix.yml
+
 - import_tasks: vomses.yml
 
 # list of disabled services

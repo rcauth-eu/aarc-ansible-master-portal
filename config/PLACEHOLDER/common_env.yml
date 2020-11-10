@@ -15,6 +15,10 @@ trust_anchor_packages:
 #  - "internalca.tar.gz"
 
 
+### Who should get root email
+#root_alias: "mp-operator@example.org, /var/spool/mail/root"
+
+
 ### Override input file or directory under roles/basic/files where input for the
 ### vomses file or directory is located.
 #vomses_input: "vomses"

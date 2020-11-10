@@ -1,0 +1,33 @@
+---
+
+# Setup root email
+
+- name: make mail directory sticky-world writeable
+  file:
+    path: /var/spool/mail
+    state: directory
+    owner: root
+    mode: 01777
+
+- name: make local root mailbox writeable for group nobody
+  file:
+    path: /var/spool/mail/root
+    state: touch
+    group: nobody
+    mode: 0660
+
+- name: set root alias for mails
+  lineinfile:
+     dest: "/etc/aliases"
+     regexp: "#?root:.*"
+     line: 'root: {{ root_alias }}'
+     owner: root
+     group: root
+     mode: 0644
+     backup: yes
+  register: alias_config
+
+- name: initialise alias database
+  command: newaliases
+  notify: restart postfix
+  when: alias_config.changed

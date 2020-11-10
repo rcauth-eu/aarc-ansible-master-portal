@@ -10,6 +10,11 @@
     name: ip6tables
     state: restarted
 
+- name: restart postfix
+  service:
+    name: postfix
+    state: restarted
+
 # restarting the network with the 'service' command breaks the ansible play
 # this seems to be an ansible gitch
 # http://earlruby.org/2015/04/restarting-network-interfaces-in-ansible/
