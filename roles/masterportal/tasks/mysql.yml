@@ -18,7 +18,12 @@
 # Configure root password (but only on fresh installations)
 
 - name: update MariaDB/MySQL root password for all root accounts
-  mysql_user: name=root host={{ item }} password={{ mysql_root_password }} priv=*.*:ALL,GRANT
+  mysql_user:
+    name: root
+    host: "{{ item }}"
+    password: "{{ mysql_root_password }}"
+    priv: "*.*:ALL,GRANT"
+  no_log: true
   with_items:
     - 127.0.0.1
     - localhost
@@ -37,6 +42,7 @@
     encoding: utf8
     login_user: root
     login_password: "{{ mysql_root_password }}"
+  no_log: true
   register: server_db
   when: mysql_root_password is defined
 
@@ -48,6 +54,7 @@
     priv: "{{ mp_server_db }}.*:ALL"
     login_user: root
     login_password: "{{ mysql_root_password }}"
+  no_log: true
   with_items:
     - 127.0.0.1
     - localhost
@@ -66,6 +73,7 @@
     target: /tmp/mp-oa2-server-mysql.sql
     login_user: root
     login_password: "{{ mysql_root_password }}"
+  no_log: true
   when: server_db is defined and server_db.changed
 
 - name: remove MP Server sql script
@@ -87,6 +95,7 @@
     encoding: utf8
     login_user: root
     login_password: "{{ mysql_root_password }}"
+  no_log: true
   register: client_db
   when: mysql_root_password is defined
 
@@ -98,6 +107,7 @@
     priv: "{{ mp_client_db }}.*:ALL"
     login_user: root
     login_password: "{{ mysql_root_password }}"
+  no_log: true
   with_items:
     - 127.0.0.1
     - localhost
@@ -116,6 +126,7 @@
     target: /tmp/mp-oa2-client-mysql.sql
     login_user: root
     login_password: "{{ mysql_root_password }}"
+  no_log: true
   when: client_db is defined and client_db.changed
 
 - name: remove MP Client sql script

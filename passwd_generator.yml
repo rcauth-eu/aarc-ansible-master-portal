@@ -2,11 +2,13 @@
 
 - name: "look for existing password: {{ item }}"
   command: "grep '^{{ item }}: CHANGEME' {{ abs_passwd_generator_file }}"
+  no_log: true
   ignore_errors: yes
   register: passwd_lookup
 
 - name: "generate new password for {{ item }}"
   shell: "openssl rand -base64 21 | tr '[/+]' 'X' | tr -d '\n'"
+  no_log: true
   register: new_passwd
   when: passwd_lookup.rc == 0
 
@@ -16,4 +18,5 @@
     regexp: "^{{ item }}: CHANGEME"
     line: "{{ item }}: {{ new_passwd.stdout }}"
     state: present
+  no_log: true
   when: passwd_lookup.rc == 0
