@@ -92,7 +92,7 @@ CustomLog logs/ssl_request_log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
     # requests that are made from your site.
     Header always set Referrer-Policy no-referrer
     # Only allow content from ourselves
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+    Header always set Content-Security-Policy "default-src 'self'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
 
     ProxyPass /{{ mp_server }}/authorized !
     ProxyPass /{{ mp_server }}/autoregister !
