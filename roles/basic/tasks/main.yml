@@ -26,6 +26,7 @@
 
 - name: disable services
   service: name={{ item }} state=stopped enabled=no
+  ignore_errors: True
   with_items: "{{ disabled_services }}"
 
 # list of enabled services
