@@ -13,7 +13,7 @@
 #trust_anchor_tarballs:
 
 ### trust anchor directory
-x509_cert_dir: "/etc/grid-security/certificates"
+x509_cert_dir: /etc/grid-security/certificates
 
 ### Default hostcert and key
 hostcert: /etc/grid-security/hostcert.pem
@@ -26,7 +26,7 @@ root_alias: /var/spool/mail/root
 
 ### Input file or directory under roles/basic/files where input for the
 ### vomses file or directory is located.
-vomses_input: "vomses"
+vomses_input: vomses
 
 ### vomses location, either directory or file
 vomses_location: /etc/vomses

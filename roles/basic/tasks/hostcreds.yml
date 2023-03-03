@@ -6,14 +6,14 @@
 - name: copy hostcert
   copy:
     src: "{{ inventory_hostname }}.crt"
-    dest: /etc/grid-security/hostcert.pem
+    dest: "{{ hostcert }}"
     mode: 0644
 
 # Chown only later, at this stage we don't have a myproxy user
 - name: copy hostkey
   copy:
     src: "{{ inventory_hostname }}.key"
-    dest: /etc/grid-security/hostkey.pem
+    dest: "{{ hostkey }}"
     mode: 0400
 
 # INSTALLING TRUST ANCHOR OF HOST CERTIFICATE FROM RPM
