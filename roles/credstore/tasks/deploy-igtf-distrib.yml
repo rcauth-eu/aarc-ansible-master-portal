@@ -5,7 +5,9 @@
     name: "{{ ca_policies_igtf }}"
     state: present
   register: igtf_distro
+  tags: hostcreds
 
 - name: update fetch-crl in background
   shell: "nohup fetch-crl -q -p20 < /dev/null > /dev/null 2>&1 &"
   when: igtf_distro.changed
+  tags: hostcreds

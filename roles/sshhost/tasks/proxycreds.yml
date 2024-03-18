@@ -10,6 +10,7 @@
     owner: "{{ proxy_user }}"
     group: "{{ proxy_user }}"
     mode: 0644
+  tags: hostcreds
 
 - name: copy proxykey
   copy:
@@ -19,3 +20,4 @@
     owner: "{{ proxy_user }}"
     group: "{{ proxy_user }}"
     mode: 0400
+  tags: hostcreds

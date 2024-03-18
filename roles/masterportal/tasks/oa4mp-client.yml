@@ -47,6 +47,8 @@
 
 - name: add trusted CAs to client trust store
   raw: "java -jar {{ keyutil_jar }} -i -F -n {{ mp_client_truststore }} -p {{ mp_client_truststore_pw }} -e {{ x509_cert_dir }}/*.pem"
+  notify: restart tomcat
+  tags: hostcreds
 
 - name: add the right permission to the trust store
   file:
@@ -54,12 +56,16 @@
     owner: tomcat
     group: tomcat
     mode: 0644
+  notify: restart tomcat
+  tags: hostcreds
 
 # convert hostcert into pkcs12, so that oa4mp can load it in its keystore
 
 - name: add hostcert to keystore
   command: "openssl pkcs12 -export -in {{ hostcert }} -inkey {{ hostkey }} -out {{ mp_client_keystore }} -name hostcred -CApath {{ x509_cert_dir }} -chain -passout pass:{{ mp_keystore_pw }}"
   no_log: true
+  notify: restart tomcat
+  tags: hostcreds
 
 - name: add the right permission to the key store
   file:
@@ -67,6 +73,8 @@
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
     mode: 0400
+  notify: restart tomcat
+  tags: hostcreds
 
 # deploy war file
 
@@ -91,4 +99,3 @@
     group: "{{ tomcat_user }}"
     mode: 0644
   notify: restart tomcat
-

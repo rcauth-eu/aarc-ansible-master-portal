@@ -53,6 +53,9 @@ different services reachable. See ./roles/basic/templates/
 
 Make sure to check recommended modifications below before starting each play!
 
+In case just the host credentials (hostcert, key and/or CA) are updated, you can
+run the notebooks with an extra flag --tags=hostcreds.
+
 
 Prerequisites
 -------------------------------------------------------------------------------

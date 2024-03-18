@@ -8,6 +8,8 @@
     src: "{{ inventory_hostname }}.crt"
     dest: "{{ hostcert }}"
     mode: 0644
+  notify: restart httpd
+  tags: hostcreds
 
 # Chown only later, at this stage we don't have a myproxy user
 - name: copy hostkey
@@ -15,6 +17,8 @@
     src: "{{ inventory_hostname }}.key"
     dest: "{{ hostkey }}"
     mode: 0400
+  notify: restart httpd
+  tags: hostcreds
 
 # INSTALLING TRUST ANCHOR OF HOST CERTIFICATE FROM RPM
 
@@ -24,6 +28,8 @@
     name: "{{ trust_anchor_packages }}"
     state: present
   when: trust_anchor_packages is defined
+  notify: restart httpd
+  tags: hostcreds
 
 # INSTALLING TRUST ANCHOR OF HOST CERTIFICATE FROM TARBALL
 
@@ -36,4 +42,5 @@
     owner: root
     group: root
   with_items: "{{ trust_anchor_tarballs }}"
+  notify: restart httpd
   when: trust_anchor_tarballs is defined

@@ -100,6 +100,8 @@
 - name: add hostcert to keystore
   command: openssl pkcs12 -export -in "{{ hostcert }}" -inkey "{{ hostkey }}" -out "{{ mp_server_keystore }}" -name hostcred -CApath "{{ x509_cert_dir }}" -chain -passout "pass:{{ mp_keystore_pw }}"
   no_log: true
+  notify: restart tomcat
+  tags: hostcreds
 
 - name: add the right permission to the key store
   file:
@@ -107,6 +109,8 @@
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_user }}"
     mode: 0400
+  notify: restart tomcat
+  tags: hostcreds
 
 # deploy war file
 

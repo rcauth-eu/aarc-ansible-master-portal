@@ -7,6 +7,7 @@
   yum:
     name: ['myproxy', 'myproxy-server', 'myproxy-voms', 'myproxy-admin', 'myproxy-doc']
     state: present
+
 - name: add myproxy-server.config
   template:
     src: myproxy-server.conf.j2
@@ -16,6 +17,7 @@
     mode: 0644
     backup: yes
   notify: restart myproxy
+
 - name: add myproxy proxy extfile
   template:
     src: myproxy-proxy-extfile
@@ -23,18 +25,23 @@
     owner: myproxy
     group: myproxy
     mode: 0644
+
 - name: give access to host certificate
   file:
     path: "{{ hostcert }}"
     owner: myproxy
     group: myproxy
     mode: 0644
+  tags: hostcreds
+
 - name: give access to host key
   file:
     path: "{{ hostkey }}"
     owner: myproxy
     group: myproxy
     mode: 0400
+  tags: hostcreds
+
 - name: create hostcert link
   file:
     src: "{{ hostcert }}"
@@ -42,6 +49,7 @@
     owner: myproxy
     group: myproxy
     state: link
+
 - name: create hostkey link
   file:
     src: "{{ hostkey }}"
