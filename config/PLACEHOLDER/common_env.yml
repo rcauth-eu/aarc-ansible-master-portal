@@ -7,7 +7,7 @@
 ### This can be an rpm or a package name from an installed repository.
 ### Alternatively or additionally, a tarball can be installed
 trust_anchor_packages:
-  - "ca_TERENA-eScience-SSL-CA-3"
+  - "ca_GEANTeScienceSSLCA4"
 
 ### trust anchor(s) can also be installed from a tarball containing the
 ### certificate, signing policy, crl and hashes.
