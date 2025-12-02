@@ -9,6 +9,7 @@
 
 # configure
 
+# Note: give also tags hostcreds since the intermediate might have changed
 - name: httpd config file present
   template:
     src: ssl.conf.j2
@@ -18,6 +19,7 @@
     mode: 0644
     backup: yes
   notify: restart httpd
+  tags: hostcreds
 
 - name: httpoxy config present
   copy:
