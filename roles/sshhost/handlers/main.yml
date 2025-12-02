@@ -1,0 +1,7 @@
+---
+
+
+- name: restart httpd
+  debug:
+    msg: "This is a no-op, since basic role notifies restart httpd"
+

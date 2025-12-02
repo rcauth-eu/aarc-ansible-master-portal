@@ -10,6 +10,10 @@
     name: ip6tables
     state: restarted
 
+- name: restart httpd
+  debug:
+    msg: "This is a no-op, since basic role notifies restart httpd"
+
 - name: restart myproxy
   service:
     name: myproxy-server

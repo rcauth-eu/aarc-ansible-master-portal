@@ -26,34 +26,24 @@
     group: myproxy
     mode: 0644
 
-- name: give access to host certificate
-  file:
-    path: "{{ hostcert }}"
-    owner: myproxy
-    group: myproxy
-    mode: 0644
-  tags: hostcreds
-
-- name: give access to host key
-  file:
-    path: "{{ hostkey }}"
-    owner: myproxy
-    group: myproxy
-    mode: 0400
-  tags: hostcreds
-
-- name: create hostcert link
-  file:
+- name: copy myproxy cert
+  copy:
+    remote_src: true
     src: "{{ hostcert }}"
     dest: /etc/grid-security/myproxy/hostcert.pem
     owner: myproxy
     group: myproxy
-    state: link
+    mode: 0644
+  notify: restart myproxy
+  tags: hostcreds
 
-- name: create hostkey link
-  file:
+- name: copy myproxy key
+  copy:
+    remote_src: true
     src: "{{ hostkey }}"
     dest: /etc/grid-security/myproxy/hostkey.pem
     owner: myproxy
     group: myproxy
-    state: link
+    mode: 0400
+  notify: restart myproxy
+  tags: hostcreds

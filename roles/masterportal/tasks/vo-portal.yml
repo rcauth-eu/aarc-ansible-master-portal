@@ -45,15 +45,19 @@
 # (no need for a trust store as long as trusted certs are in x509_cert_dir)
 # place trust and key stores
 
-- name: add trusted CAs to client trust store
+- name: add trusted CAs to voportal trust store
   raw: "java -jar {{ keyutil_jar }} -i -F -n {{ vo_portal_truststore }} -p {{ vo_portal_truststore_pw }} -e {{ x509_cert_dir }}/*.pem"
+  notify: restart tomcat
+  tags: hostcreds
 
-- name: add the right permission to the trust store
+- name: add the right permission to voportal trust store
   file:
     path: "{{ vo_portal_truststore }}"
     owner: tomcat
     group: tomcat
     mode: 0644
+  notify: restart tomcat
+  tags: hostcreds
 
 # deploy war file
 

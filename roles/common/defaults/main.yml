@@ -19,6 +19,12 @@ x509_cert_dir: /etc/grid-security/certificates
 hostcert: /etc/grid-security/hostcert.pem
 hostkey: /etc/grid-security/hostkey.pem
 
+### When the hostcert is signed by an intermediate CA,
+### specify the pem file here:
+#hostcert_intermediate: "{{ x509_cert_dir }}/TERENA-eScience-SSL-CA-3.pem"
+#hostcert_intermediate: "{{ x509_cert_dir }}/GEANTeScienceSSLCA4.pem"
+#hostcert_intermediate: "/etc/grid-security/hostchain.pem"
+
 
 ### Who should get root email
 root_alias: /var/spool/mail/root

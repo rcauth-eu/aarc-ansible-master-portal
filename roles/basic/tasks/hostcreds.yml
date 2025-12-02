@@ -2,20 +2,33 @@
 
 # INSTALLING HOST CERTIFICATES
 
-# Chown only later, at this stage we don't have a myproxy user
 - name: copy hostcert
   copy:
     src: "{{ inventory_hostname }}.crt"
     dest: "{{ hostcert }}"
+    owner: root
+    group: root
     mode: 0644
   notify: restart httpd
   tags: hostcreds
 
-# Chown only later, at this stage we don't have a myproxy user
+- name: copy hostchain
+  copy:
+    src: "{{ inventory_hostname }}.chain"
+    dest: "{{ hostcert_intermediate }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart httpd
+  tags: hostcreds
+  when: hostcert_intermediate is defined
+
 - name: copy hostkey
   copy:
     src: "{{ inventory_hostname }}.key"
     dest: "{{ hostkey }}"
+    owner: root
+    group: root
     mode: 0400
   notify: restart httpd
   tags: hostcreds
@@ -24,7 +37,7 @@
 
 # install trust root from rpm package(s)
 - name: deploy trust anchor(s) from rpm
-  yum:
+  dnf:
     name: "{{ trust_anchor_packages }}"
     state: present
   when: trust_anchor_packages is defined
